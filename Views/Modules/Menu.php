@@ -127,7 +127,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="cliente" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Clientes</p>
                 </a>
