@@ -2,7 +2,7 @@
     <!-- Brand Logo -->
     <a href="Views/Resources/index3.html" class="brand-link">
       <img src="Views/Resources/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Sistema Esmeralda</span>
+      <span class="brand-text font-weight-light">Grupo Rac</span>
     </a>
 
     <!-- Sidebar -->
@@ -17,32 +17,39 @@
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
+        
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          
-         
-     
-      
+               <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="fa-solid fa-house"></i>
+              <p>
+                Inicio
+               
+              </p>
+            </a>
+          </li>
+
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon far fa-envelope"></i>
+            <i class="fa-solid fa-chart-simple"></i>
               <p>
-                Mailbox
+                Dashboards
+               
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="fa-solid fa-file"></i>
+              <p>
+                Reportes
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
@@ -50,20 +57,122 @@
               <li class="nav-item">
                 <a href="facturas" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Facturas</p>
+                  <p>Compras</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="inventario" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Inventario</p>
+                  <p>Ventas</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Empleados por Ventas</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Vehiculos por Rangos</p>
                 </a>
               </li>
             </ul>
           </li>
      
-    
+
+         <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="fa-solid fa-lock"></i>
+              <p>
+                Accesos
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="facturas" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Usuarios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Roles</p>
+                </a>
+              </li>
+
+            
+            </ul>
+          </li>
           
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="fa-solid fa-globe"></i>
+              <p>
+                Genarales
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="facturas" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Empleados</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Clientes</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Modelos</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+     
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+            <i class="fa-solid fa-bag-shopping"></i>
+              <p>
+                Ventas
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="facturas" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ventas Vehiculos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Compras Vehiculos</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="inventario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Vehiculos</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+     
         
           
        
