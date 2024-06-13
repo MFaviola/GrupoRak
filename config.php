@@ -1,10 +1,10 @@
-
 <?php
 $host = '127.0.0.1';
-$db = 'dbsistemaesmeralda';
+$db = 'dbgruporac';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
+$port = 3307;
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -12,10 +12,11 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
-global $pdo; 
+global $pdo;
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, $options);
+    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
+    $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }

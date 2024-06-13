@@ -1,12 +1,12 @@
 <?php
 require_once 'config.php';
 
-class FacturaController {
-    public function listarFacturas() {
+class ClienteController {
+    public function listarClientes() {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbsistemaesmeralda`.`SP_Factura_Listar`()';
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Listar`()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
