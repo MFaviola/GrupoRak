@@ -2,7 +2,7 @@
     <!-- Brand Logo -->
     <a href="Views/Resources/index3.html" class="brand-link" style="background-color:#000">
       <img src="Views\Resources\dist\img\logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Grupo Rac</span>
+      <span class="brand-text font-weight-light" style="color:white">Grupo Rac</span>
     </a>
     
     <!-- Sidebar -->
@@ -13,7 +13,7 @@
           <img src="Views/Resources/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Usuario invitado</a>
+          <a href="#" class="d-block" style="color:white">Usuario invitado</a>
         </div>
       </div>
 
@@ -26,7 +26,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white" >
             <i class="fa-solid fa-house"></i>
               <p>
                 Inicio
@@ -36,7 +36,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white">
             <i class="fa-solid fa-chart-simple"></i>
               <p>
                 Dashboards
@@ -46,7 +46,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white">
             <i class="fa-solid fa-file"></i>
               <p>
                 Reportes
@@ -55,27 +55,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link">
+                <a href="facturas" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados por Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vehiculos por Rangos</p>
                 </a>
@@ -85,7 +85,7 @@
      
 
          <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white">
             <i class="fa-solid fa-lock"></i>
               <p>
                 Accesos
@@ -94,13 +94,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link">
+                <a href="facturas" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Usuarios</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Roles</p>
                 </a>
@@ -112,7 +112,7 @@
           
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white">
             <i class="fa-solid fa-globe"></i>
               <p>
                 Genarales
@@ -121,20 +121,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link">
+                <a href="facturas" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="cliente" class="nav-link">
+                <a href="cliente" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Clientes</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Modelos</p>
                 </a>
@@ -143,7 +143,7 @@
           </li>
      
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="color:white">
             <i class="fa-solid fa-bag-shopping"></i>
               <p>
                 Ventas
@@ -152,20 +152,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link">
+                <a href="facturas" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas Vehiculos</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras Vehiculos</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link">
+                <a href="inventario" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vehiculos</p>
                 </a>

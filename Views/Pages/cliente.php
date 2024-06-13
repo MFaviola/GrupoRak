@@ -18,15 +18,16 @@ try {
             Nuevo
         </p>
         <hr>
-        <div class="card-body">
-            <table class="table table-striped table-hover" id="example1">
+            <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Empleado</th>
-                        <th>Método de Pago</th>
-                        <th>Finalizado</th>
+                        <th>Codigo</th>
+                        <th>Identidad</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Sexo</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Sexo</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -41,15 +42,14 @@ try {
                             <td><?php echo $cliente['Cli_FechaNac']; ?></td>
                             <td><?php echo $cliente['Cli_Sexo']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
-                                <a class="btn btn-primary btn-sm abrir-editar"><i class="fas fa-edit"></i>Editar</a>
-                                <a class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i>Detalles</a>
+                                <a  style="color:white" class="btn btn-warning btn-sm abrir-editar"><i class="fas fa-edit"></i>Editar</a>
+                                <a  class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i>Detalles</a>
                                 <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 

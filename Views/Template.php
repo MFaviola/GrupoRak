@@ -13,6 +13,11 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="Views/Resources/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="Views/Resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="Views/Resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="Views/Resources/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 <body class="hold-transition  sidebar-mini layout-fixed layout-navbar-fixed layout-fr-footeixed">
 <!-- Site wrapper -->
@@ -23,17 +28,24 @@
 
   <!-- Main Sidebar Container -->
   <?php include "Modules/Menu.php"?>
-
+  <br>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-  <?php 
+
+     <!-- Main content -->
+     <section class="content">
+      <div class="container-fluid">
+      <?php 
     if (isset($_GET["Pages"])) {
       if ($_GET["Pages"] == "facturas" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }
   ?>
-  
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
  
   </div>
