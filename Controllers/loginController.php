@@ -37,6 +37,7 @@ class ControllerLogin {
             $user = $stmt->fetch();
 
             if ($user) {
+                $_SESSION['ID'] = $user['Usu_ID'];
                 $_SESSION['usuario'] = $user['Usu_Usua'];
                 $_SESSION['nombre_completo'] = $user['Usu_Nombrecompleto'];
                 $_SESSION['rol'] = $user['Admin'];
