@@ -1,5 +1,5 @@
 <?php
-require_once 'Controllers/RolesController.php';
+require_once '../Controllers/RolesController.php';
 
 $controller = new RolesController();
 try {
@@ -29,7 +29,7 @@ try {
                 <tbody>
                     <?php foreach ($clientes as $cliente): ?>
                         <tr>
-                            <td><?php echo $cliente['Codigo']; ?></td>
+                            <td><?php echo $cliente['Rol_Id']; ?></td>
                             <td><?php echo $cliente['Rol_Descripcion']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
                                 <a  style="color:white" class="btn btn-warning btn-sm abrir-editar"><i class="fas fa-edit"></i>Editar</a>

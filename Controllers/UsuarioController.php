@@ -1,12 +1,12 @@
 <?php
-require_once 'config.php';
+require_once '../config.php';
 
 class UsuarioController {
     public function listarUsuario() {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Usuario_Listar`()';
+            $sql = 'CALL `dbgruporac`.`SP_Usuarios_Mostrar`()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

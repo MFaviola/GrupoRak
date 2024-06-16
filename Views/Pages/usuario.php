@@ -1,5 +1,5 @@
 <?php
-require_once 'Controllers/UsuarioController.php';
+require_once '../Controllers/UsuarioController.php';
 
 $controller = new UsuarioController();
 try {
@@ -22,8 +22,9 @@ try {
                     <tr>
                         <th>Codigo</th>
                         <th>Usuario</th>
-                        <th>Contraseña</th>
+                        <!-- <th>Contraseña</th> -->
                         <th>Administrador</th>
+                        <th>Rol</th>
                         <th>Empleado</th>
                         <th class="text-center">Acciones</th>
                     </tr>
@@ -33,9 +34,10 @@ try {
                         <tr>
                             <td><?php echo $cliente['Usu_ID']; ?></td>
                             <td><?php echo $cliente['Usu_Usua']; ?></td>
-                            <td><?php echo $cliente['Usu_Contra']; ?></td>
-                            <td><?php echo $cliente['Usu_Admin']; ?></td>
-                            <td><?php echo $cliente['Empl_Id']; ?></td>
+                            
+                            <td><?php echo $cliente['Admin']; ?></td>
+                            <td><?php echo $cliente['Rol_Descripcion']; ?></td>
+                            <td><?php echo $cliente['Empl_Nombre_Completo']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
                                 <a  style="color:white" class="btn btn-warning btn-sm abrir-editar"><i class="fas fa-edit"></i>Editar</a>
                                 <a  class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i>Detalles</a>
@@ -49,7 +51,7 @@ try {
 </div>
 
 <!-- jQuery -->
-<script src="Views/Resources/plugins/jquery/jquery.min.js"></script>
+<script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 
 <script>
   $(function () {
