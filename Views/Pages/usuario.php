@@ -1,6 +1,6 @@
 <?php
-require_once '../Controllers/UsuarioController.php';
-require_once '../Controllers/RolesController.php';
+require_once '../Services/UsuarioService.php';
+require_once '../Services/RolesService.php';
 
 $controller = new UsuarioController();
 $rolesController = new RolesController();
@@ -264,7 +264,7 @@ $(document).ready(function() {
         $(".abrir-editar").off('click').on('click', function() {
             const id = $(this).data('id');
             $.ajax({
-                url: '../Controllers/obtener_usuario.php',
+                url: '../Services/obtener_usuario.php',
                 type: 'GET',
                 data: { id: id },
                 success: function(response) {
@@ -287,7 +287,7 @@ $(document).ready(function() {
         $(".btn-detalles").off('click').on('click', function() {
             const id = $(this).data('id');
             $.ajax({
-                url: '../Controllers/obtener_usuario.php',
+                url: '../Services/obtener_usuario.php',
                 type: 'GET',
                 data: { id: id },
                 success: function(response) {

@@ -41,7 +41,7 @@ class ControllerLogin {
                 $_SESSION['usuario'] = $user['Usu_Usua'];
                 $_SESSION['nombre_completo'] = $user['Usu_Nombrecompleto'];
                 $_SESSION['rol'] = $user['Admin'];
-                header("Location: ./Template.Controller.php");
+                header("Location: ./Template.Service.php");
                 exit();
             } else {
                 $_SESSION['error_message'] = "Usuario o contraseña incorrectos.";

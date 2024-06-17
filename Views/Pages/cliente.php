@@ -1,5 +1,5 @@
 <?php
-require_once 'Controllers/ClienteController.php';
+require_once 'Services/ClienteService.php';
 
 $controller = new ClienteController();
 try {

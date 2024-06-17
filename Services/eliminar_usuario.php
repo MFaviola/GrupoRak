@@ -1,6 +1,6 @@
 <?php
 require_once '../config.php';
-require_once 'UsuarioController.php';
+require_once '../Services/UsuarioService.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $controller = new UsuarioController();
         try {
             $mensaje = $controller->eliminarUsuario($id);
-            header('Location: ../Controllers/Template.Controller.php?Pages=usuario#');
+            header('Location: ../Services/Template.Service.php?Pages=usuario#');
             exit;
         } catch (Exception $e) {
             echo 'Error al eliminar usuario: ' . $e->getMessage();

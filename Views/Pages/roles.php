@@ -1,5 +1,5 @@
 <?php
-require_once '../Controllers/RolesController.php';
+require_once '../Services/RolesService.php';
 
 $controller = new RolesController();
 try {

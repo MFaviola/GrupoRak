@@ -1,5 +1,5 @@
 <?php
-require_once '../Controllers/UsuarioController.php';
+require_once '../Services/UsuarioService.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

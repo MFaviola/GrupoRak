@@ -1,5 +1,5 @@
 <?php
-require_once 'Controllers/FacturaController.php';
+require_once 'Services/FacturaService.php';
 
 $controller = new FacturaController();
 try {

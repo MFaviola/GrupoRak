@@ -36,7 +36,7 @@
             unset($_SESSION['error_message']);
           }
           ?>
-          <form id="quickForm" method="POST" action="Controllers/loginController.php">
+          <form id="quickForm" method="POST" action="Services/loginController.php">
             <div class="card-body">
               <div class="form-group">
                 <label for="exampleInputEmail1">Usuario</label>
