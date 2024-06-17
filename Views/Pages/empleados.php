@@ -5,24 +5,23 @@
     <title>Gestión de Empleados</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
 <div class="card">
     <div class="card-body">
         <h2 class="text-center" style="font-size:34px !important">Empleado</h2>
         <div class="CrearOcultar">
-            <p class="btn btn-primary" id="AbrirModal">Nuevo</p>
+            <p class="btn btn-primary" id="AbrirModal"><i class="fa-solid fa-plus"></i> Nuevo</p>
             <hr>
             <div class="table-responsive">
-                <table class="table table-striped table-hover" id="TablaEmpleado">
+                <table class="table table-striped table-hover table-responsive" id="TablaEmpleado">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Sexo</th>
-                            <th>Fecha Nacimiento</th>
                             <th>Ciudad</th>
                             <th>Estado Civil</th>
                             <th>Sede</th>
@@ -115,12 +114,11 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row d-flex justify-content-end">
-                        <div class="col-md-3">
+                   
                             <input type="submit" value="Guardar" class="btn btn-primary" id="guardarBtn" />
-                        </div>
-                        <div class="col-md-3">
-                            <a id="CerrarModal" class="btn btn-secondary" style="color:white">Volver</a>
-                        </div>
+                       
+                            <a id="CerrarModal" class="btn btn-secondary" style="color:white"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                     
                     </div>
                 </div>
             </form>
@@ -179,7 +177,7 @@
                 </div>
             </div>
             <div class="col d-flex justify-content-end m-3">
-                <a class="btn btn-secondary" style="color:white" id="VolverDetalles">Cancelar</a>
+                <a class="btn btn-secondary" style="color:white" id="VolverDetalles"><i class="fa-solid fa-arrow-left"></i> Cancelar</a>
             </div>
         </div>
     </div>
@@ -197,12 +195,14 @@
                 ¿Estás seguro de que deseas eliminar este Empleado?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="CancelarEliminar">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
+                <button type="button" class="btn btn-secondary" id="CancelarEliminar"><i class="fa-solid fa-times"></i> Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarEliminarBtn"><i class="fa-solid fa-trash"></i> Eliminar</button>
             </div>
         </div>
     </div>
 </div>
+
+<script src="Views/Resources/plugins/jquery/jquery.min.js"></script>
 
 <!-- JavaScript -->
 <script>
@@ -264,16 +264,15 @@
                         <td>${empleado.Empl_Nombre}</td>
                         <td>${empleado.Empl_Apellido}</td>
                         <td>${empleado.Empl_Sexo === 'M' ? 'Masculino' : 'Femenino'}</td>
-                        <td>${empleado.Empl_FechaNac}</td>
                         <td>${empleado.Ciudad}</td>
                         <td>${empleado.EstadoCivil}</td>
                         <td>${empleado.Sede}</td>
                         <td>${empleado.Cargo}</td>
                         <td>${empleado.Empl_DNI}</td>
                         <td class="text-center">
-                            <button class="btn btn-primary btn-sm abrir-editar" data-id="${empleado.Empl_Id}">Editar</button>
-                            <button class="btn btn-secondary btn-sm abrir-detalles" data-id="${empleado.Empl_Id}">Detalles</button>
-                            <button class="btn btn-danger btn-sm abrir-eliminar" data-id="${empleado.Empl_Id}">Eliminar</button>
+                            <button class="btn btn-primary btn-sm abrir-editar" data-id="${empleado.Empl_Id}"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-secondary btn-sm abrir-detalles" data-id="${empleado.Empl_Id}"><i class="fas fa-eye"></i> Detalles</button>
+                            <button class="btn btn-danger btn-sm abrir-eliminar" data-id="${empleado.Empl_Id}"><i class="fas fa-trash"></i> Eliminar</button>
                         </td>
                     `;
                     TablaEmpleadoBody.appendChild(row);
@@ -402,7 +401,7 @@
         });
 
         frmEmpleado.addEventListener('submit', function(event) {
-            event.preventDefault(); o
+            event.preventDefault(); 
             
             let isValid = true;
 
@@ -607,6 +606,30 @@
 
         cargarEmpleados();
         cargarOpcionesDDL();
+    });
+
+    // Configuración de DataTables
+    $(document).ready(function() {
+        $('#TablaEmpleado').DataTable({
+            responsive: true,
+            lengthChange: true,
+            autoWidth: false,
+            // buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            language: {
+                search: "Buscar:",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
+            }
+        }).buttons().container().appendTo('#TablaEmpleado_wrapper .col-md-6:eq(0)');
+
+        // Reubicar los botones de DataTables en una línea
+        var buttonContainer = $('#TablaEmpleado_wrapper .col-md-6:eq(0)');
+        buttonContainer.css('display', 'flex');
+        buttonContainer.css('flex-direction', 'row');
+        buttonContainer.css('justify-content', 'center');
+        buttonContainer.css('gap', '10px');
     });
 </script>
 
