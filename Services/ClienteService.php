@@ -27,28 +27,75 @@ class ClienteService {
         }
     }
 
-    public function insertarCliente($nombre, $apellido, $fechaNac, $sexo, $dni, $direccion) {
+    public function insertar($nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad,$Esciv, $Direccion, $Creacion) {
         global $pdo;
+        // if (session_status() == PHP_SESSION_NONE) {
+        //     session_start();
+        // }
+        $Creacion = 1;
 
         try {
-            $sql = 'CALL dbgruporac.sp_Cliente_Insertar(:nombre, :apellido, :fechaNac, :sexo, :dni, :direccion)';
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
-
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
-
-            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-            $stmt->bindParam(':apellido', $apellido, PDO::PARAM_STR);
-            $stmt->bindParam(':fechaNac', $fechaNac, PDO::PARAM_STR);
-            $stmt->bindParam(':sexo', $sexo, PDO::PARAM_STR);
-            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
-            $stmt->bindParam(':direccion', $direccion, PDO::PARAM_STR);
-
-            $stmt->execute();
-
+            error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv, $Direccion,$Creacion]));
+            $stmt->execute([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv,$Direccion, $Creacion]);
+            error_log("insertarUsuario - Valores enviados: " . json_encode([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv,$Direccion, $Creacion]));
+            $result = $stmt->fetch();
+            if (isset($result['Result']) && $result['Result'] == 1) {
+                return "Usuario insertado correctamente.";
+            } else {
+                return "No se pudo insertar el usuario.";
+            }
         } catch (Exception $e) {
-            throw new Exception('Error al insertar cliente: ' . $e->getMessage());
+            throw new Exception('Error al insertar usuario: ' . $e->getMessage());
+        }
+    }
+
+    public function actualizar($id, $nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad,$Esciv, $Direccion, $Modificacion) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Actualizar`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+            $stmt->execute([$id, $nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad,$Esciv,$Direccion,$Modificacion]);
+            $result = $stmt->fetch();
+            if (isset($result['Result']) && $result['Result'] == 1) {
+                return "Usuario actualizado correctamente.";
+            } else {
+                return "No se pudo actualizar el usuario.";
+            }
+        } catch (Exception $e) {
+            throw new Exception('Error al actualizar usuario: ' . $e->getMessage());
+        }
+    }
+
+    public function obtenerPorID($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Detalle`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            $result = $stmt->fetch();
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener usuario: ' . $e->getMessage());
+        }
+    }
+
+    public function eliminar($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Eliminar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return "Usuario eliminado correctamente.";
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar usuario: ' . $e->getMessage());
         }
     }
     
