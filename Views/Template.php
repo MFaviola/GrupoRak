@@ -37,7 +37,7 @@
       <div class="container-fluid">
       <?php 
     if (isset($_GET["Pages"])) {
-      if ($_GET["Pages"] == "facturas" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" || $_GET["Pages"] == "empleados" || $_GET["Pages"] == "compra") {
+      if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" || $_GET["Pages"] == "empleados" || $_GET["Pages"] == "compra") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }

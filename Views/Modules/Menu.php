@@ -159,7 +159,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="?Pages=factura" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas Vehiculos</p>
                 </a>
