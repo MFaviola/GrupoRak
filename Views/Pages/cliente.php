@@ -1,5 +1,5 @@
 <?php
-require_once 'Services/ClienteService.php';
+require_once '../Services/ClienteService.php';
 
 $controller = new ClienteService();
 
@@ -47,7 +47,7 @@ try {
         <div class="card-body">
             <h2 class="text-center" style="font-size:34px !important">Clientes</h2>
 
-            <button class="btn btn-primary" id="btnNuevo">
+            <button class="btn btn-dark" id="btnNuevo">
                 <i class="fa-solid fa-plus"></i>
                 Nuevo
             </button>
@@ -61,7 +61,8 @@ try {
                         <th>Apellidos</th>
                         <th>Sexo</th>
                         <th>Fecha Nacimiento</th>
-                        <th>Sexo</th>
+                        <th>Ciudad</th>
+                        <th>Estado Civil</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -74,10 +75,11 @@ try {
                             <td><?php echo $cliente['Cli_Apellido']; ?></td>
                             <td><?php echo $cliente['Cli_Sexo']; ?></td>
                             <td><?php echo $cliente['Cli_FechaNac']; ?></td>
-                            <td><?php echo $cliente['Cli_Sexo']; ?></td>
+                            <td><?php echo $cliente['Ciu_Id']; ?></td>
+                            <td><?php echo $cliente['Est_ID']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
 
-                                <button style="color:white" class="btn btn-warning btn-sm abrir-editar" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
+                                <button style="color:white" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
                                 <button class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-eye"></i>Detalles</button>
                                 <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
 
@@ -92,7 +94,7 @@ try {
 
 <!-- Formulario de Usuario -->
 <div id="insertar" style="display:none;">
-    <div class="card card-primary">
+    <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Crear Nuevo Usuario</h3>
         </div>
@@ -185,8 +187,8 @@ try {
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-primary" id="btnGuardarUsuario">Guardar Usuario</button>
-                        <button type="button" id="Cancelar" class="btn btn-secondary">Cancelar</button>
+                        <button type="button" class="btn btn-dark" id="btnGuardarUsuario"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -196,7 +198,7 @@ try {
 
 <!-- Detalles -->
 <div id="detalles" style="display:none;">
-    <div class="card card-primary">
+    <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Detalle de Usuario</h3>
         </div>
@@ -234,7 +236,7 @@ try {
                 </tbody>
             </table>
             <div class="d-flex justify-content-end">
-                <button class="btn btn-secondary btn-sm" id="btnVolver">Volver</button>
+                <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
             </div>
         </div>
     </div>
@@ -251,23 +253,24 @@ try {
                 </button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este usuario?
+                ¿Estás seguro de que deseas eliminar este registro?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar"><i class="fa-solid fa-trash"></i> Eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Formulario oculto para la eliminación del usuario -->
-<form id="eliminarUsuarioForm" method="POST" action="Services/cliente_eliminar.php" style="display:none;">
+<form id="eliminarUsuarioForm" method="POST" action="../Services/cliente_eliminar.php" style="display:none;">
     <input type="hidden" name="id" id="eliminarUsuarioId">
 </form>
 
 <!-- jQuery -->
-<script src="Views/Resources/plugins/jquery/jquery.min.js"></script>
+
+<script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 
 <!-- <script>
     function validateForm() {
@@ -431,7 +434,7 @@ try {
             $(".abrir-editar").off('click').on('click', function() {
                 const id = $(this).data('id');
                 $.ajax({
-                    url: '/xampp/htdocs/GrupoRak/Services/cliente_obtener.php',
+                    url: '../Services/cliente_obtener.php',
                     type: 'GET',
                     data: {
                         id: id
@@ -459,7 +462,7 @@ try {
             $(".btn-detalles").off('click').on('click', function() {
                 const id = $(this).data('id');
                 $.ajax({
-                    url: 'Services/cliente_obtener.php',
+                    url: '../Services/cliente_obtener.php',
                     type: 'GET',
                     data: {
                         id: id

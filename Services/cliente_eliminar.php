@@ -1,6 +1,7 @@
 <?php
 // require_once '../../Services/Cliente/cliente/eliminar.php';
-require_once 'Services/ClienteService.php';
+require_once '../config.php';
+require_once '../Services/ClienteService.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
 

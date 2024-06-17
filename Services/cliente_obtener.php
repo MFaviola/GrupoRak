@@ -1,6 +1,6 @@
 <?php
 // require_once '../Services/Cliente/cliente_obtener.php';
-require_once 'Services/ClienteService.php';
+require_once '../Services/ClienteService.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $controller = new ClienteService();
