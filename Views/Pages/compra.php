@@ -1,25 +1,24 @@
 <?php
-require_once 'Controllers/Reportes/ReportesServices.php';
+// require_once './Services/ReportesService.php';
+// require_once '../Services/ReportesService.php';
+// function isAjax() {
+//     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+// }
+// if (isAjax() && isset($_GET['month']) && isset($_GET['year'])) {
+//     $month = intval($_GET['month']);
+//     $year = intval($_GET['year']);
 
-function isAjax() {
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-}
-
-if (isAjax() && isset($_GET['month']) && isset($_GET['year'])) {
-    $month = intval($_GET['month']);
-    $year = intval($_GET['year']);
-
-    try {
-        $reportesServices = new ReportesServices();
-        $result = $reportesServices->ReporteCompras($month, $year);
-        header('Content-Type: application/json');
-        echo json_encode($result);
-    } catch (Exception $e) {
-        header('Content-Type: application/json');
-        echo json_encode(['error' => $e->getMessage()]);
-    }
-    exit(); 
-}
+//     try {
+//         $reportesServices = new ReportesServices();
+//         $result = $reportesServices->ReporteCompras1($month, $year);
+//         header('Content-Type: application/json');
+//         echo json_encode($result);
+//     } catch (Exception $e) {
+//         header('Content-Type: application/json');
+//         echo json_encode(['error' => $e->getMessage()]);
+//     }
+//     exit();
+// }
 ?>
 
 <div class="container mt-5">
@@ -69,31 +68,32 @@ if (isAjax() && isset($_GET['month']) && isset($_GET['year'])) {
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <script>
     async function generateReport() {
         const month = document.getElementById('ddlMonth').value;
         const year = document.getElementById('ddlYear').value;
         try {
-            const response = await fetch(`Views/Pages/compra.php?month=${month}&year=${year}`);
 
-            if (!response.ok) {
-                throw new Error('Response not OK: ' + response.status);
-            }
 
-            console.log(response); 
 
-            const data = await response.json();
-
-            console.log(data); 
-
-            const jsPDF = window.jspdf;
+            $.ajax({
+                url: '../Services/obtener_reporte.php',
+                type: 'GET',
+                data: { filterMonth: month, filterYear: year },
+                success: function(response) {
+                    console.log('respuesta: ' + response.data)
+                    const data = JSON.parse(response);
+                    
+                    const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
             doc.text('Reporte de Compras', 10, 10);
             let yPosition = 20;
-
-            data.forEach(row => {
+                    console.log('datos: ' + data)
+                    
+                    data.forEach(row => {
                 doc.text(`ID Compra: ${row.Com_ID}`, 10, yPosition);
                 doc.text(`Fecha: ${row.Com_Fecha}`, 10, yPosition + 10);
                 doc.text(`Cliente: ${row.cli_nombre}`, 10, yPosition + 20);
@@ -104,17 +104,22 @@ if (isAjax() && isset($_GET['month']) && isset($_GET['year'])) {
                 yPosition += 70;
             });
 
+
             const pdfDataUri = doc.output('datauristring');
             document.getElementById('pdfEmbed').setAttribute('src', pdfDataUri);
 
             $('#pdfPreview').collapse('show');
+
+
+                }
+            });
         } catch (error) {
             console.error('Error generating report:', error.message);
         }
     }
 </script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+

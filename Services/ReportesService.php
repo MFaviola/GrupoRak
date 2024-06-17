@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once '../config.php';
 
 class ReportesServices {
 
@@ -30,6 +30,27 @@ class ReportesServices {
     
         } catch (Exception $e) {
             throw new Exception('Error al listar: ' . $e->getMessage());
+        }
+    }
+
+
+    public function ReporteCompras1($filterMonth, $filterYear) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`SP_ComprasPorFecha_Reporte`(?, ?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$filterMonth, $filterYear]);
+            
+            // Use fetchAll to retrieve all rows
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Debugging: print the result
+            // echo 'resultado : ';
+            // print_r($result);
+    
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener datos: ' . $e->getMessage());
         }
     }
 }
