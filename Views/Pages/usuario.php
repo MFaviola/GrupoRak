@@ -205,7 +205,7 @@ try {
 </div>
 
 <!-- Formulario oculto para la eliminación del usuario -->
-<form id="eliminarUsuarioForm" method="POST" action="../Controllers/eliminar_usuario.php" style="display:none;">
+<form id="eliminarUsuarioForm" method="POST" action="../Services/eliminar_usuario.php" style="display:none;">
     <input type="hidden" name="id" id="eliminarUsuarioId">
 </form>
 
