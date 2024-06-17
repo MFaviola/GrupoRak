@@ -4,6 +4,8 @@ require_once 'Services/ClienteService.php';
 $controller = new ClienteService();
 try {
     $clientes = $controller->listarClientes();
+    $estadosCiviles = $controller->listarEstadosCiviles();
+    $ciudades = $controller->listarCiudades();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -20,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dni = $identidad; // Adjust this as needed to match your DNI format
 
     // Dummy date for demonstration purposes. Replace with actual date input.
-    $fechaNac = '1990-01-01';
+    $fechaNac = $_POST['txtFechaNacimiento'];
 
     $clienteService = new ClienteService();
 
@@ -134,6 +136,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <span style="color:red" class="error-message" id="errorSexo"></span>
                     </div>
+                    <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Fecha Nacimiento: </label>
+                        <div class="input-group">
+                            <input type="date" class="form-control" name="txtFechaNacimiento" id="txtFechaNacimiento">
+                        </div>
+                        <span style="color:red" class="error-message" id="errorApellido"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Ciudad</label>
+                        <select class="form-control select2" style="width: 100%;" id="ciudadSelect" name="ciudadSelect">
+                            <?php foreach ($ciudades as $ciudad) : ?>
+                                <option value="<?php echo $ciudad['Ciu_ID']; ?>"><?php echo $ciudad['Ciu_Descripcion']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Estado Civil</label>
+                        <select class="form-control select2" style="width: 100%;" id="estadoCivilSelect" name="estadoCivilSelect">
+                            <?php foreach ($estadosCiviles as $estadoCivil) : ?>
+                                <option value="<?php echo $estadoCivil['Est_ID']; ?>"><?php echo $estadoCivil['Est_Descripcion']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+             
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Direccion Exacta: </label>
@@ -242,48 +277,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $("#tabla").show();
     });
 
-    $(function() {
-        $.validator.setDefaults({
-            submitHandler: function() {
-                alert("Form successful submitted!");
-            }
-        });
-        $('#quickForm').validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                },
-                password: {
-                    required: true,
-                    minlength: 5
-                },
-                terms: {
-                    required: true
-                },
-            },
-            messages: {
-                email: {
-                    required: "Please enter a email address",
-                    email: "Please enter a valid email address"
-                },
-                password: {
-                    required: "Please provide a password",
-                    minlength: "Your password must be at least 5 characters long"
-                },
-                terms: "Please accept our terms"
-            },
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
-    });
+
 </script>
