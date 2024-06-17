@@ -5,7 +5,6 @@
       <span class="brand-text font-weight-light" style="color:white">Grupo Rac</span>
     </a>
     
-    <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -121,7 +120,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="empleados" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados</p>
                 </a>

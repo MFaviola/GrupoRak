@@ -1,9 +1,9 @@
 <?php
-    include "Controllers/Template.Controller.php";
+    include "Services/Template.Service.php";
 
-    $template = new ControllerTemplate;
+    $template = new TemplateService;
 
-    $template -> ControllerTemplate();
+    $template -> TemplateService();
 ?>
 
 
