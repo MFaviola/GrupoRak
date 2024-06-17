@@ -142,7 +142,7 @@
           </li>
      
           <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+            <a href="factura" class="nav-link" style="color:white">
             <i class="fa-solid fa-bag-shopping"></i>
               <p>
                 Ventas
