@@ -7,7 +7,7 @@ if (isset($_GET['filterMonth'], $_GET['filterYear'])) {
     $controller = new ReportesServices();
 
     try {
-        $reporte = $controller->ReporteCompras1($filterMonth, $filterMonth);
+        $reporte = $controller->ReporteCompras1($filterMonth, $filterYear);
         echo json_encode($reporte);
     } catch (Exception $e) {
         echo json_encode(['error' => $e->getMessage()]);
