@@ -1,7 +1,9 @@
 <?php
 require_once '../Controllers/UsuarioController.php';
+require_once '../Controllers/RolesController.php';
 
 $controller = new UsuarioController();
+$rolesController = new RolesController();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
@@ -26,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 try {
     $clientes = $controller->listarUsuario();
+    $roles = $rolesController->listarRoles();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -69,6 +72,7 @@ try {
     </div>
 </div>
 
+<!-- Formulario de Usuario -->
 <div id="insertar" style="display:none;">
     <div class="card card-primary">
         <div class="card-header">
@@ -102,7 +106,12 @@ try {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Rol:</label>
-                            <input type="number" class="form-control" name="Rol_Id" id="Rol_Id" required>
+                            <select class="form-control" name="Rol_Id" id="Rol_Id" required>
+                                <option value="">--Seleccione un Rol--</option>
+                                <?php foreach ($roles as $rol): ?>
+                                    <option value="<?php echo $rol['Rol_Id']; ?>"><?php echo $rol['Rol_Descripcion']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span style="color:red" class="error-message" id="errorRol"></span>
                         </div>
                     </div>
@@ -124,6 +133,7 @@ try {
         </div>
     </div>
 </div>
+
 
 <div id="detalles" style="display:none;">
 <div class="card card-primary">
