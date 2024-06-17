@@ -6,7 +6,7 @@ class ClienteService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbprueba`.`ListClients`()';
+            $sql = 'CALL `dbGrupoRac`.`sp_Cliente_Listar`()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
