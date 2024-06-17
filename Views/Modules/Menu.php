@@ -128,7 +128,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="?Pages=empleados" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados</p>
                 </a>

@@ -247,7 +247,7 @@
         });
 
         function cargarEmpleados() {
-            fetch('Services/EmpleadoService.php', {
+            fetch('../Services/EmpleadoService.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -348,7 +348,7 @@
         }
 
         function fetchEmpleadoPorId(Empl_Id, callback) {
-            fetch('Services/EmpleadoService.php', {
+            fetch('../Services/EmpleadoService.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -364,7 +364,7 @@
 
         confirmarEliminarBtn.addEventListener('click', function() {
             var Empl_Id = sessionStorage.getItem('Empl_Id');
-            fetch('Services/EmpleadoService.php', {
+            fetch('../Services/EmpleadoService.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -527,7 +527,7 @@
             var action = Empl_Id == "0" ? 'insertar' : 'actualizar';
             var requestData = `action=${action}&Empl_Id=${Empl_Id}&Empl_Nombre=${Empl_Nombre}&Empl_Apellido=${Empl_Apellido}&Empl_Sexo=${Empl_Sexo}&Empl_FechaNac=${Empl_FechaNac}&Ciu_Id=${Ciu_Id}&Est_ID=${Est_ID}&Sed_ID=${Sed_ID}&Carg_Id=${Carg_Id}&Empl_DNI=${Empl_DNI}`;
 
-            fetch('Services/EmpleadoService.php', {
+            fetch('../Services/EmpleadoService.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -575,7 +575,7 @@
         }
 
         function cargarOpciones(procedimiento, selectId, idCampo, descripcionCampo) {
-            fetch('Services/EmpleadoService.php', {
+            fetch('../Services/EmpleadoService.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
