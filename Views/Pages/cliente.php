@@ -380,6 +380,7 @@ try {
 
     $(document).ready(function() {
       // Función para cargar ciudades basadas en el departamento seleccionado
+      
     function cargarCiudades(departamentoId, ciudadId) {
         if (departamentoId != 0) {
             $.ajax({

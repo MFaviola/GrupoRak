@@ -45,9 +45,9 @@ class ClienteService {
             error_log("insertarUsuario - Valores enviados: " . json_encode([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv,$Direccion, $Creacion]));
             $result = $stmt->fetch();
             if (isset($result['Result']) && $result['Result'] == 1) {
-                return "Usuario insertado correctamente.";
+                return "1";
             } else {
-                return "No se pudo insertar el usuario.";
+                return "0";
             }
         } catch (Exception $e) {
             throw new Exception('Error al insertar usuario: ' . $e->getMessage());
