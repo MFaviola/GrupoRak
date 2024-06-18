@@ -1,9 +1,14 @@
 <?php
 require_once '../Services/RolesService.php';
+require_once '../Services/PantallaServices.php';
 
 $controller = new RolesController();
+$controller_2 = new  PantallasController();
+// $controller_3 = new  PantallasController();
 try {
     $clientes = $controller->listarRoles();
+    $Pantallas = $controller_2->listarPantallas();
+    // $PantallasPorRol = $controller_3->listarPantallasporRoles();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -88,6 +93,90 @@ try {
 </div>
 </div>
 
+<div id="insertar" style="display:none;">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-secondary btn-sm" id="btnVolver">Volver</button>
+                </div>
+                <h3 class="card-title" id="form-title">Crear Rol</h3>
+                </div>
+                <div class="card-body">
+                    <form id="frmInsertar" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form asp-action="Create">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label>ROL:</label>
+                                    <input type="text" class="form-control" name="Rol_Descripcion" id="Rol_Descripcion" required>
+                                    <span style="color:red" class="error-message" id="errorUsuario"></span>
+                                </div>
+                                <div style="text-align:end">
+                                    <div class="form-group">
+                                        <input type="submit" value="Crear" class="btn btn-outline-secondary btn-sm flex-grow-1" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pantalla" style="background-color:#fff; color: black;">
+                            <table class="table" id="tbPant">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            Pantallas
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($Pantallas as $Pantalla): ?>
+                                        <tr >
+                                            <!-- <td class="dragitem btn btn-dark" data-id="@item.Pant_Id" style="width:100%">
+                                                @item.Pant_Descripcion
+                                            </td> -->
+                                            <td><?php echo $Pantalla['Ptl_Descripcion']; ?></td>
+                                        </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6 pantallaPorRoles" style="background-color: #fff; color: black;">
+                            <table class="table" id="tbPantRole">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            Pantallas Por Rol
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                <?php //foreach ($PantallasPorRol as $Pantallarol): ?>
+                                        <!-- @Model.IDs_Pantallas.Add(item);
+                                        <tr>
+                                            <td class="dragitem ">
+                                                @item.Pant_Descripcion
+                                            </td>
+                                        </tr> -->
+                                        <td><?php// echo $Pantallarol['Ptl_Descripcion']; ?></td>
+                                <?php //endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 <!-- Modal de Confirmación de Eliminación -->
 <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -109,6 +198,12 @@ try {
     </div>
 </div>
 
+<!-- Formulario oculto para la eliminación del usuario -->
+<form id="eliminarUsuarioForm" method="POST" action="../Services/eliminar_rol.php" style="display:none;">
+    <input type="hidden" name="id" id="eliminarUsuarioId">
+</form>
+
+
 
 
 <!-- jQuery -->
@@ -124,28 +219,28 @@ $(document).ready(function() {
     });
 
     function attachClickEvents() {
-        $(".abrir-editar").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/obtener_usuario.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const usuario = JSON.parse(response);
-                    $("#form-title").text('Editar Usuario');
-                    $("#id").val(usuario.Usu_ID);
-                    $("#Usu_Usua").val(usuario.Usu_Usua);
-                    $("#Usu_Contra").val('');
-                    $("#Usu_Admin_checkbox").prop('checked', usuario.Usu_Admin == 1);
-                    $("#Usu_Admin").val(usuario.Usu_Admin);
-                    $("#Rol_Id").val(usuario.Rol_Id);
-                    $("#Empl_Id").val(usuario.Empl_Id);
-                    $("#password-field").hide();
-                    $("#insertar").show();
-                    $("#tabla").hide();
-                }
-            });
-        });
+        // $(".abrir-editar").off('click').on('click', function() {
+        //     const id = $(this).data('id');
+        //     $.ajax({
+        //         url: '../Services/obtener_usuario.php',
+        //         type: 'GET',
+        //         data: { id: id },
+        //         success: function(response) {
+        //             const usuario = JSON.parse(response);
+        //             $("#form-title").text('Editar Usuario');
+        //             $("#id").val(usuario.Usu_ID);
+        //             $("#Usu_Usua").val(usuario.Usu_Usua);
+        //             $("#Usu_Contra").val('');
+        //             $("#Usu_Admin_checkbox").prop('checked', usuario.Usu_Admin == 1);
+        //             $("#Usu_Admin").val(usuario.Usu_Admin);
+        //             $("#Rol_Id").val(usuario.Rol_Id);
+        //             $("#Empl_Id").val(usuario.Empl_Id);
+        //             $("#password-field").hide();
+        //             $("#insertar").show();
+        //             $("#tabla").hide();
+        //         }
+        //     });
+        // });
 
         $(".btn-detalles").off('click').on('click', function() {
             const id = $(this).data('id');

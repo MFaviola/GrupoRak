@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->addAddress($email);
 
             $mail->isHTML(true);
-            $mail->Subject = 'Código de Restablecimiento de Contraseña';
+            $mail->Subject = 'Codigo de Restablecimiento de Contrasena';
             $mail->Body    = "Su código es: <b>$randomNumber</b>";
 
             $mail->send();

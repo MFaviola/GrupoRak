@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
 
     if ($id) {
-        $controller = new RolController();
+        $controller = new RolesController();
         try {
             $mensaje = $controller->eliminarRoles($id);
             header('Location: ../Services/Template.Service.php?Pages=roles#');

@@ -47,7 +47,6 @@
             <i class="fa-solid fa-chart-simple"></i>
               <p>
                 Dashboards
-               
               </p>
             </a>
           </li>
