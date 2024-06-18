@@ -47,7 +47,6 @@
             <i class="fa-solid fa-chart-simple"></i>
               <p>
                 Dashboards
-               
               </p>
             </a>
           </li>
@@ -179,7 +178,13 @@
               </li>
             </ul>
           </li>
-     
+          <li class="nav-item">
+            <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;">              <p>
+                Cerrar sesion
+              </p>
+            </a>
+          </li>
+
         
           
        
