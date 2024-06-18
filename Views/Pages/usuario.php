@@ -38,7 +38,10 @@ try {
     <div class="card">
         <div class="card-body">
             <h2 class="text-center" style="font-size:34px !important">Usuarios</h2>
-            <button class="btn btn-primary" id="btnNuevo">Nuevo</button>
+            <button class="btn btn-dark" id="btnNuevo">
+                <i class="fa-solid fa-plus"></i>
+                Nuevo
+            </button>
             <hr>
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
@@ -60,7 +63,7 @@ try {
                             <td><?php echo $cliente['Rol_Descripcion']; ?></td>
                             <td><?php echo $cliente['Empl_Nombre_Completo']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
-                                <a href="#" class="btn btn-warning btn-sm abrir-editar" data-id="<?php echo $cliente['Usu_ID']; ?>"><i class="fas fa-edit"></i> Editar</a>
+                                <a href="#" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $cliente['Usu_ID']; ?>"><i class="fas fa-edit"></i> Editar</a>
                                 <a href="#" class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $cliente['Usu_ID']; ?>"><i class="fas fa-eye"></i> Detalles</a>
                                 <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
                             </td>
@@ -74,7 +77,7 @@ try {
 
 <!-- Formulario de Usuario -->
 <div id="insertar" style="display:none;">
-    <div class="card card-primary">
+    <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Crear Nuevo Usuario</h3>
         </div>
@@ -125,8 +128,8 @@ try {
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-primary" id="btnGuardarUsuario">Guardar Usuario</button>
-                        <button type="button" id="Cancelar" class="btn btn-secondary">Cancelar</button>
+                        <button type="button" class="btn btn-dark" id="btnGuardarUsuario"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -136,7 +139,7 @@ try {
 
 
 <div id="detalles" style="display:none;">
-<div class="card card-primary">
+<div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Detalle de Usuario</h3>
         </div>
@@ -174,7 +177,7 @@ try {
             </tbody>
         </table>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-secondary btn-sm" id="btnVolver">Volver</button>
+            <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
         </div>
     </div>
 </div>
@@ -194,15 +197,15 @@ try {
                 ¿Estás seguro de que deseas eliminar este usuario?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar"><i class="fa-solid fa-trash"></i> Eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Formulario oculto para la eliminación del usuario -->
-<form id="eliminarUsuarioForm" method="POST" action="../Controllers/eliminar_usuario.php" style="display:none;">
+<form id="eliminarUsuarioForm" method="POST" action="../Services/eliminar_usuario.php" style="display:none;">
     <input type="hidden" name="id" id="eliminarUsuarioId">
 </form>
 

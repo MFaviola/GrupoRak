@@ -61,27 +61,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="?Pages=comprareporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=ventareporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=empleadoreporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados por Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=vehiculoreporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vehiculos por Rangos</p>
                 </a>
@@ -127,7 +127,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="?Pages=empleados" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados</p>
                 </a>
@@ -149,7 +149,7 @@
           </li>
      
           <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+            <a href="factura" class="nav-link" style="color:white">
             <i class="fa-solid fa-bag-shopping"></i>
               <p>
                 Ventas
@@ -158,7 +158,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="facturas" class="nav-link" style="color:white">
+                <a href="?Pages=factura" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas Vehiculos</p>
                 </a>

@@ -12,7 +12,7 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="../Views/Resources/plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="../Views/Resources/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="../Views/Resources/dist/css/adminlte.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- DataTables -->
@@ -38,7 +38,8 @@
       <div class="container-fluid">
       <?php 
     if (isset($_GET["Pages"])) {
-      if ($_GET["Pages"] == "facturas" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles") {
+      if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" ||
+       $_GET["Pages"] == "empleados"  || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }
