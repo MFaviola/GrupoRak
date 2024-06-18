@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,8 +38,8 @@
       <div class="container-fluid">
       <?php 
     if (isset($_GET["Pages"])) {
-      if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" || $_GET["Pages"] == "empleados"
-       || $_GET["Pages"] == "compra" || $_GET["Pages"] == "compravehiculo") {
+      if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" ||
+       $_GET["Pages"] == "empleados"  || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }

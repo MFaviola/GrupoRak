@@ -22,7 +22,7 @@
       <div class="login-aside flex justify-content-center align-items-center">
         <div>
           <div class="icon-wrapper mt-3">
-            <!-- <img src="assets/layout/images/themes/logo-removebg.png" alt="Home Icon" id="logo"> -->
+            <img src="Views/Resources/dist/img/logroRac.jpg" alt="Home Icon" id="logo">
           </div>
         </div>
       </div>
@@ -37,7 +37,8 @@
           }
           ?>
           <form id="quickForm" method="POST" action="Services/loginController.php">
-            <div class="card-body">
+          <h3 style="text-align:center; font-weight:bold; font-family: Arial, sans-serif;">Iniciar Sesión</h3>
+            <div class="card-body" style="width:135%">
               <div class="form-group">
                 <label for="exampleInputEmail1">Usuario</label>
                 <input type="text" name="email" class="form-control" id="exampleInputEmail1" placeholder="Usuario">
@@ -48,13 +49,14 @@
                   placeholder="Contraseña">
               </div>
               <div class="form-group mb-0">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
-                  <label class="custom-control-label" for="exampleCheck1">Recordar <a href="#">Restablecer
-                      contraseña</a>.</label>
-                </div>
+              <div class="custom-control custom-checkbox" style="font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <input style="margin-right: 5px;" type="checkbox" name="terms" class="custom-control-input mb-4" id="exampleCheck1">
+              <label style="margin-right: auto;" class="custom-control-label" for="exampleCheck1">Recordar</label> 
+              <a href="Views/Pages/solicitar_restauracion.php" style="font-size: 14px; margin-left: 10px;">Restablecer contraseña</a>
+          </div>
+                
               </div>
-              <button type="submit" class="btn btn-primary btn-block mt-3">Iniciar Sesión</button>
+              <button type="submit" class="btn btn-dark btn-block mt-3"><i class="fa-solid fa-right-to-bracket"></i>ㅤIniciar Sesión</button>
               <div class="form-group">
                 <label class="text-danger" id="error_message"><?php echo $error_message; ?></label>
               </div>
@@ -78,6 +80,10 @@
       justify-content: center;
       align-items: center;
       background-color: #f4f6f9;
+      background-image: url('https://c.wallhere.com/photos/f9/12/1920x1080_px_car_Dodge_Dodge_Challenger_SRT_Red_Cars-1095872.jpg!d');
+      background-size: cover; 
+      background-repeat: no-repeat; 
+      background-attachment: fixed;
     }
 
     .wrapper {
@@ -145,11 +151,12 @@
       transition: width 2s, opacity 1s ease-out;
       width: 100%;
       height: 95%;
-      background: white;
+      background: #f1f1f1;
       border-top-right-radius: 15px;
       border-bottom-right-radius: 15px;
       box-shadow: rgba(0, 0, 0, 0.25) 10px 14px 28px, rgba(0, 0, 0, 0.22) 8px 10px 10px;
       opacity: 0;
+
     }
 
     .login-container.show {

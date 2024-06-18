@@ -47,7 +47,6 @@
             <i class="fa-solid fa-chart-simple"></i>
               <p>
                 Dashboards
-               
               </p>
             </a>
           </li>
@@ -62,27 +61,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="?Pages=compra" class="nav-link" style="color:white">
+                <a href="?Pages=comprareporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=ventareporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=empleadoreporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados por Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=vehiculoreporte" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vehiculos por Rangos</p>
                 </a>
@@ -179,7 +178,13 @@
               </li>
             </ul>
           </li>
-     
+          <li class="nav-item">
+            <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;">              <p>
+                Cerrar sesion
+              </p>
+            </a>
+          </li>
+
         
           
        
