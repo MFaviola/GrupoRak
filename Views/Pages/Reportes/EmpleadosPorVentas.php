@@ -1,7 +1,7 @@
 <?php
-require_once 'Controllers/ClienteController.php';
+require_once 'Services/ClienteServices.php';
 
-$controller = new ClienteController();
+$controller = new ClienteService();
 try {
     $clientes = $controller->listarClientes();
 } catch (Exception $e) {
@@ -54,7 +54,7 @@ try {
 </div>
 
 <!-- jQuery -->
-<script src="Views/Resources/plugins/jquery/jquery.min.js"></script>
+<script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 
 <script>
   $(function () {
