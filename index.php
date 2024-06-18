@@ -52,7 +52,7 @@
               <div class="custom-control custom-checkbox" style="font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
               <input style="margin-right: 5px;" type="checkbox" name="terms" class="custom-control-input mb-4" id="exampleCheck1">
               <label style="margin-right: auto;" class="custom-control-label" for="exampleCheck1">Recordar</label> 
-              <a href="#" style="font-size: 14px; margin-left: 10px;">Restablecer contraseña</a>
+              <a href="Views/Pages/solicitar_restauracion.php" style="font-size: 14px; margin-left: 10px;">Restablecer contraseña</a>
           </div>
                 
               </div>
