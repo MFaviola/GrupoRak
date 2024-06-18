@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Verificar Código</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="Views/Resources/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../Resources/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="Views/Resources/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="Views/Resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="Views/Resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="Views/Resources/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="../Resources/dist/css/adminlte.min.css">
 </head>
 <body>
     <div class="wrapper">
@@ -26,46 +21,26 @@
             </div>
             <div class="login-aside-container">
                 <div class="login-container d-none" id="login-container">
-                    <?php
-                    session_start();
-                    $error_message = "";
-                    if (isset($_SESSION['error_message'])) {
-                        $error_message = $_SESSION['error_message'];
-                        unset($_SESSION['error_message']);
-                    }
-                    ?>
-                    <form id="quickForm" method="POST" action="Services/loginController.php">
+                    <form id="quickForm" method="POST" action="../../Services/cambiar_contrasena.php">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Usuario</label>
-                                <input type="text" name="email" class="form-control" id="exampleInputEmail1" placeholder="Usuario">
+                                <label for="exampleInputCode">Código de Verificación</label>
+                                <input type="text" name="codigo" class="form-control" id="exampleInputCode" placeholder="Código" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Contraseña</label>
-                                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña">
+                                <label for="exampleInputPassword1">Nueva Contraseña</label>
+                                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña" required>
                             </div>
-                            <div class="form-group mb-0">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
-                                    <label class="custom-control-label" for="exampleCheck1">Recordar</label>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-3">Iniciar Sesión</button>
-                            <div class="form-group">
-                                <label class="text-danger" id="error_message"><?php echo $error_message; ?></label>
-                            </div>
-                            <div class="form-group mt-3">
-                                <a href="Views/Pages/solicitar_restauracion.php">Restablecer contraseña</a>
-                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-3">Cambiar Contraseña</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <style>
-        .d-none {
+                .d-none {
             display: none;
         }
 
