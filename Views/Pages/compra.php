@@ -21,10 +21,12 @@
 // }
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-body">
-            <h2 class="card-title text-center">Reporte de Compras</h2>
+            <h2 class="card-title text-center py-2">Reporte de Compras</h2>
             <div class="form-row justify-content-center mt-4">
                 <div class="col-md-4 mb-3">
                     <label for="ddlMonth">Mes</label>
@@ -55,7 +57,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <button onclick="generateReport()" class="btn btn-primary">Generar Reporte</button>
+                <button onclick="generateReport()" class="btn btn-danger">Generar Reporte</button>
             </div>
         </div>
     </div>
@@ -68,16 +70,13 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <script>
     async function generateReport() {
         const month = document.getElementById('ddlMonth').value;
         const year = document.getElementById('ddlYear').value;
+
         try {
-
-
-
             $.ajax({
                 url: '../Services/obtener_reporte.php',
                 type: 'GET',
@@ -85,32 +84,69 @@
                 success: function(response) {
                     console.log('respuesta: ' + response.data)
                     const data = JSON.parse(response);
-                    
+
                     const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+                    const doc = new jsPDF();
 
-            doc.text('Reporte de Compras', 10, 10);
-            let yPosition = 20;
-                    console.log('datos: ' + data)
-                    
-                    data.forEach(row => {
-                doc.text(`ID Compra: ${row.Com_ID}`, 10, yPosition);
-                doc.text(`Fecha: ${row.Com_Fecha}`, 10, yPosition + 10);
-                doc.text(`Cliente: ${row.cli_nombre}`, 10, yPosition + 20);
-                doc.text(`Cantidad: ${row.Cdt_Cantidad}`, 10, yPosition + 30);
-                doc.text(`Precio Compra: ${row.Cdt_PrecioCompra}`, 10, yPosition + 40);
-                doc.text(`Subtotal: ${row.subtotal}`, 10, yPosition + 50);
-                doc.text(`Total: ${row.total}`, 10, yPosition + 60);
-                yPosition += 70;
-            });
+                    // Título del reporte
+                    doc.setFontSize(18);
+                    doc.setTextColor(255, 255, 255); // Blanco
+                    doc.setFillColor(220, 0, 0); // Rojo
+                    doc.rect(10, 10, 190, 10, 'F'); // Fondo rojo para el título
+                    doc.text('Reporte de Compras', 105, 17, null, null, 'center');
 
+                    doc.setFontSize(12);
+                doc.setTextColor(255, 255, 255); // Blanco
+                doc.setFillColor(0, 0, 0); // Negro
+                doc.rect(10, 30, 190, 10, 'F'); // Fondo negro para el encabezado de la tabla
 
-            const pdfDataUri = doc.output('datauristring');
-            document.getElementById('pdfEmbed').setAttribute('src', pdfDataUri);
+                // Ajusta el ancho de la columna de ID
+                doc.rect(10, 30, 15, 10, 'F'); // ID
+                doc.text('ID', 12, 37); // Texto ID
+                doc.text('Fecha', 30, 37); // Ajusta la posición del texto Fecha
+                doc.text('Cliente', 60, 37); // Ajusta la posición del texto Cliente
+                doc.text('Cantidad', 90, 37); // Ajusta la posición del texto Cantidad
+                doc.text('Precio', 120, 37); // Ajusta la posición del texto Precio
+                doc.text('Subtotal', 150, 37); // Ajusta la posición del texto Subtotal
+                doc.text('Total', 180, 37); // Ajusta la posición del texto Total
 
-            $('#pdfPreview').collapse('show');
+                let yPosition = 47;
+                doc.setTextColor(0, 0, 0); // Negro
 
+                // Líneas de la tabla
+                doc.setLineWidth(0.1);
+                data.forEach(row => {
+                    doc.line(10, yPosition - 7, 200, yPosition - 7); // Línea horizontal superior
+                    doc.line(10, yPosition + 3, 200, yPosition + 3); // Línea horizontal inferior
+                    doc.line(10, yPosition - 7, 10, yPosition + 3); // Línea vertical izquierda
+                    doc.line(25, yPosition - 7, 25, yPosition + 3); // Línea vertical después de ID Compra
+                    doc.line(55, yPosition - 7, 55, yPosition + 3); // Línea vertical después de Fecha
+                    doc.line(85, yPosition - 7, 85, yPosition + 3); // Línea vertical después de Cliente
+                    doc.line(115, yPosition - 7, 115, yPosition + 3); // Línea vertical después de Cantidad
+                    doc.line(145, yPosition - 7, 145, yPosition + 3); // Línea vertical después de Precio Compra
+                    doc.line(175, yPosition - 7, 175, yPosition + 3); // Línea vertical después de Subtotal
+                    doc.line(200, yPosition - 7, 200, yPosition + 3); // Línea vertical derecha
 
+                    // Contenido de la tabla
+                    const date = new Date(row.Com_Fecha).toLocaleDateString();
+                    doc.text(`${row.Com_ID}`, 12, yPosition);
+                    doc.text(`${date}`, 30, yPosition);
+                    doc.text(`${row.cli_nombre}`, 60, yPosition);
+                    doc.text(`${row.Cdt_Cantidad}`, 90, yPosition);
+                    doc.text(`L. ${row.Cdt_PrecioCompra}`, 120, yPosition);
+                    doc.text(`L. ${row.subtotal}`, 150, yPosition);
+                    doc.text(`L.${row.total}`, 180, yPosition);
+                    yPosition += 10;
+                    if (yPosition > 280) { // Salto de página si la posición y supera un límite
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                });
+
+                    const pdfDataUri = doc.output('datauristring');
+                    document.getElementById('pdfEmbed').setAttribute('src', pdfDataUri);
+
+                    $('#pdfPreview').collapse('show');
                 }
             });
         } catch (error) {
