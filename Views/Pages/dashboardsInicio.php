@@ -97,9 +97,9 @@ try {
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                     <i class="fas fa-times"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
               <div class="card-body">
@@ -112,17 +112,42 @@ try {
             <!-- /.card -->
 
             <!-- DONUT CHART -->
-            <div class="card card-danger collapse">
+
+            
+            <!-- /.card -->
+
+            <!-- PIE CHART -->
+            <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Ventas por Mes</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button> -->
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+            <!-- /.card -->
+            <div class="card card-info ">
               <div class="card-header">
-                <h3 class="card-title">Donut Chart</h3>
+                <h3 class="card-title">Compras Por Cliente</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                     <i class="fas fa-times"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
               <div class="card-body">
@@ -130,28 +155,6 @@ try {
               </div>
               <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-
-            <!-- PIE CHART -->
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Pie Chart</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
 
           </div>
           <!-- /.col (LEFT) -->
@@ -165,9 +168,9 @@ try {
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                     <i class="fas fa-times"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
               <div class="card-body">
@@ -180,20 +183,20 @@ try {
             <!-- /.card -->
 
             <!-- BAR CHART -->
-            <div class="card card-success">
+            <div class="card card-warning">
             <div class="card-header">
-              <h3 class="card-title">Bar Chart</h3>
+              <h3 class="card-title">Compras Por Mes</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                   <i class="fas fa-times"></i>
-                </button>
+                </button> -->
               </div>
             </div>
             <div class="card-body">
-              <div class="chart">
+              <div class="chart"><span style="color:red; font-size:30px; font-weight:bold; margin-left:100px; margin-top:90px; position:absolute; transform: rotate(45deg)">fuera de servicio</span>
                 <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
               </div>
             </div>
@@ -202,23 +205,21 @@ try {
             <!-- /.card -->
 
             <!-- STACKED BAR CHART -->
-            <div class="card card-success collapse">
+            <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Stacked Bar Chart</h3>
+                <h3 class="card-title">Ventas por Empleado</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                     <i class="fas fa-times"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
               <div class="card-body">
-                <div class="chart">
-                  <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
+                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
               </div>
               <!-- /.card-body -->
             </div>
@@ -227,6 +228,8 @@ try {
           </div>
           <!-- /.col (RIGHT) -->
         </div>
+
+        
 
 
 

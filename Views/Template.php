@@ -14,7 +14,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="../Views/Resources/dist/css/adminlte.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="../Views/Resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../Views/Resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -39,7 +39,8 @@
       <?php 
     if (isset($_GET["Pages"])) {
       if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" ||
-       $_GET["Pages"] == "empleados"  || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte") {
+       $_GET["Pages"] == "empleados"  || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte"
+       || $_GET["Pages"] == "dashboards" || $_GET["Pages"] == "dashboardsInicio") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }
