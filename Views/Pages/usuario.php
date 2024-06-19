@@ -1,9 +1,11 @@
 <?php
 require_once '../Services/UsuarioService.php';
 require_once '../Services/RolesService.php';
+// require_once '../Services/EmpleadoService.php';
 
 $controller = new UsuarioController();
 $rolesController = new RolesController();
+$empleadoController = new UsuarioController();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
@@ -29,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 try {
     $clientes = $controller->listarUsuario();
     $roles = $rolesController->listarRoles();
+    $empleados = $empleadoController->listarempleados();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -101,13 +104,6 @@ try {
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Administrador:</label>
-                            <input type="checkbox" id="Usu_Admin_checkbox">
-                            <input type="hidden" name="Usu_Admin" id="Usu_Admin" value="0">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
                             <label>Rol:</label>
                             <select class="form-control" name="Rol_Id" id="Rol_Id" required>
                                 <option value="">--Seleccione un Rol--</option>
@@ -121,8 +117,20 @@ try {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Empleado:</label>
-                            <input type="number" class="form-control" name="Empl_Id" id="Empl_Id" required>
+                            <select class="form-control" id="Empl_Id" name="Empl_Id" required>
+                                <option value="">--Seleccione un empleado--</option>
+                                <?php foreach ($empleados as $empleado): ?>
+                                    <option value="<?php echo $empleado['Empl_Id']; ?>"><?php echo $empleado['Empl_Nombre']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span style="color:red" class="error-message" id="errorEmpleado"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Administrador:</label>
+                            <input type="checkbox" id="Usu_Admin_checkbox">
+                            <input type="hidden" name="Usu_Admin" id="Usu_Admin" value="0">
                         </div>
                     </div>
                 </div>
@@ -155,7 +163,7 @@ try {
             </div>
         </div>
         <hr>
-        <table class="table">
+        <table class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
                     <th>Acción</th>
