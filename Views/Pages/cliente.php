@@ -18,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         if ($id) {
-            // $usu_id_modi = $_SESSION['ID'];
-            $Modifica = 1;
-            $resultado = $controller->actualizar($id, $nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad,$Ciudad,$Esciv,$Direccion,$Modifica);
+            $Modifica = $_SESSION['ID'];
+            // $Modifica = 1;
+            $resultado = $controller->actualizar($id, $nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Modifica);
         } else {
             $Creacion = 1;
-            $resultado = $controller->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad,$Ciudad,$Esciv,$Direccion,$Creacion);
+            $resultado = $controller->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
         }
         //echo '<div class="alert alert-success">' . $resultado . '</div>';
     } catch (Exception $e) {
@@ -34,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 try {
     $clientes = $controller->listarClientes();
     $estadosCiviles = $controller->listarEstadosCiviles();
-    $ciudades = $controller->listarCiudades();
+    $ciudades = $controller->CiudadesDDl(0);
+    $departamentos = $controller->listarDepartamentos();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -57,8 +58,7 @@ try {
                     <tr>
                         <th>Codigo</th>
                         <th>Identidad</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
+                        <th>Nombre Completo</th>
                         <th>Sexo</th>
                         <th>Fecha Nacimiento</th>
                         <th>Ciudad</th>
@@ -72,11 +72,10 @@ try {
                             <td><?php echo $cliente['Cli_Id']; ?></td>
                             <td><?php echo $cliente['Cli_DNI']; ?></td>
                             <td><?php echo $cliente['Cli_Nombre']; ?></td>
-                            <td><?php echo $cliente['Cli_Apellido']; ?></td>
                             <td><?php echo $cliente['Cli_Sexo']; ?></td>
                             <td><?php echo $cliente['Cli_FechaNac']; ?></td>
-                            <td><?php echo $cliente['Ciu_Id']; ?></td>
-                            <td><?php echo $cliente['Est_ID']; ?></td>
+                            <td><?php echo $cliente['Ciu_Descripcion']; ?></td>
+                            <td><?php echo $cliente['Est_Descripcion']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
 
                                 <button style="color:white" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
@@ -96,7 +95,7 @@ try {
 <div id="insertar" style="display:none;">
     <div class="card card-dark">
         <div class="card-header">
-            <h3 class="card-title" id="form-title">Crear Nuevo Usuario</h3>
+            <h3 class="card-title" id="form-title">Nuevo Cliente</h3>
         </div>
         <div class="card-body">
             <form id="frmInsertar" method="POST">
@@ -127,7 +126,7 @@ try {
                         <label>Sexo: </label>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input value="F" class="form-check-input" type="radio" name="rbSexo" id="rbfemenino" checked/>
+                                <input value="F" class="form-check-input" type="radio" name="rbSexo" id="rbfemenino" />
                                 <label class="form-check-label" for="rbfemenino">F</label>
                             </div>
                         </div>
@@ -149,23 +148,12 @@ try {
                             <span style="color:red" class="error-message" id="errorFecha"></span>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Ciudad</label>
-                            <select class="form-control select2" style="width: 100%;" id="ciudadSelect" name="ciudadSelect">
-                                <?php foreach ($ciudades as $ciudad) : ?>
-                                    <option value="<?php echo $ciudad['Ciu_ID']; ?>"><?php echo $ciudad['Ciu_Descripcion']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <span style="color:red" class="error-message" id="errorCiudad"></span>
-                        </div>
-                    </div>
-
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Estado Civil</label>
                             <select class="form-control select2" style="width: 100%;" id="estadoCivilSelect" name="estadoCivilSelect">
+                                <option value="0">Seleccione</option>
                                 <?php foreach ($estadosCiviles as $estadoCivil) : ?>
                                     <option value="<?php echo $estadoCivil['Est_ID']; ?>"><?php echo $estadoCivil['Est_Descripcion']; ?></option>
                                 <?php endforeach; ?>
@@ -173,6 +161,30 @@ try {
                             <span style="color:red" class="error-message" id="errorEsciv"></span>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Departamento</label>
+                            <select class="form-control select2" style="width: 100%;" id="departamentoSelect" name="departamentoSelect">
+                                <option value="0">Seleccione</option>
+                                <?php foreach ($departamentos as $departamento) : ?>
+                                    <option value="<?php echo $departamento['Dep_ID']; ?>"><?php echo $departamento['Dep_Descripcion']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Ciudad</label>
+                            <select class="form-control select2" style="width: 100%;" id="ciudadSelect" name="ciudadSelect">
+                                <option value="0">Seleccione</option>
+                            </select>
+                            <span style="color:red" class="error-message" id="errorCiudad"></span>
+                        </div>
+                    </div>
+
+
 
                     <div class="col-md-12">
                         <div class="form-group">
@@ -200,21 +212,38 @@ try {
 <div id="detalles" style="display:none;">
     <div class="card card-dark">
         <div class="card-header">
-            <h3 class="card-title" id="form-title">Detalle de Usuario</h3>
+            <h3 class="card-title" id="form-title">Detalle Cliente</h3>
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <p><strong>Codigo:</strong> <span id="Detalle_Codigo"></span></p>
+                    <p><strong>Identidad:</strong> <span id="Detalle_Identidad"></span></p>
+                </div>
+                <div class="col-md-4">
                     <p><strong>Nombre:</strong> <span id="Detalle_Nombre"></span></p>
                     <p><strong>Apellido:</strong> <span id="Detalle_Apellido"></span></p>
+
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Identidad:</strong> <span id="Detalle_Identidad"></span></p>
+                <div class="col-md-4">
+                    <p><strong>Fecha Nacimiento:</strong> <span id="Detalle_FechaNacimiento"></span></p>
+                    <p><strong>Sexo:</strong> <span id="Detalle_Sexo"></span></p>
+                </div>
+
+            </div>
+            <div class="mt-1 row">
+                <div class="col-md-4">
                     <p><strong>Estado Civil:</strong> <span id="Detalle_Esciv"></span></p>
+                    <p><strong>Direccion:</strong> <span id="Detalle_Direccion"></span></p>
+                </div>
+
+                <div class="col-md-4">
+                    <p><strong>Ciudad:</strong> <span id="Detalle_Ciudad"></span></p>
+                    <p><strong>Departamento:</strong> <span id="Detalle_Departamento"></span></p>
                 </div>
             </div>
             <hr>
-            <table class="table">
+            <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
                         <th>Acción</th>
@@ -225,16 +254,17 @@ try {
                 <tbody>
                     <tr>
                         <td>Creado por</td>
-                        <td id="Detalle_Usuario_Creador"></td>
-                        <td id="Detalle_Usu_Fecha_Creacion"></td>
+                        <td id="Detalle_Creacion"></td>
+                        <td id="Detalle_FechaCreacion"></td>
                     </tr>
                     <tr>
                         <td>Modificado por</td>
-                        <td id="Detalle_Usuario_Modificador"></td>
-                        <td id="Detalle_Usu_Fecha_Modifica"></td>
+                        <td id="Detalle_Modifica"></td>
+                        <td id="Detalle_FechaModifica"></td>
                     </tr>
                 </tbody>
             </table>
+            <br>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
             </div>
@@ -272,88 +302,11 @@ try {
 
 <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 
-<!-- <script>
-    function validateForm() {
-        let isValid = true;
-
-        // Clear previous error messages and remove is-invalid class
-        document.querySelectorAll('.error-message').forEach(function(error) {
-            error.textContent = '';
-        });
-        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
-            input.classList.remove('is-invalid');
-        });
-
-        // Validate Identidad
-        const identidad = document.getElementById('txtIdentidad');
-        if (!identidad.value) {
-            document.getElementById('errorIdentidad').textContent = 'El campo es requerido';
-            identidad.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        // Validate Nombre
-        const nombre = document.getElementById('txtNombre');
-        if (!nombre.value) {
-            document.getElementById('errorNombre').textContent = 'El campo es requerido';
-            nombre.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        // Validate Apellido
-        const apellido = document.getElementById('txtApellido');
-        if (!apellido.value) {
-            document.getElementById('errorApellido').textContent = 'El campo es requerido';
-            apellido.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        // Validate Sexo
-        const sexoF = document.getElementById('rbfemenino');
-        const sexoM = document.getElementById('rbmasculino');
-        if (!sexoF.checked && !sexoM.checked) {
-            document.getElementById('errorSexo').textContent = 'El campo es requerido';
-            sexoF.classList.add('is-invalid');
-            sexoM.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        // Validate Direccion
-        const direccion = document.getElementById('txtDireccion');
-        if (!direccion.value) {
-            document.getElementById('errorDireccion').textContent = 'El campo es requerido';
-            direccion.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    $(function() {
-        $("#example1").DataTable({
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
-
-    $(document).ready(function() {
-        $("#insertar").hide();
-    });
-
-    $("#btnNuevo").click(function() {
-        $("#insertar").show();
-        $("#tabla").hide();
-    });
-
-    $("#regresar").click(function() {
-        $("#insertar").hide();
-        $("#tabla").show();
-    });
-</script> -->
 
 
 <script>
+    
+
     function validateForm() {
         let isValid = true;
         document.querySelectorAll('.error-message').forEach(function(error) {
@@ -384,12 +337,15 @@ try {
             isValid = false;
         }
 
-        // const sexo = document.getElementById('rbSexo');
-        // if (!sexo.value) {
-        //     document.getElementById('errorSexo').textContent = 'El campo es requerido';
-        //     sexo.classList.add('is-invalid');
-        //     isValid = false;
-        // }
+
+        const sexo = document.querySelector('input[name="rbSexo"]:checked');
+        if (!sexo) {
+            document.getElementById('errorSexo').textContent = 'El campo es requerido';
+            document.getElementById('rbfemenino').classList.add('is-invalid');
+            document.getElementById('rbmasculino').classList.add('is-invalid');
+            isValid = false;
+        }
+
 
         const fecha = document.getElementById('txtFechaNacimiento');
         if (!fecha.value) {
@@ -399,20 +355,20 @@ try {
         }
 
         const ciudad = document.getElementById('ciudadSelect');
-        if (!ciudad.value) {
+        if (!ciudad.value || ciudad.value == '0') {
             document.getElementById('errorCiudad').textContent = 'El campo es requerido';
             ciudad.classList.add('is-invalid');
             isValid = false;
         }
 
         const esciv = document.getElementById('estadoCivilSelect');
-        if (!esciv.value) {
+        if (!esciv.value || esciv.value == '0') {
             document.getElementById('errorEsciv').textContent = 'El campo es requerido';
             esciv.classList.add('is-invalid');
             isValid = false;
         }
 
-        
+
         const direccion = document.getElementById('txtDireccion');
         if (!direccion.value) {
             document.getElementById('errorDireccion').textContent = 'El campo es requerido';
@@ -423,44 +379,94 @@ try {
     }
 
     $(document).ready(function() {
-        // Inicialización de DataTables
-        var table = $("#example1").DataTable({
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-        });
+      // Función para cargar ciudades basadas en el departamento seleccionado
+    function cargarCiudades(departamentoId, ciudadId) {
+        if (departamentoId != 0) {
+            $.ajax({
+                url: '../Services/ciudades_obtener.php',
+                type: 'GET',
+                data: { id: departamentoId },
+                success: function(response) {
+                    var ciudades = JSON.parse(response);
+                    var $ciudadSelect = $('#ciudadSelect');
+                    
+                    $ciudadSelect.empty();
+                    $ciudadSelect.append('<option value="0">Seleccione</option>');
+                    
+                    ciudades.forEach(function(ciudad) {
+                        $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
+                    });
 
-        function attachClickEvents() {
-            $(".abrir-editar").off('click').on('click', function() {
-                const id = $(this).data('id');
-                $.ajax({
-                    url: '../Services/cliente_obtener.php',
-                    type: 'GET',
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        const usuario = JSON.parse(response);
-                        console.log("DATOS EDTIAR: " + usuario)
-                        $("#form-title").text('Editar Usuario');
-                        $("#id").val(usuario.Cli_Id);
-                        $("#txtNombre").val(usuario.Cli_Nombre);
-                        $("#txtIdentidad").val(usuario.Cli_DNI);
-                        $("#txtDireccion").val(usuario.Cli_Direccion);
-                        $("#txtApellido").val(usuario.Cli_Apellido);
-                        $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
-                        $("#rbSexo").val(usuario.Cli_Sexo);
-                        $("#ciudadSelect").val(usuario.Ciu_Id);
-                        $("#estadoCivilSelect").val(usuario.Est_ID);
-    
-                        $("#insertar").show();
-                        $("#tabla").hide();
+                    // Seleccionar la ciudad si se proporciona un ID de ciudad
+                    if (ciudadId) {
+                        $ciudadSelect.val(ciudadId);
                     }
-                });
+                },
+                error: function() {
+                    alert('Error al cargar las ciudades');
+                }
             });
+        } else {
+            $('#ciudadSelect').empty().append('<option value="0">Seleccione</option>');
+        }
+    }
+
+    $('#departamentoSelect').change(function() {
+        var departamentoId = $(this).val();
+        console.log('ID DEPARTAMENTO' + departamentoId)
+        cargarCiudades(departamentoId);
+    });
+
+    // Inicialización de DataTables
+    var table = $("#example1").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+    });
+
+    function attachClickEvents() {
+        $(".abrir-editar").off('click').on('click', function() {
+            const id = $(this).data('id');
+            $.ajax({
+                url: '../Services/cliente_obtener.php',
+                type: 'GET',
+                data: { id: id },
+                success: function(response) {
+                    const usuario = JSON.parse(response);
+                    $("#form-title").text('Editar Cliente');
+                    $("#id").val(usuario.Cli_Id);
+                    $("#txtNombre").val(usuario.Cli_Nombre);
+                    $("#txtIdentidad").val(usuario.Cli_DNI);
+                    $("#txtDireccion").val(usuario.Cli_Direccion);
+                    $("#txtApellido").val(usuario.Cli_Apellido);
+                    $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
+
+                    if (usuario.Cli_Sexo === "Femenino") {
+                        $("#rbfemenino").prop("checked", true);
+                    } else if (usuario.Cli_Sexo === "Masculino") {
+                        $("#rbmasculino").prop("checked", true);
+                    }
+
+                    $("#estadoCivilSelect").val(usuario.Est_ID);
+                    $("#departamentoSelect").val(usuario.Dep_ID);
+
+                    // Cargar las ciudades y seleccionar la ciudad correspondiente
+                    const prueba1 = usuario.Dep_ID;
+                    const prueba2 = usuario.Ciu_Id;
+                    console.log('PRUEBA 1: ' + prueba1);
+                    console.log('PRUEBA 2: ' + prueba2);
+
+                    cargarCiudades(prueba1, prueba2);
+
+                    $("#insertar").show();
+                    $("#tabla").hide();
+                }
+            });
+        });
 
             $(".btn-detalles").off('click').on('click', function() {
                 const id = $(this).data('id');
+                console.log('ESTE ES EL ID: ' + id)
                 $.ajax({
                     url: '../Services/cliente_obtener.php',
                     type: 'GET',
@@ -469,15 +475,23 @@ try {
                     },
                     success: function(response) {
                         const usuario = JSON.parse(response);
-                        console.log("DATOS Detalles: " + usuario)
-                        $("#Detalle_Nombre").val(usuario.Cli_Nombre);
-                        $("#Detalle_Identidad").val(usuario.Cli_DNI);
-                        $("#Detalle_Direccion").val(usuario.Cli_Direccion);
-                        $("#Detalle_Apellido").val(usuario.Cli_Apellido);
-                        $("#Detalle_FechaNacimiento").val(usuario.Cli_FechaNac);
-                        $("#Detalle_Sexo").val(usuario.Cli_Sexo);
-                        $("#Detalle_Ciudad").val(usuario.Ciu_Id);
-                        $("#Detalle_Esciv").val(usuario.Est_ID);
+
+
+                        $("#Detalle_Codigo").text(id);
+                        $("#Detalle_Nombre").text(usuario.Cli_Nombre);
+                        $("#Detalle_Identidad").text(usuario.Cli_DNI);
+                        $("#Detalle_Direccion").text(usuario.Cli_Direccion);
+                        $("#Detalle_Apellido").text(usuario.Cli_Apellido);
+                        $("#Detalle_FechaNacimiento").text(usuario.Cli_FechaNac);
+                        $("#Detalle_Sexo").text(usuario.Cli_Sexo);
+                        $("#Detalle_Ciudad").text(usuario.Ciu_Descripcion);
+                        $("#Detalle_Esciv").text(usuario.Est_Descripcion);
+                        $("#Detalle_Departamento").text(usuario.Dep_Descripcion);
+                        $("#Detalle_Creacion").text(usuario.Creacion);
+
+                        $("#Detalle_FechaCreacion").text(usuario.Cli_Fecha_Creacion);
+                        $("#Detalle_Modifica").text(usuario.Modifica);
+                        $("#Detalle_FechaModifica").text(usuario.Cli_Fecha_Modifica);
                         $("#tabla").hide();
                         $("#detalles").show();
                     }
@@ -498,19 +512,21 @@ try {
         });
 
         $("#btnNuevo").click(function() {
-            $("#form-title").text('Crear Nuevo Usuario');
+            $("#form-title").text('Nuevo Cliente');
             $("#id").val('');
             $("#txtNombre").val('');
             $("#txtApellido").val('');
             $("#txtIdentidad").val('');
             $("#txtDireccion").val('');
             $("#txtFechaNacimiento").val('');
-            $("#rbSexo").val('');
-            $("#ciudadSelect").val('');
-            $("#estadoCivilSelect").val('');
+            $("input[name='rbSexo']").prop("checked", false);
+            $("#departamentoSelect").val('0');
+            $("#ciudadSelect").val('0');
+            $("#estadoCivilSelect").val('0');
             $("#insertar").show();
             $("#tabla").hide();
         });
+
 
         $("#Cancelar").click(function() {
             $("#insertar").hide();

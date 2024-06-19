@@ -164,7 +164,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
+                <a href="?Pages=compravehiculo" class="nav-link" style="color:white">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras Vehiculos</p>
                 </a>
