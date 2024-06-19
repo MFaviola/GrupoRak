@@ -78,8 +78,10 @@ try {
     </div>
 </div>
 
+
+
 <!-- Formulario de Usuario -->
-<div id="insertar" style="display:none;">
+<div id="insertarUsuario" style="display:none;">
     <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Crear Nuevo Usuario</h3>

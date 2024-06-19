@@ -275,7 +275,7 @@ $(document).ready(function() {
     table.on('draw', function() {
         attachClickEvents();
     });
-
+ 
     $("#btnNuevo").click(function() {
         $("#form-title").text('Crear Nuevo Rol');
         $("#Rol_Id").val('');
