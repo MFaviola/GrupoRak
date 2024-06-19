@@ -23,8 +23,11 @@
         <div>
           <div class="icon-wrapper mt-3">
             <img src="Views/Resources/dist/img/logroRac.jpg" alt="Home Icon" id="logo">
+            
           </div>
         </div>
+        <span id="copyright" style="color:#eee; position:relative; top:100px; left:10px; font-weight:bold; white-space:nowrap; font-size:12px; font-family: Arial, sans-serif;">
+      </span>
       </div>
       <div class="login-aside-container">
         <div class="login-container d-none" id="login-container">
@@ -80,7 +83,7 @@
       justify-content: center;
       align-items: center;
       background-color: #f4f6f9;
-      background-image: url('https://c.wallhere.com/photos/f9/12/1920x1080_px_car_Dodge_Dodge_Challenger_SRT_Red_Cars-1095872.jpg!d');
+      background-image: url('Views/Resources/dist/img/fondoLogin2.jpg');
       background-size: cover; 
       background-repeat: no-repeat; 
       background-attachment: fixed;
@@ -178,6 +181,8 @@
     #logo {
       width: 100%;
       border-radius: 10px;
+      margin-top: 35%;
+      margin-left: 5%;
     }
 
     .sinopsis {
@@ -200,6 +205,13 @@
         }, 50); // Delay to allow transition to apply
       }, 1800); // Delay before showing the form (1.2 seconds)
     });
+
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('copyright').textContent = `® 2016 - ${currentYear}ㅤGRUPO RAC`;
+  });
+
   </script>
 </body>
 
