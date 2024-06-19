@@ -27,25 +27,29 @@ class ClienteService {
         }
     }
 
-    public function insertar($nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad,$Esciv, $Direccion, $Creacion) {
+    public function insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion) {
         global $pdo;
-         if (session_status() == PHP_SESSION_NONE) {
-             session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            // Llamada al procedimiento almacenado
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Cli_ID)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
-            error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv, $Direccion,$Creacion]));
-            $stmt->execute([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv,$Direccion, $Creacion]);
-            error_log("insertarUsuario - Valores enviados: " . json_encode([$nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv,$Direccion, $Creacion]));
-            $result = $stmt->fetch();
-            if (isset($result['Result']) && $result['Result'] == 1) {
-                return "1";
+            error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion]));
+            $stmt->execute([$nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion]);
+            error_log("insertarUsuario - Valores enviados: " . json_encode([$nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion]));
+            $stmt->closeCursor(); // Necesario para llamar a una consulta almacenada que devuelve resultados
+
+            // Obtener el ID generado
+            $result = $pdo->query("SELECT @p_Cli_ID AS Cli_ID")->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                return $result['Cli_ID'];
             } else {
                 return "0";
             }

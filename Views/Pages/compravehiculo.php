@@ -1,51 +1,80 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../Services/CompraVehiculoService.php';
 require_once '../Services/ClienteService.php';
 
-$controller = new CompraVehiculoService();
+$controllerCompra = new CompraVehiculoService();
 $controllerCliente = new ClienteService();
 
+$response = array("status" => "error", "message" => "Ocurrió un error");
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = isset($_POST['id']) ? $_POST['id'] : null;
-    $nombre = $_POST['txtNombre'];
-    $apellido = $_POST['txtApellido'];
-    $FechaNacimiento = $_POST['txtFechaNacimiento'];
-    $Sexo = $_POST['rbSexo'];
-    $Identidad = $_POST['txtIdentidad'];
-    $Ciudad = $_POST['ciudadSelect'];
-    $Esciv = $_POST['estadoCivilSelect'];
-    $Direccion = $_POST['txtDireccion'];
+    header('Content-Type: application/json');
 
+    if (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
+        $FechaCompra = $_POST['txtFecha'];
+        $MetodoPago = $_POST['pagosSelect'];
+        $IdentidadBusqueda = $_POST['txtIdentidadBusqueda'];
+        $ClienteBusqueda = $_POST['txtClienteBusqueda'];
 
-    try {
-        if ($id) {
-            $Modifica = $_SESSION['ID'];
-            // $Modifica = 1;
-            $resultado = $controller->actualizar($id, $nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Modifica);
-        } else {
-            $Creacion = 1;
-            $resultado = $controller->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
+        try {
+            $Creacion = $_SESSION['ID'];
+            $resultadoEncabezado = $controllerCompra->insertarEncabezado($FechaCompra, $MetodoPago, $ClienteBusqueda, $Creacion);
+            $response = array("status" => "success", "message" => "Encabezado insertado correctamente");
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage();
         }
-        //echo '<div class="alert alert-success">' . $resultado . '</div>';
-    } catch (Exception $e) {
-        //echo '<div class="alert alert-danger">Error: ' . $e->getMessage() . '</div>';
+    } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarCliente') {
+        $nombre = $_POST['txtNombre'];
+        $apellido = $_POST['txtApellido'];
+        $FechaNacimiento = $_POST['txtFechaNacimiento'];
+        $Sexo = $_POST['rbSexo'];
+        $Identidad = $_POST['txtIdentidad'];
+        $Ciudad = $_POST['ciudadSelect'];
+        $Esciv = $_POST['estadoCivilSelect'];
+        $Direccion = $_POST['txtDireccion'];
+
+        try {
+            $Creacion = $_SESSION['ID'];
+            $clienteID = $controllerCliente->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
+            $response = array("status" => "success", "message" => "Cliente insertado correctamente", "clienteID" => $clienteID);
+        } catch (Exception $e) {
+            $response = array("status" => "error", "message" => $e->getMessage());
+        }
+    } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarVehiculo') {
+        $Placa = $_POST['txtPlaca'];
+        $Color = $_POST['txtColor'];
+        $PrecioVehiculo = $_POST['txtPrecioVehiculo'];
+        $ModeloVehiculo = $_POST['modeloSelect'];
+        $Imagen = $_POST['txtImagen']; // Solo el nombre del archivo
+
+        try {
+            $Creacion = $_SESSION['ID'];
+            $resultadoVehiculo = $controllerCompra->insertarVehiculo($Placa, $Color, $Imagen, $PrecioVehiculo, $ModeloVehiculo, $Creacion);
+            $response = $resultadoVehiculo;
+        } catch (Exception $e) {
+            $response['message'] = $e->getMessage();
+        }
     }
+
+    echo json_encode($response);
+    exit;
 }
 
-
 try {
-    $compras = $controller->listar();
-    $pagos = $controller->listarMetodosPagos();
-    $modelos = $controller->listarModelos();
+    $compras = $controllerCompra->listar();
+    $pagos = $controllerCompra->listarMetodosPagos();
+    $modelos = $controllerCompra->ModelosDDl(0);
+    $marcas = $controllerCompra->listarMarcas();
     $estadosCiviles = $controllerCliente->listarEstadosCiviles();
     $ciudades = $controllerCliente->CiudadesDDl(0);
     $departamentos = $controllerCliente->listarDepartamentos();
-
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
-
-
 ?>
 
 <div id="tabla">
@@ -53,7 +82,7 @@ try {
         <div class="card-body">
             <h2 class="text-center" style="font-size:34px !important">Compras</h2>
 
-            <button class="btn btn-dark" id="btnNuevo">
+            <button class="btn btn-primary" id="btnNuevo">
                 <i class="fa-solid fa-plus"></i>
                 Nuevo
             </button>
@@ -92,13 +121,13 @@ try {
 
 
 <div id="insertarEncabezado" style="display: none;">
-    <div class="card card-dark">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Nueva Compra</h3>
         </div>
         <div class="card-body">
             <form id="frmInsertarEncabezado" method="POST">
-                <input type="hidden" name="id" id="id">
+                <input type="hidden" name="formulario" value="insertarEncabezado">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
@@ -106,14 +135,14 @@ try {
                             <div class="input-group">
                                 <input type="date" class="form-control" name="txtFecha" id="txtFecha" disabled>
                             </div>
-                      
+
                         </div>
                     </div>
                     <div class="col-md-3">
 
                     </div>
                     <div class="col-md-6">
-                    <div class="form-group">
+                        <div class="form-group">
                             <label>Metodo de Pago</label>
                             <select class="form-control select2" style="width: 100%;" id="pagosSelect" name="pagosSelect">
                                 <option value="0">Seleccione</option>
@@ -130,12 +159,12 @@ try {
                         <div class="form-group">
                             <label>Identidad:</label>
                             <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda">
+                                <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda">
                                 <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-dark"> <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                                    <button type="button" class="btn btn-primary"> <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
                                 </div>
                                 <!-- /btn-group -->
-                               
+
                             </div>
                             <span style="color:red" class="error-message" id="errorIdentidadBusqueda"></span>
                         </div>
@@ -144,157 +173,47 @@ try {
                         <div class="form-group">
                             <label>Cliente:</label>
                             <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="txtClienteBusqueda" name="txtClienteBusqueda">
+                                <input type="text" class="form-control" id="txtClienteBusqueda" name="txtClienteBusqueda">
                                 <div class="input-group-prepend">
                                     <button id="btnAgregarCliente" type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i> Agregar</button>
                                 </div>
                                 <!-- /btn-group -->
-                               
+
                             </div>
                             <span style="color:red" class="error-message" id="errorClienteBusqueda"></span>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="col-md-6">
-                        <button type="button" class="btn btn-danger" id="btnAgregarVehiculo"><i class="fa-solid fa-car"></i> Agregar Vehiculo</button>
+                            <button type="button" class="btn btn-danger" id="btnAgregarVehiculo"><i class="fa-solid fa-car"></i> Agregar Vehiculo</button>
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-dark" id="btnGuardar"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
-                        <button type="button" class="btn btn-dark" id="btnFinalizar"><i class="fa-solid fa-check"></i> Finalizar</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardar"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button type="button" class="btn btn-primary" id="btnFinalizar"><i class="fa-solid fa-check"></i> Finalizar</button>
                         <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
 
 
-<div id="detalleCompra" class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Responsive Hover Table</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>User</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Reason</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>183</td>
-                      <td>John Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-success">Approved</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>219</td>
-                      <td>Alexander Pierce</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-warning">Pending</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>657</td>
-                      <td>Bob Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-primary">Approved</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>175</td>
-                      <td>Mike Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-danger">Denied</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
 
-<!-- Formulario de Vehiculo -->
-<div id="insertarVehiculo" style="display:none;">
-    <div class="card card-dark">
-        <div class="card-header">
-            <h3 class="card-title" id="form-title">Nuevo Vehiculo</h3>
-        </div>
-        <div class="card-body">
-            <form id="frmInsertarVehiculo" method="POST">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Placa:</label>
-                            <input type="text" class="form-control" name="txtPlaca" id="txtPlaca">
-                            <span style="color:red" class="error-message" id="errorPlaca"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Color:</label>
-                            <input type="text" class="form-control" name="txtColor" id="txtColor">
-                            <span style="color:red" class="error-message" id="errorColor"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Precio:</label>
-                            <input type="text" class="form-control" name="txtPrecio" id="txtPrecio">
-                            <span style="color:red" class="error-message" id="errorPrecio"></span>
-                        </div>
-                    </div>
-                           
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Modelo</label>
-                            <select class="form-control select2" style="width: 100%;" id="modeloSelect" name="modeloSelect">
-                                <option value="0">Seleccione</option>
-                                <?php foreach ($modelos as $modelo) : ?>
-                                    <option value="<?php echo $modelo['Mod_Id']; ?>"><?php echo $modelo['Mod_Descripcion']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <span style="color:red" class="error-message" id="errorModelo"></span>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-dark" id="btnGuardarVehiculo"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
-
-                        <button type="button" id="btnVolverVehiculo" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
- 
 <!-- Formulario de Cliente -->
 <div id="insertar" style="display:none;">
-    <div class="card card-dark">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Nuevo Cliente</h3>
         </div>
         <div class="card-body">
             <form id="frmInsertarCliente" method="POST">
+                <input type="hidden" name="formulario" value="insertarCliente">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -343,7 +262,7 @@ try {
                             <span style="color:red" class="error-message" id="errorFecha"></span>
                         </div>
                     </div>
-                                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Estado Civil</label>
@@ -394,7 +313,7 @@ try {
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-dark" id="btnGuardarCliente"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarCliente"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                         <button type="button" id="btnVolverCliente" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Volver</button>
                     </div>
                 </div>
@@ -403,95 +322,82 @@ try {
     </div>
 </div>
 
-<!-- Detalles -->
-<div id="detalles" style="display:none;">
-    <div class="card card-dark">
+
+<!-- Formulario de Vehiculo -->
+<div id="insertarVehiculo" style="display:none;">
+    <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title" id="form-title">Detalle Cliente</h3>
+            <h3 class="card-title" id="form-title">Nuevo Vehiculo</h3>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <p><strong>Codigo:</strong> <span id="Detalle_Codigo"></span></p>
-                    <p><strong>Identidad:</strong> <span id="Detalle_Identidad"></span></p>
-                </div>
-                <div class="col-md-4">
-                    <p><strong>Nombre:</strong> <span id="Detalle_Nombre"></span></p>
-                    <p><strong>Apellido:</strong> <span id="Detalle_Apellido"></span></p>
+            <form id="frmInsertarVehiculo" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="formulario" value="insertarVehiculo">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Placa:</label>
+                            <input type="text" class="form-control" name="txtPlaca" id="txtPlaca">
+                            <span style="color:red" class="error-message" id="errorPlaca"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Color:</label>
+                            <input type="text" class="form-control" name="txtColor" id="txtColor">
+                            <span style="color:red" class="error-message" id="errorColor"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Precio:</label>
+                            <input type="text" class="form-control" name="txtPrecioVehiculo" id="txtPrecioVehiculo">
+                            <span style="color:red" class="error-message" id="errorPrecio"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Imagen:</label>
+                            <input type="file" class="form-control" name="txtImagen" id="txtImagen">
+                            <span style="color:red" class="error-message" id="errorImagen"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Marca</label>
+                            <select class="form-control select2" style="width: 100%;" id="marcaSelect" name="marcaSelect">
+                                <option value="0">Seleccione</option>
+                                <?php foreach ($marcas as $marca) : ?>
+                                    <option value="<?php echo $marca['Mar_Id']; ?>"><?php echo $marca['Mar_Descripcion']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Modelo</label>
+                            <select class="form-control select2" style="width: 100%;" id="modeloSelect" name="modeloSelect">
+                                <option value="0">Seleccione</option>
+                            </select>
+                            <span style="color:red" class="error-message" id="errorModelo"></span>
+                        </div>
+                    </div>
 
                 </div>
-                <div class="col-md-4">
-                    <p><strong>Fecha Nacimiento:</strong> <span id="Detalle_FechaNacimiento"></span></p>
-                    <p><strong>Sexo:</strong> <span id="Detalle_Sexo"></span></p>
-                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end" style="gap:10px">
+                        <button type="button" class="btn btn-primary" id="btnGuardarVehiculo"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
 
-            </div>
-            <div class="mt-1 row">
-                <div class="col-md-4">
-                    <p><strong>Estado Civil:</strong> <span id="Detalle_Esciv"></span></p>
-                    <p><strong>Direccion:</strong> <span id="Detalle_Direccion"></span></p>
+                        <button type="button" id="btnVolverVehiculo" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    </div>
                 </div>
-
-                <div class="col-md-4">
-                    <p><strong>Ciudad:</strong> <span id="Detalle_Ciudad"></span></p>
-                    <p><strong>Departamento:</strong> <span id="Detalle_Departamento"></span></p>
-                </div>
-            </div>
-            <hr>
-            <table class="table table-striped table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>Acción</th>
-                        <th>Usuario</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Creado por</td>
-                        <td id="Detalle_Creacion"></td>
-                        <td id="Detalle_FechaCreacion"></td>
-                    </tr>
-                    <tr>
-                        <td>Modificado por</td>
-                        <td id="Detalle_Modifica"></td>
-                        <td id="Detalle_FechaModifica"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
-<!-- Modal de Confirmación de Eliminación -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este registro?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar"><i class="fa-solid fa-trash"></i> Eliminar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Formulario oculto para la eliminación del usuario -->
-<form id="eliminarUsuarioForm" method="POST" action="../Services/cliente_eliminar.php" style="display:none;">
-    <input type="hidden" name="id" id="eliminarUsuarioId">
-</form>
 
 <!-- jQuery -->
 
@@ -500,198 +406,61 @@ try {
 
 
 <script>
-    function validateForm() {
-        let isValid = true;
+    // Función para limpiar errores
+    function clearErrors() {
         document.querySelectorAll('.error-message').forEach(function(error) {
             error.textContent = '';
         });
-        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
+        document.querySelectorAll('.form-control').forEach(function(input) {
             input.classList.remove('is-invalid');
         });
-
-        const identidad = document.getElementById('txtIdentidad');
-        if (!identidad.value) {
-            document.getElementById('errorIdentidad').textContent = 'El campo es requerido';
-            identidad.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const nombre = document.getElementById('txtNombre');
-        if (!nombre.value) {
-            document.getElementById('errorNombre').textContent = 'El campo es requerido';
-            nombre.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const apellido = document.getElementById('txtApellido');
-        if (!apellido.value) {
-            document.getElementById('errorApellido').textContent = 'El campo es requerido';
-            apellido.classList.add('is-invalid');
-            isValid = false;
-        }
-
-
-        const sexo = document.querySelector('input[name="rbSexo"]:checked');
-        if (!sexo) {
-            document.getElementById('errorSexo').textContent = 'El campo es requerido';
-            document.getElementById('rbfemenino').classList.add('is-invalid');
-            document.getElementById('rbmasculino').classList.add('is-invalid');
-            isValid = false;
-        }
-
-
-        const fecha = document.getElementById('txtFechaNacimiento');
-        if (!fecha.value) {
-            document.getElementById('errorFecha').textContent = 'El campo es requerido';
-            fecha.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const ciudad = document.getElementById('ciudadSelect');
-        if (!ciudad.value || ciudad.value == '0') {
-            document.getElementById('errorCiudad').textContent = 'El campo es requerido';
-            ciudad.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const esciv = document.getElementById('estadoCivilSelect');
-        if (!esciv.value || esciv.value == '0') {
-            document.getElementById('errorEsciv').textContent = 'El campo es requerido';
-            esciv.classList.add('is-invalid');
-            isValid = false;
-        }
-
-
-        const direccion = document.getElementById('txtDireccion');
-        if (!direccion.value) {
-            document.getElementById('errorDireccion').textContent = 'El campo es requerido';
-            direccion.classList.add('is-invalid');
-            isValid = false;
-        }
-
-
-        return isValid;
     }
-
-    function validateFormEncabezado() {
-        let isValid = true;
-        document.querySelectorAll('.error-message').forEach(function(error) {
-            error.textContent = '';
-        });
-        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
-            input.classList.remove('is-invalid');
-        });
-
-        const identidadBusqueda = document.getElementById('txtIdentidadBusqueda');
-        if (!identidadBusqueda.value) {
-            document.getElementById('errorIdentidadBusqueda').textContent = 'El campo es requerido';
-            identidadBusqueda.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const clienteBusqueda = document.getElementById('txtClienteBusqueda');
-        if (!clienteBusqueda.value) {
-            document.getElementById('errorClienteBusqueda').textContent = 'El campo es requerido';
-            clienteBusqueda.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const metodo = document.getElementById('pagosSelect');
-        if (!metodo.value || metodo.value == '0') {
-            document.getElementById('errorMetodoPago').textContent = 'El campo es requerido';
-            metodo.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
-    function validateFormVehiculo() {
-        let isValid = true;
-        document.querySelectorAll('.error-message').forEach(function(error) {
-            error.textContent = '';
-        });
-        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
-            input.classList.remove('is-invalid');
-        });
-
-        const placa = document.getElementById('txtPlaca');
-        if (!placa.value) {
-            document.getElementById('errorPlaca').textContent = 'El campo es requerido';
-            placa.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const color = document.getElementById('txtColor');
-        if (!color.value) {
-            document.getElementById('errorColor').textContent = 'El campo es requerido';
-            color.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const precio = document.getElementById('txtPrecio');
-        if (!precio.value) {
-            document.getElementById('errorPrecio').textContent = 'El campo es requerido';
-            precio.classList.add('is-invalid');
-            isValid = false;
-        }
-
-        const modelo = document.getElementById('modeloSelect');
-        if (!modelo.value || modelo.value == '0') {
-            document.getElementById('errorModelo').textContent = 'El campo es requerido';
-            modelo.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
     $(document).ready(function() {
+        $("#EsquemaVentas").addClass('menu-open');
+        $("#LinkVentas").addClass('active');
+        $("#LinkComprasVehiculos").addClass('active');
+
+        // Al cargar la página, establecer la fecha actual en el campo de fecha de compra
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0!
+        var yyyy = today.getFullYear();
+
+        var fechaActual = yyyy + '-' + mm + '-' + dd;
+        $('#txtFecha').val(fechaActual);
         // Función para cargar ciudades basadas en el departamento seleccionado
         $("#insertarEncabezado").hide();
+        $("#detalleCompra").hide();
 
-        $("#btnAgregarCliente").click(function(){
+        $("#btnAgregarCliente").click(function() {
             $("#insertar").show();
             $("#insertarEncabezado").hide();
             $("#tabla").hide();
 
-            document.querySelectorAll('.error-message').forEach(function(error) {
-                error.textContent = '';
-            });
-            document.querySelectorAll('.form-control').forEach(function(input) {
-                input.classList.remove('is-invalid');
-            });
+            clearErrors();
         });
-        $("#btnVolverCliente").click(function(){
+
+        $("#btnVolverCliente").click(function() {
             $("#insertarEncabezado").show();
             $("#insertar").hide();
             $("#tabla").hide();
+            clearErrors();
 
-            document.querySelectorAll('.error-message').forEach(function(error) {
-                error.textContent = '';
-            });
-            document.querySelectorAll('.form-control').forEach(function(input) {
-                input.classList.remove('is-invalid');
-            });
         });
-        $("#btnAgregarVehiculo").click(function(){
+
+        $("#btnAgregarVehiculo").click(function() {
             $("#insertarVehiculo").show();
             $("#insertarEncabezado").hide();
         });
 
 
-        $("#btnVolverVehiculo").click(function(){
-            if($("#txt"))
-            $("#insertarEncabezado").show();
+        $("#btnVolverVehiculo").click(function() {
+            if ($("#txt"))
+                $("#insertarEncabezado").show();
             $("#insertarVehiculo").hide();
             $("#tabla").hide();
 
-            document.querySelectorAll('.error-message').forEach(function(error) {
-                error.textContent = '';
-            });
-            document.querySelectorAll('.form-control').forEach(function(input) {
-                input.classList.remove('is-invalid');
-            });
+            clearErrors();
         });
 
         function cargarCiudades(departamentoId, ciudadId) {
@@ -727,11 +496,51 @@ try {
             }
         }
 
+        function cargarModelos(marcaId, modeloId) {
+            if (marcaId != 0) {
+                $.ajax({
+                    url: '../Services/marcas_obtener.php',
+                    type: 'GET',
+                    data: {
+                        id: marcaId
+                    },
+                    success: function(response) {
+                        var ciudades = JSON.parse(response);
+                        var $ciudadSelect = $('#modeloSelect');
+
+                        $ciudadSelect.empty();
+                        $ciudadSelect.append('<option value="0">Seleccione</option>');
+
+                        ciudades.forEach(function(ciudad) {
+                            $ciudadSelect.append('<option value="' + ciudad.Mod_Id + '">' + ciudad.Mod_Descripcion + '</option>');
+                        });
+
+                        // Seleccionar la ciudad si se proporciona un ID de ciudad
+                        if (modeloId) {
+                            $ciudadSelect.val(modeloId);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al cargar las ciudades');
+                    }
+                });
+            } else {
+                $('#modeloSelect').empty().append('<option value="0">Seleccione</option>');
+            }
+        }
+
         $('#departamentoSelect').change(function() {
             var departamentoId = $(this).val();
             console.log('ID DEPARTAMENTO' + departamentoId)
             cargarCiudades(departamentoId);
         });
+
+        $('#marcaSelect').change(function() {
+            var departamentoId = $(this).val();
+            console.log('ID DEPARTAMENTO' + departamentoId)
+            cargarModelos(departamentoId);
+        });
+
 
         // Inicialización de DataTables
         var table = $("#example1").DataTable({
@@ -740,94 +549,6 @@ try {
             "autoWidth": false,
         });
 
-        function attachClickEvents() {
-            $(".abrir-editar").off('click').on('click', function() {
-                const id = $(this).data('id');
-                $.ajax({
-                    url: '../Services/cliente_obtener.php',
-                    type: 'GET',
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        const usuario = JSON.parse(response);
-                        $("#form-title").text('Editar Cliente');
-                        $("#id").val(usuario.Cli_Id);
-                        $("#txtNombre").val(usuario.Cli_Nombre);
-                        $("#txtIdentidad").val(usuario.Cli_DNI);
-                        $("#txtDireccion").val(usuario.Cli_Direccion);
-                        $("#txtApellido").val(usuario.Cli_Apellido);
-                        $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
-
-                        if (usuario.Cli_Sexo === "Femenino") {
-                            $("#rbfemenino").prop("checked", true);
-                        } else if (usuario.Cli_Sexo === "Masculino") {
-                            $("#rbmasculino").prop("checked", true);
-                        }
-
-                        $("#estadoCivilSelect").val(usuario.Est_ID);
-                        $("#departamentoSelect").val(usuario.Dep_ID);
-
-                        // Cargar las ciudades y seleccionar la ciudad correspondiente
-                        const prueba1 = usuario.Dep_ID;
-                        const prueba2 = usuario.Ciu_Id;
-                        console.log('PRUEBA 1: ' + prueba1);
-                        console.log('PRUEBA 2: ' + prueba2);
-
-                        cargarCiudades(prueba1, prueba2);
-
-                        $("#insertar").show();
-                        $("#tabla").hide();
-                    }
-                });
-            });
-
-            $(".btn-detalles").off('click').on('click', function() {
-                const id = $(this).data('id');
-                console.log('ESTE ES EL ID: ' + id)
-                $.ajax({
-                    url: '../Services/cliente_obtener.php',
-                    type: 'GET',
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        const usuario = JSON.parse(response);
-
-
-                        $("#Detalle_Codigo").text(id);
-                        $("#Detalle_Nombre").text(usuario.Cli_Nombre);
-                        $("#Detalle_Identidad").text(usuario.Cli_DNI);
-                        $("#Detalle_Direccion").text(usuario.Cli_Direccion);
-                        $("#Detalle_Apellido").text(usuario.Cli_Apellido);
-                        $("#Detalle_FechaNacimiento").text(usuario.Cli_FechaNac);
-                        $("#Detalle_Sexo").text(usuario.Cli_Sexo);
-                        $("#Detalle_Ciudad").text(usuario.Ciu_Descripcion);
-                        $("#Detalle_Esciv").text(usuario.Est_Descripcion);
-                        $("#Detalle_Departamento").text(usuario.Dep_Descripcion);
-                        $("#Detalle_Creacion").text(usuario.Creacion);
-
-                        $("#Detalle_FechaCreacion").text(usuario.Cli_Fecha_Creacion);
-                        $("#Detalle_Modifica").text(usuario.Modifica);
-                        $("#Detalle_FechaModifica").text(usuario.Cli_Fecha_Modifica);
-                        $("#tabla").hide();
-                        $("#detalles").show();
-                    }
-                });
-            });
-
-            // Delegación de eventos para los botones de eliminar
-            $('#example1 tbody').on('click', '.btn-danger', function() {
-                const id = $(this).closest('tr').find('.abrir-editar').data('id');
-                $('#modalEliminar').data('id', id).modal('show');
-            });
-        }
-
-        attachClickEvents();
-
-        table.on('draw', function() {
-            attachClickEvents();
-        });
 
         $("#btnNuevo").click(function() {
             $("#form-title").text('Nueva Compra');
@@ -843,6 +564,7 @@ try {
             $("#estadoCivilSelect").val('0');
             $("#insertarEncabezado").show();
             $("#insertar").hide();
+            $("#detalleCompra").show();
             $("#tabla").hide();
         });
 
@@ -851,51 +573,102 @@ try {
             $("#insertar").hide();
             $("#tabla").show();
             $("#insertarEncabezado").hide();
-            document.querySelectorAll('.error-message').forEach(function(error) {
-                error.textContent = '';
-            });
-            document.querySelectorAll('.form-control').forEach(function(input) {
-                input.classList.remove('is-invalid');
-            });
+            clearErrors();
         });
 
+        // Enviar formularios
         $("#btnGuardar").click(function() {
-            if (validateFormEncabezado()) {
-                // const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
-                // const adminHiddenInput = document.getElementById('Usu_Admin');
-                // adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
-                $("#frmInsertarEncabezado").submit();
-            }
+            $("#frmInsertarEncabezado").submit();
         });
 
         $("#btnGuardarCliente").click(function() {
-            if (validateForm()) {
-                // const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
-                // const adminHiddenInput = document.getElementById('Usu_Admin');
-                // adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
-                $("#frmInsertarCliente").submit();
-            }
+            var formData = new FormData($("#frmInsertarCliente")[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "", // URL del script PHP
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response); // Imprimir la respuesta en la consola para depuración
+                    try {
+                        var resultado = JSON.parse(response);
+                        if (resultado.status === "success") {
+                            var clienteID = resultado.clienteID;
+                            console.log("Cliente ID: " + clienteID);
+                            // Puedes usar el clienteID para otras operaciones
+
+                            alert(resultado.message);
+                            $("#frmInsertarCliente")[0].reset();
+                            $("#insertar").hide();
+                            $("#tabla").show();
+                            $("#insertarEncabezado").hide();
+                        } else {
+                            alert("Error: " + resultado.message);
+                        }
+                    } catch (e) {
+                        console.error("Error parsing JSON:", e);
+                        console.error("Response:", response);
+                    }
+                },
+                error: function() {
+                    alert("Error en la solicitud AJAX");
+                }
+            });
+
         });
 
 
         $("#btnGuardarVehiculo").click(function() {
-            if (validateFormVehiculo()) {
-                // const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
-                // const adminHiddenInput = document.getElementById('Usu_Admin');
-                // adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
-                $("#frmInsertarVehiculo").submit();
-            }
+            var formData = new FormData($("#frmInsertarVehiculo")[0]);
+
+            // Extraer el nombre del archivo
+            var fileName = $("#txtImagen").val().split('\\').pop();
+            formData.append("txtImagen", fileName);
+
+            $.ajax({
+                type: "POST",
+                url: "", // URL del script PHP
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(resultadoVehiculo) {
+                    console.log('RESPONSE: ' + resultadoVehiculo);
+
+
+                    alert(resultadoVehiculo.message);
+                    $("#frmInsertarVehiculo")[0].reset();
+                    $("#insertarVehiculo").hide();
+                    $("#insertarEncabezado").show();
+
+                },
+                error: function() {
+                    alert("Error en la solicitud AJAX");
+                }
+            });
         });
 
-        $("#btnVolver").click(function() {
-            $("#detalles").hide();
-            $("#tabla").show();
-        });
+        // $("#btnGuardarVehiculo").click(function() {
 
-        $("#btnConfirmarEliminar").click(function() {
-            const id = $('#modalEliminar').data('id');
-            $('#eliminarUsuarioId').val(id);
-            $('#eliminarUsuarioForm').submit();
-        });
+        //     const placa = $("#txtPlaca").val();
+        //     const color = $("#txtColor").val();
+        //     const precio = $("#txtPrecioVehiculo").val();
+        //     const imagen = $("#txtImagen").val();
+        //     const modelo = $("#modeloSelect").val();
+        //     console.log('Placa: ' + placa);
+        //     console.log('Color: ' + color);
+        //     console.log('Precio: ' + precio);
+        //     console.log('Imagen: ' + imagen);
+        //     console.log('Modelo: ' + modelo);
+
+
+        //     $("#frmInsertarVehiculo").submit(function(event) {
+        //         event.preventDefault();
+        //         console.log('Placa: ' + $("$txtPlaca").val());
+        //     });
+        // });
+
+
     });
 </script>

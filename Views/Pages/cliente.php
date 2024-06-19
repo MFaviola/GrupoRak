@@ -48,7 +48,7 @@ try {
         <div class="card-body">
             <h2 class="text-center" style="font-size:34px !important">Clientes</h2>
 
-            <button class="btn btn-dark" id="btnNuevo">
+            <button class="btn btn-primary" id="btnNuevo">
                 <i class="fa-solid fa-plus"></i>
                 Nuevo
             </button>
@@ -78,7 +78,7 @@ try {
                             <td><?php echo $cliente['Est_Descripcion']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
 
-                                <button style="color:white" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
+                                <button style="color:white" class="btn btn-primary btn-sm abrir-editar" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
                                 <button class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $cliente['Cli_Id']; ?>"><i class="fas fa-eye"></i>Detalles</button>
                                 <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
 
@@ -93,7 +93,7 @@ try {
 
 <!-- Formulario de Usuario -->
 <div id="insertar" style="display:none;">
-    <div class="card card-dark">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Nuevo Cliente</h3>
         </div>
@@ -199,7 +199,7 @@ try {
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-dark" id="btnGuardarUsuario"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarUsuario"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                         <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
@@ -210,7 +210,7 @@ try {
 
 <!-- Detalles -->
 <div id="detalles" style="display:none;">
-    <div class="card card-dark">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Detalle Cliente</h3>
         </div>
@@ -379,6 +379,9 @@ try {
     }
 
     $(document).ready(function() {
+        $("#EsquemaGeneral").addClass('menu-open');
+        $("#LinkGeneral").addClass('active');
+        $("#LinkClientes").addClass('active');
       // Función para cargar ciudades basadas en el departamento seleccionado
       
     function cargarCiudades(departamentoId, ciudadId) {

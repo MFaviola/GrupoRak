@@ -51,8 +51,8 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+          <li class="nav-item" id="EsquemaReportes">
+            <a href="#" class="nav-link" style="color:white" id="LinkReportes">
             <i class="fa-solid fa-file"></i>
               <p>
                 Reportes
@@ -61,27 +61,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="?Pages=comprareporte" class="nav-link" style="color:white">
+                <a href="?Pages=comprareporte" class="nav-link" id="LinkReporteCompras">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="?Pages=ventareporte" class="nav-link" style="color:white">
+                <a href="?Pages=ventareporte" class="nav-link" id="LinkReporteVentas">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="?Pages=empleadoreporte" class="nav-link" style="color:white">
+                <a href="?Pages=empleadoreporte" class="nav-link" id="LinkEmpleadosPorVentas">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados por Ventas</p>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a href="?Pages=vehiculoreporte" class="nav-link" style="color:white">
+                <a href="?Pages=vehiculoreporte" class="nav-link" id="LinkVehiculosPorRango">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vehiculos por Rangos</p>
                 </a>
@@ -90,8 +90,8 @@
           </li>
      
 
-         <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+         <li class="nav-item" id="EsquemaAcceso">
+            <a href="#" class="nav-link" style="color:white" id="LinkAcceso">
             <i class="fa-solid fa-lock"></i>
               <p>
                 Accesos
@@ -100,13 +100,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="?Pages=usuario" class="nav-link" style="color:white">
+                <a href="?Pages=usuario" class="nav-link" id="LinkUsuarios">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Usuarios</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="?Pages=roles" class="nav-link" style="color:white">
+                <a href="?Pages=roles" class="nav-link" id="LinkRoles">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Roles</p>
                 </a>
@@ -117,8 +117,8 @@
           </li>
           
 
-          <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+          <li class="nav-item" id="EsquemaGeneral">
+            <a href="#" class="nav-link" style="color:white" id="LinkGeneral">
             <i class="fa-solid fa-globe"></i>
               <p>
                 Genarales
@@ -127,13 +127,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="?Pages=empleados" class="nav-link" style="color:white">
+                <a href="?Pages=empleados" class="nav-link" id="LinkEmpleados">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Empleados</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="?Pages=cliente" class="nav-link" style="color:white">
+                <a href="?Pages=cliente" class="nav-link" id="LinkClientes">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Clientes</p>
                 </a>
@@ -148,8 +148,8 @@
             </ul>
           </li>
      
-          <li class="nav-item">
-            <a href="factura" class="nav-link" style="color:white">
+          <li class="nav-item" id="EsquemaVentas">
+            <a href="factura" class="nav-link" id="LinkVentas" style="color:white">
             <i class="fa-solid fa-bag-shopping"></i>
               <p>
                 Ventas
@@ -158,13 +158,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="?Pages=factura" class="nav-link" style="color:white">
+                <a href="?Pages=factura" class="nav-link" id="LinkVentasVehiculos">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Ventas Vehiculos</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="?Pages=compravehiculo" class="nav-link" style="color:white">
+                <a href="?Pages=compravehiculo" class="nav-link" id="LinkComprasVehiculos">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Compras Vehiculos</p>
                 </a>

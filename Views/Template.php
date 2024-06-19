@@ -39,7 +39,7 @@
       <?php 
     if (isset($_GET["Pages"])) {
       if ($_GET["Pages"] == "factura" || $_GET["Pages"] == "inventario" || $_GET["Pages"] == "cliente" || $_GET["Pages"] == "usuario" || $_GET["Pages"] == "roles" ||
-       $_GET["Pages"] == "empleados"  || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte") {
+       $_GET["Pages"] == "empleados" || $_GET["Pages"] == "compravehiculo" || $_GET["Pages"] == "comprareporte" || $_GET["Pages"] == "ventareporte" || $_GET["Pages"] == "vehiculoreporte" || $_GET["Pages"] == "empleadoreporte") {
         include "Pages/". $_GET["Pages"] . ".php";
       }
     }
