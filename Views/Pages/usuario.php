@@ -78,10 +78,8 @@ try {
     </div>
 </div>
 
-
-
 <!-- Formulario de Usuario -->
-<div id="insertarUsuario" style="display:none;">
+<div id="insertar" style="display:none;">
     <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Crear Nuevo Usuario</h3>
@@ -266,6 +264,10 @@ function validateForm() {
 }
 
 $(document).ready(function() {
+    $("#EsquemaAcceso").addClass('menu-open');
+    $("#LinkAcceso").addClass('active');
+    $("#LinkUsuarios").addClass('active');
+
     // Inicialización de DataTables
     var table = $("#example1").DataTable({
         "responsive": false,
