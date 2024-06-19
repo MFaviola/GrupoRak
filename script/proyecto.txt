@@ -1,0 +1,267 @@
+<?php
+session_start();
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../funciones.php';
+
+function getPantallasPorRol($pdo, $rolId) {
+    $stmt = $pdo->prepare("
+        SELECT p.Ptl_Descripcion, p.Ptl_Identificador
+        FROM acce_tbpantallas AS p
+        JOIN acce_tbpantallas_porroles AS r ON p.Ptl_Id = r.Ptl_Id
+        WHERE r.Rol_Id = :rolId
+    ");
+    $stmt->bindParam(':rolId', $rolId);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$rolId = $_SESSION['rol'];
+$pantallas = getPantallasPorRol($pdo, $rolId);
+$nombreCompleto = isset($_SESSION['nombre_completo']) ? $_SESSION['nombre_completo'] : 'Usuario invitado';
+?>
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(https://i.pinimg.com/736x/95/62/3d/95623dc132235138cfa75403d63aeef3.jpg);">
+    <!-- Brand Logo -->
+    <a href="../Views/Resources/index3.html" class="brand-link" style="background-color:#000">
+        <img src="../Views/Resources/dist/img/logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light" style="color:white">Grupo Rac</span>
+    </a>
+
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="../Views/Resources/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block" style="color:white">
+                    <?php echo htmlspecialchars($nombreCompleto); ?>
+                </a>
+            </div>
+        </div>
+
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Menú de navegación dinámico -->
+                <?php
+                foreach ($pantallas as $pantalla):
+                    $subMenus = [
+                        'Reportes' => ['comprareporte', 'ventareporte', 'empleadoreporte', 'vehiculoreporte'],
+                        'Accesos' => ['usuario', 'roles'],
+                        'Generales' => ['empleados', 'cliente', 'modelos'],
+                        'Ventas' => ['factura', 'vehiculoreporte']
+                    ];
+                    $menuTitle = $pantalla['Ptl_Descripcion'];
+                    $menuId = $pantalla['Ptl_Identificador'];
+
+                    if (array_key_exists($menuTitle, $subMenus)):
+                        echo '<li class="nav-item">
+                                <a href="#" class="nav-link" style="color:white">
+                                    <i class="nav-icon fas fa-' . strtolower($menuTitle) . '"></i>
+                                    <p>' . $menuTitle . ' <i class="fas fa-angle-left right"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview">';
+                        foreach ($subMenus[$menuTitle] as $subMenu):
+                            if (usuarioTieneAcceso($subMenu, $rolId, $pdo)):
+                                echo '<li class="nav-item">
+                                        <a href="?Pages=' . $subMenu . '" class="nav-link" style="color:white">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>' . ucfirst($subMenu) . '</p>
+                                        </a>
+                                    </li>';
+                            endif;
+                        endforeach;
+                        echo '</ul></li>';
+                    else:
+                        echo '<li class="nav-item">
+                                <a href="?Pages=' . $menuId . '" class="nav-link" style="color:white">
+                                    <i class="nav-icon fas fa-' . strtolower($menuTitle) . '"></i>
+                                    <p>' . $menuTitle . '</p>
+                                </a>
+                            </li>';
+                    endif;
+                endforeach;
+                ?>
+                <li class="nav-item">
+                    <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;">
+                        <p>Cerrar sesión</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+
+
+
+
+-----------------------------en cada archivo de pantalla
+
+
+
+<?php
+session_start();
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../funciones.php';
+
+$pagina = 'cliente'; ----> cambiar esto
+$rolId = $_SESSION['rol'];
+
+if (!usuarioTieneAcceso($pagina, $rolId, $pdo)) {
+    header("Location: ../index.php");
+    exit();
+}
+
+// El resto del contenido de cliente.php
+?>
+
+
+
+
+
+------------------------------funcion.php
+
+<?php
+require_once __DIR__ . '/../config.php';
+
+function usuarioTieneAcceso($pagina, $rolId, $pdo) {
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM acce_tbpantallas_porroles AS r
+        JOIN acce_tbpantallas AS p ON r.Ptl_Id = p.Ptl_Id
+        WHERE r.Rol_Id = :rolId AND p.Ptl_Identificador = :pagina
+    ");
+    $stmt->bindParam(':rolId', $rolId);
+    $stmt->bindParam(':pagina', $pagina);
+    $stmt->execute();
+    return $stmt->fetchColumn() > 0;
+}
+?>
+
+
+
+
+----------------------segundo menu
+<?php
+session_start();
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../funciones.php';
+
+$rolId = $_SESSION['rol'];
+$pantallas = getPantallasPorRol($pdo, $rolId);
+$nombreCompleto = isset($_SESSION['nombre_completo']) ? $_SESSION['nombre_completo'] : 'Usuario invitado';
+?>
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(https://i.pinimg.com/736x/95/62/3d/95623dc132235138cfa75403d63aeef3.jpg);">
+    <!-- Brand Logo -->
+    <a href="../Views/Resources/index3.html" class="brand-link" style="background-color:#000">
+        <img src="../Views/Resources/dist/img/logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light" style="color:white">Grupo Rac</span>
+    </a>
+
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="../Views/Resources/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block" style="color:white">
+                    <?php echo htmlspecialchars($nombreCompleto); ?>
+                </a>
+            </div>
+        </div>
+
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Menú de navegación dinámico -->
+                <?php
+                foreach ($pantallas as $pantalla):
+                    $subMenus = [
+                        'Reportes' => ['comprareporte', 'ventareporte', 'empleadoreporte', 'vehiculoreporte'],
+                        'Accesos' => ['usuario', 'roles'],
+                        'Generales' => ['empleados', 'cliente', 'modelos'],
+                        'Ventas' => ['factura', 'vehiculoreporte']
+                    ];
+                    $menuTitle = $pantalla['Ptl_Descripcion'];
+                    $menuId = $pantalla['Ptl_Identificador'];
+
+                    if (array_key_exists($menuTitle, $subMenus)):
+                        echo '<li class="nav-item">
+                                <a href="#" class="nav-link" style="color:white">
+                                    <i class="nav-icon fas fa-' . strtolower($menuTitle) . '"></i>
+                                    <p>' . $menuTitle . ' <i class="fas fa-angle-left right"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview">';
+                        foreach ($subMenus[$menuTitle] as $subMenu):
+                            if (usuarioTieneAcceso($subMenu, $rolId, $pdo)):
+                                echo '<li class="nav-item">
+                                        <a href="?Pages=' . $subMenu . '" class="nav-link" style="color:white">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>' . ucfirst($subMenu) . '</p>
+                                        </a>
+                                    </li>';
+                            endif;
+                        endforeach;
+                        echo '</ul></li>';
+                    else:
+                        echo '<li class="nav-item">
+                                <a href="?Pages=' . $menuId . '" class="nav-link" style="color:white">
+                                    <i class="nav-icon fas fa-' . strtolower($menuTitle) . '"></i>
+                                    <p>' . $menuTitle . '</p>
+                                </a>
+                            </li>';
+                    endif;
+                endforeach;
+                ?>
+                <li class="nav-item">
+                    <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;">
+                        <p>Cerrar sesión</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+
+
+
+
+----------------------funcion de administrador
+<?php
+require_once __DIR__ . '/../config.php';
+
+function usuarioTieneAcceso($pagina, $rolId, $pdo) {
+    if ($_SESSION['Usu_Admin']) {
+        return true;
+    }
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM acce_tbpantallas_porroles AS r
+        JOIN acce_tbpantallas AS p ON r.Ptl_Id = p.Ptl_Id
+        WHERE r.Rol_Id = :rolId AND p.Ptl_Identificador = :pagina
+    ");
+    $stmt->bindParam(':rolId', $rolId);
+    $stmt->bindParam(':pagina', $pagina);
+    $stmt->execute();
+    return $stmt->fetchColumn() > 0;
+}
+
+function getPantallasPorRol($pdo, $rolId) {
+    if ($_SESSION['Usu_Admin']) {
+        $stmt = $pdo->prepare("
+            SELECT Ptl_Descripcion, Ptl_Identificador 
+            FROM acce_tbpantallas
+        ");
+    } else {
+        $stmt = $pdo->prepare("
+            SELECT p.Ptl_Descripcion, p.Ptl_Identificador
+            FROM acce_tbpantallas AS p
+            JOIN acce_tbpantallas_porroles AS r ON p.Ptl_Id = r.Ptl_Id
+            WHERE r.Rol_Id = :rolId
+        ");
+        $stmt->bindParam(':rolId', $rolId);
+    }
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
+
