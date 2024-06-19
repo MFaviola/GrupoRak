@@ -52,6 +52,28 @@ class RolesController {
         }
     }
 
+    public function insertarRol($rol_descripcion, $rol_creacion, $rol_fecha_creacion) {
+        global $pdo;
+
+        try {
+            $sql = 'CALL sp_Rol_Insertar(?, ?, ?, @rol_id)';
+            $stmt = $pdo->prepare($sql);
+
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+
+            $stmt->execute([$rol_descripcion, $rol_creacion, $rol_fecha_creacion]);
+
+            $rol_id = $pdo->query("SELECT @rol_id AS rol_id")->fetch(PDO::FETCH_ASSOC)['rol_id'];
+
+            return $rol_id;
+
+        } catch (Exception $e) {
+            throw new Exception('Error al insertar rol: ' . $e->getMessage());
+        }
+    }
+
 
     
 }
