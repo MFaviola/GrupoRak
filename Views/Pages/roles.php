@@ -33,7 +33,7 @@ try {
                             <td><?php echo $role['Rol_Id']; ?></td>
                             <td><?php echo $role['Rol_Descripcion']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
-                                <a href="#" class="btn btn-warning btn-sm abrir-editar" data-id="<?php echo $role['Rol_Id']; ?>"><i class="fas fa-edit"></i> Editar</a>
+                                <a href="#" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $role['Rol_Id']; ?>"><i class="fas fa-edit"></i> Editar</a>
                                 <a href="#" class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $role['Rol_Id']; ?>"><i class="fas fa-eye"></i> Detalles</a>
                                 <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
                             </td>
@@ -46,7 +46,7 @@ try {
 </div>
 
 <div id="detalles" style="display:none;">
-    <div class="card card-primary">
+    <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Detalle de Rol</h3>
         </div>
@@ -57,7 +57,7 @@ try {
                 </div>
             </div>
             <hr>
-            <table class="table">
+            <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
                         <th>Acción</th>
