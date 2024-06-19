@@ -3,10 +3,10 @@ require_once '../Services/RolesService.php';
 require_once '../Services/PantallaServices.php';
 
 $controller = new RolesController();
-$controller_2 = new PantallasController();
+$pantallasController = new PantallasController();
 try {
     $roles = $controller->listarRoles();
-    $pantallas = $controller_2->listarPantallas();
+    $pantallas = $pantallasController->listarPantallas();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -97,7 +97,7 @@ try {
                         <h3 class="card-title" id="form-title">Crear Rol</h3>
                     </div>
                     <div class="card-body">
-                        <form id="frmInsertar" method="POST" action="../Services/insertar_rol.php">
+                        <form id="frmInsertar" method="POST" action="../Services/guardar_rol.php">
                             <input type="hidden" name="Rol_Id" id="Rol_Id">
                             <div class="row">
                                 <div class="col-md-12">
@@ -188,7 +188,6 @@ try {
 
 <script>
 $(document).ready(function() {
-    // Inicialización de DataTables
     var table = $("#example1").DataTable({
         "responsive": false,
         "lengthChange": false,
@@ -204,11 +203,11 @@ $(document).ready(function() {
                 data: { id: id },
                 success: function(response) {
                     const rol = JSON.parse(response);
-                    $("#Detalle_Rol_Descripcion").text(rol.Rol_Descripcion);
-                    $("#Detalle_Usuario_Creador").text(rol.Usuario_Creador);
-                    $("#Detalle_Rol_FechaCreacion").text(rol.Rol_FechaCreacion);
-                    $("#Detalle_Usuario_Modificador").text(rol.Usuario_Modificador);
-                    $("#Detalle_Rol_FechaModificacion").text(rol.Rol_FechaModificacion);
+                    $("#Detalle_Rol_Descripcion").text(rol.rol.Rol_Descripcion);
+                    $("#Detalle_Usuario_Creador").text(rol.rol.Usuario_Creador);
+                    $("#Detalle_Rol_FechaCreacion").text(rol.rol.Rol_FechaCreacion);
+                    $("#Detalle_Usuario_Modificador").text(rol.rol.Usuario_Modificador);
+                    $("#Detalle_Rol_FechaModificacion").text(rol.rol.Rol_FechaModificacion);
                     $("#tabla").hide();
                     $("#detalles").show();
                 },
@@ -227,16 +226,12 @@ $(document).ready(function() {
                 success: function(response) {
                     const rol = JSON.parse(response);
                     $("#form-title").text('Editar Rol');
-                    $("#Rol_Id").val(rol.Rol_Id);
-                    $("#Rol_Descripcion").val(rol.Rol_Descripcion);
+                    $("#Rol_Id").val(rol.rol.Rol_Id);
+                    $("#Rol_Descripcion").val(rol.rol.Rol_Descripcion);
 
                     // Limpiar las tablas
                     $("#tbPant tbody").empty();
                     $("#tbPantRole tbody").empty();
-
-                    // Depuración
-                    console.log('pantallasDisponibles:', rol.pantallasDisponibles);
-                    console.log('pantallasAsignadas:', rol.pantallasAsignadas);
 
                     // Añadir las pantallas disponibles
                     if (rol.pantallasDisponibles) {
@@ -288,7 +283,6 @@ $(document).ready(function() {
         $("#tbPant tbody").empty();
         $("#tbPantRole tbody").empty();
 
-        // Añadir todas las pantallas al panel de pantallas disponibles
         const pantallas = <?php echo json_encode($pantallas); ?>;
         pantallas.forEach(pantalla => {
             $("#tbPant tbody").append(
@@ -317,8 +311,10 @@ $(document).ready(function() {
             pantallasSeleccionadas.push($(this).data("pantalla-id"));
         });
 
+        var url = rolId ? '../Services/actualizar_pantalla_rol.php' : '../Services/insertar_rol.php';
+
         $.ajax({
-            url: '../Services/insertar_rol.php',
+            url: url,
             type: 'POST',
             data: {
                 Rol_Id: rolId,
@@ -363,3 +359,5 @@ function drop(event, targetId) {
 }
 
 </script>
+
+

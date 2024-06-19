@@ -74,6 +74,24 @@ class RolesController {
         }
     }
 
+    public function actualizarRol($rol_id, $rol_descripcion) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL sp_Rol_Actualizar(?, ?)';
+            $stmt = $pdo->prepare($sql);
+    
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$rol_id, $rol_descripcion]);
+        } catch (Exception $e) {
+            throw new Exception('Error al actualizar rol: ' . $e->getMessage());
+        }
+    }
+    
+
 
     
 }

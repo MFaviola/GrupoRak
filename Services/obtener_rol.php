@@ -5,27 +5,32 @@ require_once '../Services/PantallaServices.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $controller = new RolesController();
-    $pantallasController = new PantallasController();
+    $pantallaController = new PantallasController();
 
     try {
         $rol = $controller->obtenerRolesPorID($id);
-        if ($rol) {
-            // Obtener pantallas asignadas y disponibles
-            $pantallasAsignadas = $pantallasController->listarPantallasPorRol($id);
-            $pantallasDisponibles = $pantallasController->listarPantallasDisponibles($id);
+        $pantallasAsignadas = $pantallaController->listarPantallasPorRol($id);
+        $pantallasDisponibles = $pantallaController->listarPantallas();
 
-            // Añadir las pantallas asignadas y disponibles al rol
-            $rol['pantallasAsignadas'] = $pantallasAsignadas;
-            $rol['pantallasDisponibles'] = $pantallasDisponibles;
+        // Eliminar las pantallas asignadas de las disponibles
+        $pantallasDisponibles = array_filter($pantallasDisponibles, function($pantalla) use ($pantallasAsignadas) {
+            foreach ($pantallasAsignadas as $asignada) {
+                if ($pantalla['Ptl_Id'] === $asignada['Ptl_Id']) {
+                    return false;
+                }
+            }
+            return true;
+        });
 
-            echo json_encode($rol);
-        } else {
-            echo json_encode(['error' => 'El rol no existe.']);
-        }
+        echo json_encode([
+            'rol' => $rol,
+            'pantallasDisponibles' => array_values($pantallasDisponibles), // Asegurar que los índices sean correctos
+            'pantallasAsignadas' => $pantallasAsignadas
+        ]);
     } catch (Exception $e) {
         echo json_encode(['error' => $e->getMessage()]);
     }
 } else {
-    echo json_encode(['error' => 'ID de rol no especificado.']);
+    echo json_encode(['error' => 'ID de usuario no especificado.']);
 }
 ?>

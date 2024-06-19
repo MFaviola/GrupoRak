@@ -157,5 +157,23 @@ class PantallasController {
             throw new Exception('Error al listar pantallas disponibles: ' . $e->getMessage());
         }
     }
+
+    public function eliminarPantallasPorRol($rol_id) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL sp_PantallasPorRoles_EliminarPorRol(?)';
+            $stmt = $pdo->prepare($sql);
+    
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$rol_id]);
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar pantallas por rol: ' . $e->getMessage());
+        }
+    }
+    
 }
 ?>

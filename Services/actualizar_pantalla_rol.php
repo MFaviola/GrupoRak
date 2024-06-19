@@ -1,23 +1,34 @@
 <?php
-require_once '../config.php';
+require_once '../Services/RolesService.php';
 require_once '../Services/PantallaServices.php';
 
-$pantallasController = new PantallasController();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $rol_id = $_POST['Rol_Id'];
+    $rol_descripcion = $_POST['Rol_Descripcion'];
+    $pantallasSeleccionadas = explode(',', $_POST['pantallasSeleccionadas']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'];
-    $rol_id = $_POST['rol_id'];
-    $pantalla_id = $_POST['pantalla_id'];
+    $controller = new RolesController();
+    $pantallaController = new PantallasController();
 
     try {
-        if ($action === 'agregar') {
-            $pantallasController->asignarPantallaARol($rol_id, $pantalla_id);
-        } elseif ($action === 'eliminar') {
-            $pantallasController->eliminarPantallaDeRol($rol_id, $pantalla_id);
+        // Actualizar el nombre del rol
+        $controller->actualizarRol($rol_id, $rol_descripcion);
+
+        // Eliminar todas las pantallas actuales del rol
+        $pantallaController->eliminarPantallasPorRol($rol_id);
+
+        // Asignar las nuevas pantallas al rol
+        foreach ($pantallasSeleccionadas as $pantalla_id) {
+            if (!empty($pantalla_id)) {
+                $pantallaController->asignarPantallaARol($rol_id, $pantalla_id);
+            }
         }
-        echo "Operación completada";
+
+        echo json_encode(['success' => true]);
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo json_encode(['error' => $e->getMessage()]);
     }
+} else {
+    echo json_encode(['error' => 'Método no permitido']);
 }
 ?>
