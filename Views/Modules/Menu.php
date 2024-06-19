@@ -43,7 +43,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white">
+            <a href="?Pages=dashboardsInicio" class="nav-link" style="color:white">
             <i class="fa-solid fa-chart-simple"></i>
               <p>
                 Dashboards
