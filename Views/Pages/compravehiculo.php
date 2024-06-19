@@ -39,24 +39,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         try {
             $Creacion = $_SESSION['ID'];
+
             $clienteID = $controllerCliente->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
-            $response = array("status" => "success", "message" => "Cliente insertado correctamente", "clienteID" => $clienteID);
+            // $response = array("status" => "success", "message" => "Cliente insertado correctamente", "clienteID" => $clienteID);
+
         } catch (Exception $e) {
             $response = array("status" => "error", "message" => $e->getMessage());
         }
-    } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarVehiculo') {
+    }elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarVehiculo') {
         $Placa = $_POST['txtPlaca'];
         $Color = $_POST['txtColor'];
         $PrecioVehiculo = $_POST['txtPrecioVehiculo'];
         $ModeloVehiculo = $_POST['modeloSelect'];
-        $Imagen = $_POST['txtImagen']; // Solo el nombre del archivo
+        $Imagen = $_FILES['txtImagen']; // Archivo subido
 
         try {
             $Creacion = $_SESSION['ID'];
-            $resultadoVehiculo = $controllerCompra->insertarVehiculo($Placa, $Color, $Imagen, $PrecioVehiculo, $ModeloVehiculo, $Creacion);
-            $response = $resultadoVehiculo;
+            
+            // Ruta de destino para guardar la imagen
+            $carpetaDestino = '../Resources/uploads/';
+            if (!file_exists($carpetaDestino)) {
+                mkdir($carpetaDestino, 0777, true);
+            }
+            
+            // Nombre del archivo de imagen
+            $nombreArchivo = basename($Imagen['name']);
+            $rutaArchivo = $carpetaDestino . $nombreArchivo;
+            
+            // Mover el archivo subido a la carpeta destino
+            if (move_uploaded_file($Imagen['tmp_name'], $rutaArchivo)) {
+                $resultadoVehiculo = $controllerCompra->insertarVehiculo($Placa, $Color, $nombreArchivo, $PrecioVehiculo, $ModeloVehiculo, $Creacion);
+                $response = array("status" => "success", "message" => "Vehículo insertado correctamente");
+            } else {
+                throw new Exception("Error al mover la imagen subida");
+            }
         } catch (Exception $e) {
-            $response['message'] = $e->getMessage();
+            $response = array("status" => "error", "message" => $e->getMessage());
         }
     }
 
@@ -76,6 +94,9 @@ try {
     echo 'Error: ' . $e->getMessage();
 }
 ?>
+
+
+
 
 <div id="tabla">
     <div class="card">
@@ -360,6 +381,11 @@ try {
                             <input type="file" class="form-control" name="txtImagen" id="txtImagen">
                             <span style="color:red" class="error-message" id="errorImagen"></span>
                         </div>
+
+                        <label class="control-label">Imagen Actual</label>
+                        <div id="imagenActualContainer">
+                            <img id="imagenActual" src="#" alt="Imagen Actual" style="max-width: 100%;" />
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -406,6 +432,20 @@ try {
 
 
 <script>
+    function cargarImagenActual(imagen) {
+        var imagenActual = $('#imagenActual');
+        if (imagen) {
+            var imageUrl = '/GrupoRak/Resources/uploads/' + encodeURIComponent(imagen);
+            imagenActual
+                .attr('src', imageUrl)
+                .attr('style', 'max-width: 100%; max-height: 200px;')
+                .show();
+        } else {
+            imagenActual
+                .attr('src', '#')
+                .hide();
+        }
+    }
     // Función para limpiar errores
     function clearErrors() {
         document.querySelectorAll('.error-message').forEach(function(error) {
@@ -432,6 +472,23 @@ try {
         $("#insertarEncabezado").hide();
         $("#detalleCompra").hide();
 
+
+
+        $('#txtImagen').change(function() {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagenActual')
+                        .attr('src', e.target.result)
+                        .attr('style', 'max-width: 100%; max-height: 200px;')
+                        .show();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+
+
         $("#btnAgregarCliente").click(function() {
             $("#insertar").show();
             $("#insertarEncabezado").hide();
@@ -451,12 +508,13 @@ try {
         $("#btnAgregarVehiculo").click(function() {
             $("#insertarVehiculo").show();
             $("#insertarEncabezado").hide();
+
+            cargarImagenActual(null);
         });
 
 
         $("#btnVolverVehiculo").click(function() {
-            if ($("#txt"))
-                $("#insertarEncabezado").show();
+            $("#insertarEncabezado").show();
             $("#insertarVehiculo").hide();
             $("#tabla").hide();
 
@@ -583,7 +641,8 @@ try {
 
         $("#btnGuardarCliente").click(function() {
             var formData = new FormData($("#frmInsertarCliente")[0]);
-
+            var identidadBusqeda = $("#txtIdentidad").val();
+            var clienteBusqueda = $("#txtNombre").val() + ' ' + $("#txtApellido").val();
             $.ajax({
                 type: "POST",
                 url: "", // URL del script PHP
@@ -591,26 +650,19 @@ try {
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    console.log(response); // Imprimir la respuesta en la consola para depuración
-                    try {
-                        var resultado = JSON.parse(response);
-                        if (resultado.status === "success") {
-                            var clienteID = resultado.clienteID;
-                            console.log("Cliente ID: " + clienteID);
-                            // Puedes usar el clienteID para otras operaciones
 
-                            alert(resultado.message);
-                            $("#frmInsertarCliente")[0].reset();
-                            $("#insertar").hide();
-                            $("#tabla").hide();
-                            $("#insertarEncabezado").show();
-                        } else {
-                            alert("Error: " + resultado.message);
-                        }
-                    } catch (e) {
-                        console.error("Error parsing JSON:", e);
-                        console.error("Response:", response);
-                    }
+
+
+                    $("#frmInsertarCliente")[0].reset();
+                    $("#insertar").hide();
+                    $("#tabla").hide();
+                    $("#insertarEncabezado").show();
+                    $("#txtIdentidadBusqueda").val(identidadBusqeda);
+                    $("#txtClienteBusqueda").val(clienteBusqueda);
+                    // } catch (e) {
+                    //     console.error("Error parsing JSON:", e);
+                    //     console.error("Response:", response);
+                    // }
                 },
                 error: function() {
                     alert("Error en la solicitud AJAX");
@@ -634,10 +686,6 @@ try {
                 contentType: false,
                 processData: false,
                 success: function(resultadoVehiculo) {
-                    console.log('RESPONSE: ' + resultadoVehiculo);
-
-
-                    alert(resultadoVehiculo.message);
                     $("#frmInsertarVehiculo")[0].reset();
                     $("#insertarVehiculo").hide();
                     $("#insertarEncabezado").show();

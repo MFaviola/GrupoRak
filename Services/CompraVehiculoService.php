@@ -114,7 +114,7 @@ class CompraVehiculoService {
             throw new Exception('Error al insertar usuario: ' . $e->getMessage());
         }
     }
-
+    
     public function insertarVehiculo($placa, $color, $Imagen,$Precio, $Modelo, $Creacion) {
         global $pdo;
          if (session_status() == PHP_SESSION_NONE) {
@@ -125,9 +125,7 @@ class CompraVehiculoService {
         try {
             $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Insertar`(?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
-            if ($stmt === false) {
-                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
-            }
+
             error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]));
             $stmt->execute([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]);
             error_log("insertarUsuario - Valores enviados: " . json_encode([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]));
