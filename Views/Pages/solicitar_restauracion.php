@@ -15,19 +15,23 @@
             <div class="login-aside flex justify-content-center align-items-center">
                 <div>
                     <div class="icon-wrapper mt-3">
-                        <!-- <img src="assets/layout/images/themes/logo-removebg.png" alt="Home Icon" id="logo"> -->
+                    <img src="../Resources/dist/img/logroRac.jpg" alt="Home Icon" id="logo">
+
                     </div>
                 </div>
+                <span id="copyright" style="color:#eee; position:relative; top:100px; left:10px; font-weight:bold; white-space:nowrap; font-size:12px; font-family: Arial, sans-serif;">
+                </span>
             </div>
             <div class="login-aside-container">
                 <div class="login-container d-none" id="login-container">
                     <form id="quickForm" method="POST" action="../../Services/enviar_codigo.php">
-                        <div class="card-body">
-                            <div class="form-group">
+                    <h3 style="text-align:center; font-weight:bold; font-family: Arial, sans-serif;">Reestablecer</h3>
+                    <div class="card-body" style="width:135%">
+                    <div class="form-group">
                                 <label for="exampleInputUsername1">Usuario</label>
                                 <input type="text" name="usuario" class="form-control" id="exampleInputUsername1" placeholder="Usuario" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-3">Enviar Código</button>
+                            <button type="submit" class="btn btn-dark btn-block mt-3"><i class="fa-solid fa-right-to-bracket"></i>ㅤEnviar Código</button>
                         </div>
                     </form>
                 </div>
@@ -47,7 +51,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f4f6f9;
+            background-image: url('../Resources/dist/img/fondoLogin2.jpg');
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed;
         }
 
         .wrapper {
@@ -115,7 +122,7 @@
             transition: width 2s, opacity 1s ease-out;
             width: 100%;
             height: 95%;
-            background: white;
+            background: #f1f1f1;
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
             box-shadow: rgba(0, 0, 0, 0.25) 10px 14px 28px, rgba(0, 0, 0, 0.22) 8px 10px 10px;
@@ -141,6 +148,8 @@
         #logo {
             width: 100%;
             border-radius: 10px;
+            margin-top: 35%;
+            margin-left: 5%;
         }
 
         .sinopsis {
@@ -163,6 +172,11 @@
                 }, 50);
             }, 1800);
         });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+    const currentYear = new Date().getFullYear();
+    document.getElementById('copyright').textContent = `® 2016 - ${currentYear}ㅤGRUPO RAC`;
+  });
     </script>
 </body>
 </html>
