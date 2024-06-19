@@ -276,7 +276,7 @@ $(document).ready(function() {
     table.on('draw', function() {
         attachClickEvents();
     });
-
+ 
     $("#btnNuevo").click(function() {
         $("#form-title").text('Crear Nuevo Usuario');
         $("#id").val('');

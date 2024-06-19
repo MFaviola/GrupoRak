@@ -3,7 +3,7 @@ require_once '../Services/RolesService.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $controller = new RolController();
+    $controller = new RolesController();
 
     try {
         $usuario = $controller->obtenerRolesPorID($id);

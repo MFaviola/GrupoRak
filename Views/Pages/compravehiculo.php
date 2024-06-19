@@ -12,7 +12,7 @@ $controllerCliente = new ClienteService();
 $response = array("status" => "error", "message" => "Ocurrió un error");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');
 
     if (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
         $FechaCompra = $_POST['txtFecha'];
@@ -602,8 +602,8 @@ try {
                             alert(resultado.message);
                             $("#frmInsertarCliente")[0].reset();
                             $("#insertar").hide();
-                            $("#tabla").show();
-                            $("#insertarEncabezado").hide();
+                            $("#tabla").hide();
+                            $("#insertarEncabezado").show();
                         } else {
                             alert("Error: " + resultado.message);
                         }
