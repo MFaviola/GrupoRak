@@ -132,7 +132,7 @@ unset($_SESSION['mensaje_tipo']);
                 </button>
             </div>
             <div class="modal-body">
-                <table id="tablaVehiculos" class="table table-bordered table-striped">
+                <table id=tablaVehiculos"" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Placa</th>

@@ -5,9 +5,11 @@ error_reporting(E_ALL);
 
 require_once '../Services/ApartadoService.php';
 require_once '../Services/ClienteService.php';
+require_once '../Services/VentaService.php';
 
 $controllerCompra = new ApartadoVehiculoService();
 $controllerCliente = new ClienteService();
+$ventasService = new VentaService();
 
 $response = array("status" => "error", "message" => "Ocurrió un error");
 
@@ -78,6 +80,7 @@ try {
     $estadosCiviles = $controllerCliente->listarEstadosCiviles();
     $ciudades = $controllerCliente->CiudadesDDl(0);
     $departamentos = $controllerCliente->listarDepartamentos();
+    $vehiculos = $ventasService->listarVehiculos();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -230,6 +233,33 @@ try {
                         </div>
                     </div>
                 </div>
+                <div class="card card-danger">
+                            <div class="card-header">
+                                <!-- <h3 class="card-title">Vehiculos Comprados</h3> -->
+                            </div>
+                <div class="card-body table-responsive p-0">
+                <table id="detalleFactura" class="table table-hover text-nowrap">
+            <thead class="thead-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Placa</th>
+                    <th>Vehículo</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        </div>
+        <div class="text-right">
+            <p><strong>Subtotal:</strong> <span id="subtotal">L 0.00</span></p>
+            <p><strong>ISV (15%):</strong> <span id="isv15">L 0.00</span></p>
+            <p><strong>Descuento:</strong> <span id="descuento">L 0.00</span></p>
+            <p><strong>Total a Pagar:</strong> <span id="totalPagar">L 0.00</span></p>
+        </div>
+        </div>
                 
 
                 <div class="card-footer">
@@ -239,6 +269,7 @@ try {
                         <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
+
             </form>
 
         </div>
@@ -364,78 +395,52 @@ try {
     </div>
 </div>
 
+<div class="modal fade" id="modalVehiculos" tabindex="-1" role="dialog" aria-labelledby="modalVehiculosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVehiculosLabel">Lista de Vehículos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+    <div class="card">
+            <div class="modal-body">
+                <table id="tablaVehiculos" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Placa</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Marca</th>
+                            <th>Color</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($vehiculos as $vehiculo) : ?>
+                        <tr>
+                            <td><?php echo $vehiculo['Veh_Placa']; ?></td>
+                            <td><?php echo $vehiculo['Modelo']; ?></td>
+                            <td><?php echo $vehiculo['Año']; ?></td>
+                            <td><?php echo $vehiculo['Marca']; ?></td>
+                            <td><?php echo $vehiculo['Veh_Color']; ?></td>
+                            <td><?php echo $vehiculo['Precio']; ?></td>
 
-<!-- Formulario de Vehiculo -->
-<div id="insertarVehiculo" style="display:none;">
-    <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title" id="form-title">Nuevo Vehiculo</h3>
-        </div>
-        <div class="card-body">
-            <form id="frmInsertarVehiculo" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="formulario" value="insertarVehiculo">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Placa:</label>
-                            <input type="text" class="form-control" name="txtPlaca" id="txtPlaca">
-                            <span style="color:red" class="error-message" id="errorPlaca"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Color:</label>
-                            <input type="text" class="form-control" name="txtColor" id="txtColor">
-                            <span style="color:red" class="error-message" id="errorColor"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Precio:</label>
-                            <input type="text" class="form-control" name="txtPrecioVehiculo" id="txtPrecioVehiculo">
-                            <span style="color:red" class="error-message" id="errorPrecio"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Imagen:</label>
-                            <input type="file" class="form-control" name="txtImagen" id="txtImagen">
-                            <span style="color:red" class="error-message" id="errorImagen"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Marca</label>
-                            <select class="form-control select2" style="width: 100%;" id="marcaSelect" name="marcaSelect">
-                                <option value="0">Seleccione</option>
-                                <?php foreach ($marcas as $marca) : ?>
-                                    <option value="<?php echo $marca['Mar_Id']; ?>"><?php echo $marca['Mar_Descripcion']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
+                            <td><button class="btn btn-success btn-sm seleccionar-vehiculo" data-placa="<?php echo $vehiculo['Veh_Placa']; ?>" data-modelo="<?php echo $vehiculo['Modelo']; ?>" data-color="<?php echo $vehiculo['Veh_Color']; ?>"data-color="<?php echo $vehiculo['Precio']; ?>">Agregar</button></td>
 
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Modelo</label>
-                            <select class="form-control select2" style="width: 100%;" id="modeloSelect" name="modeloSelect">
-                                <option value="0">Seleccione</option>
-                            </select>
-                            <span style="color:red" class="error-message" id="errorModelo"></span>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-primary" id="btnGuardarVehiculo"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
-
-                        <button type="button" id="btnVolverVehiculo" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-                    </div>
-                </div>
-            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -458,6 +463,37 @@ try {
         });
     }
     $(document).ready(function() {
+
+        $("#btnAgregarVehiculo").click(function() {
+        $("#modalVehiculos").modal('show');
+    });
+
+    $(".seleccionar-vehiculo").click(function() {
+        var vehiculo = {
+            placa: $(this).data('placa'),
+            modelo: $(this).data('modelo'),
+            color: $(this).data('color'),
+            precio: $(this).data('precio'),
+        };
+
+        // Crear una nueva fila en la tabla de detalles
+        var newRow = `
+            <tr>
+                <td>${$("#detalleFactura tbody tr").length + 1}</td>
+                <td>${vehiculo.placa}</td>
+                <td>${vehiculo.modelo} (${vehiculo.color})</td>
+                <td>${vehiculo.precio}</td>
+                <td><input type="number" class="form-control cantidad" value="1" min="1" data-precio="${vehiculo.precio}"></td>
+                <td class="subtotal">${vehiculo.precio}</td>
+                <td><button class="btn btn-danger btn-sm eliminar-vehiculo">Eliminar</button></td>
+            </tr>
+        `;
+
+        // Añadir la nueva fila a la tabla de detalles
+        $("#detalleFactura tbody").append(newRow);
+        actualizarTotales();
+        $("#modalVehiculos").modal('hide');
+    });
         $("#EsquemaVentas").addClass('menu-open');
         $("#LinkVentas").addClass('active');
         $("#LinkComprasVehiculos").addClass('active');
@@ -490,10 +526,10 @@ try {
 
         });
 
-        $("#btnAgregarVehiculo").click(function() {
-            $("#insertarVehiculo").show();
-            $("#insertarEncabezado").hide();
-        });
+        // $("#btnAgregarVehiculo").click(function() {
+        //     $("#insertarVehiculo").show();
+        //     $("#insertarEncabezado").hide();
+        // });
 
 
         $("#btnVolverVehiculo").click(function() {
@@ -591,9 +627,15 @@ try {
             "autoWidth": false,
         });
 
+        var table = $("#tablaVehiculos").DataTable({
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+        });
+
 
         $("#btnNuevo").click(function() {
-            $("#form-title").text('Nueva Compra');
+            $("#form-title").text('Nueva Apartado de Vehiculo');
             $("#id").val('');
             $("#txtNombre").val('');
             $("#txtApellido").val('');
