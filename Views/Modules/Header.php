@@ -5,9 +5,13 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
 
+      <li class="nav-item">
+        <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red;"><p>Cerrar sesión</p></a>';
+      </li>'
+
     </ul>
 
-    <!-- Right navbar links -->
+
 
 
   
