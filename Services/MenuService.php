@@ -52,7 +52,7 @@ function generarMenu($conn) {
                 break;
             case 'Ventas Vehiculos':
             case 'Compras Vehiculos':
-            case 'Vehiculos':
+            case 'Apartados':
                 $menu['Ventas'][] = $row;
                 break;
             case 'Dashboards':

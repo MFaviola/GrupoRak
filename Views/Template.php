@@ -39,7 +39,7 @@
         if (isset($_GET["Pages"])) {
           $pages = array("factura", "inventario", "cliente", "usuario", "roles", 
                          "empleados", "comprareporte", "ventareporte", "vehiculoreporte", 
-                         "empleadoreporte", "dashboards", "dashboardsInicio", "compravehiculo");
+                         "empleadoreporte", "dashboards", "dashboardsInicio", "compravehiculo", "apartado");
 
           if (in_array($_GET["Pages"], $pages)) {
             include "Pages/" . $_GET["Pages"] . ".php";
