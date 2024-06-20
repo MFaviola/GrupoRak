@@ -123,10 +123,6 @@ function generarMenu($conn) {
         echo '</ul>';
         echo '</li>';
     }
-
-    echo '<li class="nav-item">';
-    echo '<a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;"><p>Cerrar sesión</p></a>';
-    echo '</li>';
     
     echo '</ul>';
 }
