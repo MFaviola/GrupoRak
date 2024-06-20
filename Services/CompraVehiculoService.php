@@ -26,6 +26,7 @@ class CompraVehiculoService {
             throw new Exception('Error al listar facturas: ' . $e->getMessage());
         }
     }
+
     public function listarMetodosPagos() {
         global $pdo;
     
@@ -55,6 +56,19 @@ class CompraVehiculoService {
         global $pdo;
         try {
             $sql = 'CALL `dbgruporac`.`sp_Modelos_Ddl`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener ciudades: ' . $e->getMessage());
+        }
+    }
+
+    public function ListarComprasDetalles($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalle_Listar`(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -115,30 +129,36 @@ class CompraVehiculoService {
         }
     }
     
-    public function insertarVehiculo($placa, $color, $Imagen,$Precio, $Modelo, $Creacion) {
+    public function insertarVehiculo($placa, $color, $Imagen, $Precio, $Modelo, $Creacion) {
         global $pdo;
-         if (session_status() == PHP_SESSION_NONE) {
-             session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
         $Creacion = $_SESSION['ID'];
-
         try {
             $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Insertar`(?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
-
-            error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]));
-            $stmt->execute([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]);
-            error_log("insertarUsuario - Valores enviados: " . json_encode([$placa, $color, $Imagen,$Precio, $Modelo, $Creacion]));
-            $result = $stmt->fetch();
-            if (isset($result['Result']) && $result['Result'] == 1) {
+    
+            // Debug: Log values before executing
+            error_log("insertarVehiculo - Valores antes de ejecutar: " . json_encode([$placa, $color, $Imagen, $Precio, $Modelo, $Creacion]));
+            // Execute the statement
+            $stmt->execute([$placa, $color, $Imagen, $Precio, $Modelo, $Creacion]);
+            // Fetch the result
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Debug: Log values after executing
+            error_log("insertarVehiculo - Resultado obtenido: " . json_encode($result));
+    
+            // Check the result
+            if ($result && $result['Result'] == 1) {
                 return 1;
             } else {
                 return 0;
             }
         } catch (Exception $e) {
-            throw new Exception('Error al insertar usuario: ' . $e->getMessage());
+            throw new Exception('Error al insertar vehículo: ' . $e->getMessage());
         }
     }
+    
       
     public function insertarEncabezado($fecha, $MetodoPago, $Cliente, $Creacion) {
         global $pdo;
@@ -148,7 +168,7 @@ class CompraVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Insertar`(?, ?, ?, ?, ?)';
+            $sql = 'CALL `dbgruporac`.`sp_Compras_Insertar`(?, ?, ?, ?,@p_Com_ID)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -156,11 +176,45 @@ class CompraVehiculoService {
             error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$fecha, $MetodoPago, $Cliente, $Creacion]));
             $stmt->execute([$fecha, $MetodoPago, $Cliente, $Creacion]);
             error_log("insertarUsuario - Valores enviados: " . json_encode([$fecha, $MetodoPago, $Cliente, $Creacion]));
-            $result = $stmt->fetch();
-            if (isset($result['Result']) && $result['Result'] == 1) {
-                return "1";
+            $stmt->closeCursor(); // Necesario para llamar a una consulta almacenada que devuelve resultados
+
+            // Obtener el ID generado
+            $result = $pdo->query("SELECT @p_Com_ID AS Com_ID")->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                return $result['Com_ID'];
             } else {
                 return "0";
+            }
+        } catch (Exception $e) {
+            throw new Exception('Error al insertar usuario: ' . $e->getMessage());
+        }
+    }
+
+    public function insertarDetalle($PrecioCompra, $CompraId, $Placa,$Impuesto, $Creacion) {
+        global $pdo;
+         if (session_status() == PHP_SESSION_NONE) {
+             session_start();
+        }
+        $Creacion = $_SESSION['ID'];
+
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalles_Insertar`(?, ?, ?, ?, ?)';
+            $stmt = $pdo->prepare($sql);
+    
+            // Debug: Log values before executing
+            error_log("insertarVehiculo - Valores antes de ejecutar: " . json_encode([$PrecioCompra, $CompraId, $Placa,$Impuesto, $Creacion]));
+            // Execute the statement
+            $stmt->execute([$PrecioCompra, $CompraId, $Placa,$Impuesto, $Creacion]);
+            // Fetch the result
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Debug: Log values after executing
+            error_log("insertarVehiculo - Resultado obtenido: " . json_encode($result));
+    
+            // Check the result
+            if ($result && $result['Result'] == 1) {
+                return 1;
+            } else {
+                return 0;
             }
         } catch (Exception $e) {
             throw new Exception('Error al insertar usuario: ' . $e->getMessage());
