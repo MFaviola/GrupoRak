@@ -221,5 +221,18 @@ class CompraVehiculoService {
         }
     }
 
+    public function eliminarDetalle($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalles_Eliminar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return "Usuario eliminado correctamente.";
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar usuario: ' . $e->getMessage());
+        }
+    }
+    
+
 }
 ?>

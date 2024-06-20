@@ -215,7 +215,6 @@ try {
                 <input type="hidden" id="CompraId" name="CompraId" value="<?php echo isset($_SESSION['CompraId']) ? htmlspecialchars($_SESSION['CompraId']) : ''; ?>">
 
                 <div class="row">
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Metodo de Pago</label>
@@ -287,7 +286,6 @@ try {
                                             <th class="text-center">Precio Compra</th>
                                             <th class="text-center">Impuesto</th>
                                             <th class="text-center">Acciones</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -302,10 +300,11 @@ try {
                                                     <div class="col-md-6">
                                                         <input type="text" class="form-control" name="precioCompra[]" value="<?php echo $detalle['Cdt_PrecioCompra']; ?>">
                                                     </div>
-
                                                 </td>
                                                 <td><?php echo $detalle['Imp_ISV']; ?></td>
-                                                <td><button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="<?php echo $detalle['id']; ?>"><i class="fa-solid fa-trash"></i></button>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -491,10 +490,6 @@ try {
                             <span style="color:red" class="error-message" id="errorImagen"></span>
                         </div>
 
-                        <label class="control-label">Imagen Actual</label>
-                        <div id="imagenActualContainer">
-                            <img id="imagenActual" src="#" alt="Imagen Actual" style="max-width: 100%;" />
-                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -519,8 +514,14 @@ try {
                             <span style="color:red" class="error-message" id="errorModelo"></span>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-center">
+                            <img id="imagenActual" src="#" alt="Imagen Actual" style="max-width: 100%;" />
+                        </div>
+                    </div>
 
                 </div>
+                <br>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
                         <button type="button" class="btn btn-primary" id="btnGuardarVehiculo"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
@@ -533,6 +534,26 @@ try {
     </div>
 </div>
 
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="modalEliminarDetalle" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminarDetalle"><i class="fa-solid fa-trash"></i> Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- jQuery -->
 
@@ -541,6 +562,160 @@ try {
 
 
 <script>
+    function validateForm() {
+        let isValid = true;
+        document.querySelectorAll('.error-message').forEach(function(error) {
+            error.textContent = '';
+        });
+        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
+            input.classList.remove('is-invalid');
+        });
+
+        const identidad = document.getElementById('txtIdentidad');
+        if (!identidad.value) {
+            document.getElementById('errorIdentidad').textContent = 'El campo es requerido';
+            identidad.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const nombre = document.getElementById('txtNombre');
+        if (!nombre.value) {
+            document.getElementById('errorNombre').textContent = 'El campo es requerido';
+            nombre.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const apellido = document.getElementById('txtApellido');
+        if (!apellido.value) {
+            document.getElementById('errorApellido').textContent = 'El campo es requerido';
+            apellido.classList.add('is-invalid');
+            isValid = false;
+        }
+
+
+        const sexo = document.querySelector('input[name="rbSexo"]:checked');
+        if (!sexo) {
+            document.getElementById('errorSexo').textContent = 'El campo es requerido';
+            document.getElementById('rbfemenino').classList.add('is-invalid');
+            document.getElementById('rbmasculino').classList.add('is-invalid');
+            isValid = false;
+        }
+
+
+        const fecha = document.getElementById('txtFechaNacimiento');
+        if (!fecha.value) {
+            document.getElementById('errorFecha').textContent = 'El campo es requerido';
+            fecha.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const ciudad = document.getElementById('ciudadSelect');
+        if (!ciudad.value || ciudad.value == '0') {
+            document.getElementById('errorCiudad').textContent = 'El campo es requerido';
+            ciudad.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const esciv = document.getElementById('estadoCivilSelect');
+        if (!esciv.value || esciv.value == '0') {
+            document.getElementById('errorEsciv').textContent = 'El campo es requerido';
+            esciv.classList.add('is-invalid');
+            isValid = false;
+        }
+
+
+        const direccion = document.getElementById('txtDireccion');
+        if (!direccion.value) {
+            document.getElementById('errorDireccion').textContent = 'El campo es requerido';
+            direccion.classList.add('is-invalid');
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+
+    function validateFormEncabezado() {
+        let isValid = true;
+        document.querySelectorAll('.error-message').forEach(function(error) {
+            error.textContent = '';
+        });
+        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
+            input.classList.remove('is-invalid');
+        });
+
+        // const identidadBusqueda = document.getElementById('txtIdentidadBusqueda');
+        // if (!identidadBusqueda.value) {
+        //     document.getElementById('errorIdentidadBusqueda').textContent = 'El campo es requerido';
+        //     identidadBusqueda.classList.add('is-invalid');
+        //     isValid = false;
+        // }
+
+        const clienteBusqueda = document.getElementById('txtClienteBusqueda');
+        if (!clienteBusqueda.value) {
+            document.getElementById('errorClienteBusqueda').textContent = 'El campo es requerido';
+            clienteBusqueda.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const metodo = document.getElementById('pagosSelect');
+        if (!metodo.value || metodo.value == '0') {
+            document.getElementById('errorMetodoPago').textContent = 'El campo es requerido';
+            metodo.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function validateFormVehiculo() {
+        let isValid = true;
+        document.querySelectorAll('.error-message').forEach(function(error) {
+            error.textContent = '';
+        });
+        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
+            input.classList.remove('is-invalid');
+        });
+
+        const placa = document.getElementById('txtPlaca');
+        if (!placa.value) {
+            document.getElementById('errorPlaca').textContent = 'El campo es requerido';
+            placa.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const color = document.getElementById('txtColor');
+        if (!color.value) {
+            document.getElementById('errorColor').textContent = 'El campo es requerido';
+            color.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const imagen = document.getElementById('txtImagen');
+        if (!imagen.value) {
+            document.getElementById('errorImagen').textContent = 'El campo es requerido';
+            imagen.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const precio = document.getElementById('txtPrecioVehiculo');
+        if (!precio.value) {
+            document.getElementById('errorPrecio').textContent = 'El campo es requerido';
+            precio.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const modelo = document.getElementById('modeloSelect');
+        if (!modelo.value || modelo.value == '0') {
+            document.getElementById('errorModelo').textContent = 'El campo es requerido';
+            modelo.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+
     function cargarImagenActual(imagen) {
         var imagenActual = $('#imagenActual');
         if (imagen) {
@@ -566,6 +741,7 @@ try {
     }
     $(document).ready(function() {
         var encabezadoInsertado = false; // Variable de control para evitar insertar el encabezado más de una vez
+
 
         $("#EsquemaVentas").addClass('menu-open');
         $("#LinkVentas").addClass('active');
@@ -618,10 +794,8 @@ try {
 
         $("#btnAgregarVehiculo").click(function() {
 
-            var cliente = $("#txtClienteBusqueda").val();
-            var metodo = $("#pagosSelect").val();
-            console.log(metodo);
-            if (cliente != '' && metodo != '0') {
+
+            if (validateFormEncabezado()) {
                 $("#insertarVehiculo").show();
                 $("#insertarEncabezado").hide();
 
@@ -787,47 +961,53 @@ try {
         });
 
 
+
         $("#btnGuardarCliente").click(function() {
 
-            var formData = new FormData($("#frmInsertarCliente")[0]);
-            var identidadBusqeda = $("#txtIdentidad").val();
-            var clienteBusqueda = $("#txtNombre").val() + ' ' + $("#txtApellido").val();
+            if (validateForm()) {
+                var formData = new FormData($("#frmInsertarCliente")[0]);
+                var identidadBusqeda = $("#txtIdentidad").val();
+                var clienteBusqueda = $("#txtNombre").val() + ' ' + $("#txtApellido").val();
 
-            // Actualizar el valor de clienteID desde el input hidden
-            var clienteID = $("#clienteID").val();
-            console.log('CO' + clienteID)
-            $.ajax({
-                type: "POST",
-                url: "", // URL del script PHP
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log("ID CLIENTE CREADO: " + clienteID);
-                    $("#frmInsertarCliente")[0].reset();
-                    $("#insertar").hide();
-                    $("#tabla").hide();
-                    $("#insertarEncabezado").show();
-                    $("#txtIdentidadBusqueda").val(identidadBusqeda);
-                    $("#txtClienteBusqueda").val(clienteBusqueda);
-                },
-                error: function() {
-                    alert("Error en la solicitud AJAX");
-                }
-            });
+                // Actualizar el valor de clienteID desde el input hidden
+                var clienteID = $("#clienteID").val();
+                console.log('CO' + clienteID)
+                $.ajax({
+                    type: "POST",
+                    url: "", // URL del script PHP
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log("ID CLIENTE CREADO: " + clienteID);
+                        $("#frmInsertarCliente")[0].reset();
+                        $("#insertar").hide();
+                        $("#tabla").hide();
+                        $("#insertarEncabezado").show();
+                        $("#txtIdentidadBusqueda").val(identidadBusqeda);
+                        $("#txtClienteBusqueda").val(clienteBusqueda);
+                    },
+                    error: function() {
+                        alert("Error en la solicitud AJAX");
+                    }
+                });
+            }
+
 
 
 
         });
 
 
+        $("#btnEliminarDetalle").click(function() {
+            console.log("ENTOOOOO");
+            $("#modalEliminarDetalle").show();
+        });
 
         function insertarEncabezado() {
 
-
-
             var compraID = $("#CompraId").val();
-            var compraIDSumado = parseInt(compraID) + 1; // Sumar 1 al valor de CompraId
+            var compraIDSumado = parseInt(compraID) + 1; // Sumar 1 al valoCr de ompraId
 
             if (!encabezadoInsertado) {
                 var pagosSelect = $("#pagosSelect").val();
@@ -860,6 +1040,7 @@ try {
             } else {
 
                 insertarDetalle(compraIDSumado);
+
             }
         }
 
@@ -881,21 +1062,20 @@ try {
         }
 
         function cargarDetallesCompra(compraId) {
+    $.ajax({
+        type: "GET",
+        url: "comprasDetalles_obtener.php",
+        data: {
+            id: compraId
+        },
+        success: function(response) {
+            var detalles = JSON.parse(response);
+            console.log("DETALLES :" + detalles);
+            var tbody = $("#detalleCompra tbody");
+            tbody.empty(); // Limpiar tabla
 
-            $.ajax({
-                type: "GET",
-                url: "comprasDetalles_obtener.php",
-                data: {
-                    id: compraId
-                },
-                success: function(response) {
-                    var detalles = JSON.parse(response);
-                    console.log("DETALLES :" + detalles);
-                    var tbody = $("#detalleCompra tbody");
-                    tbody.empty(); // Limpiar tabla
-
-                    detalles.forEach(function(detalle) {
-                        var fila = `<tr>
+            detalles.forEach(function(detalle) {
+                var fila = `<tr>
                     <td>${detalle.Veh_Placa}</td>
                     <td>${detalle.Veh_Color}</td>
                     <td>${detalle.Mod_Descripcion}</td>
@@ -903,52 +1083,82 @@ try {
                     <td>${detalle.Mar_Descripcion}</td>
                     <td><input type="text" class="form-control" name="precioCompra[]" value="${detalle.Cdt_PrecioCompra}"></td>
                     <td>${detalle.Imp_ISV}</td>
-                    <td><button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button></td>
+                    <td><button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="${detalle.Cdt_Id}"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>`;
-                        tbody.append(fila);
-                    });
-                    $("#detalleCompra").show();
-                },
-                error: function() {
-                    alert("Error al cargar los detalles de la compra");
-                }
+                tbody.append(fila);
             });
+            $("#detalleCompra").show();
+        },
+        error: function() {
+            alert("Error al cargar los detalles de la compra");
         }
+    });
+}
+
+// Manejar el evento de clic en el botón de eliminar detalle
+$(document).on('click', '.btnEliminarDetalle', function() {
+    let idDetalleAEliminar = $(this).data('id');
+    console.log("ID DETALLE: " + idDetalleAEliminar)
+    $('#modalEliminarDetalle').data('id', idDetalleAEliminar).modal('show');
+});
+
+// Manejar la confirmación de eliminación en el modal
+$('#btnConfirmarEliminarDetalle').click(function() {
+    let idDetalleAEliminar = $('#modalEliminarDetalle').data('id');
+    $.ajax({
+        type: "POST",
+        url: "eliminarDetalle.php", // URL del script PHP para eliminar el detalle
+        data: { id: idDetalleAEliminar },
+        success: function(response) {
+            $('#modalEliminarDetalle').modal('hide');
+            cargarDetallesCompra(compraIDSumado); // Recargar la tabla de detalles después de eliminar
+        },
+        error: function() {
+            alert("Error al eliminar el detalle");
+        }
+    });
+});
 
 
         // Enviar formulario de vehiculo y luego insertar encabezado y detalle
         $("#btnGuardarVehiculo").click(function() {
-            var formData = new FormData($("#frmInsertarVehiculo")[0]);
 
-            // Extraer el nombre del archivo
-            var fileName = $("#txtImagen").val().split('\\').pop();
-            formData.append("txtImagen", fileName);
-            var Precio = $("#txtPrecioVehiculo").val();
-            formData.append("txtPrecioVehiculo", Precio);
+            if (validateFormVehiculo()) {
+                var formData = new FormData($("#frmInsertarVehiculo")[0]);
 
-            $.ajax({
-                type: "POST",
-                url: "", // URL del script PHP
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    $("#frmInsertarVehiculo")[0].reset();
-                    $("#insertarVehiculo").hide();
-                    $("#insertarEncabezado").show();
-                    // Deshabilitar el campo #txtIdentidadBusqueda
-                    $("#txtIdentidadBusqueda").prop('disabled', true);
-                    $("#btnFinalizar").prop('disabled',false);
-                    // Insertar el encabezado después de insertar el vehículo
-                    insertarEncabezado();
+                // Extraer el nombre del archivo
+                var fileName = $("#txtImagen").val().split('\\').pop();
+                formData.append("txtImagen", fileName);
+                var Precio = $("#txtPrecioVehiculo").val();
+                formData.append("txtPrecioVehiculo", Precio);
+
+                $.ajax({
+                    type: "POST",
+                    url: "", // URL del script PHP
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        $("#frmInsertarVehiculo")[0].reset();
+                        $("#insertarVehiculo").hide();
+                        $("#insertarEncabezado").show();
+                        // Deshabilitar el campo #txtIdentidadBusqueda
+                        $("#txtIdentidadBusqueda").prop('disabled', true);
+                        $("#txt").prop('disabled', true);
+                        $("#btnFinalizar").prop('disabled', false);
+                        $("#pagosSelect").prop('disabled', true);
+                        // Insertar el encabezado después de insertar el vehículo
+                        insertarEncabezado();
 
 
-                },
-                error: function() {
-                    alert("Error en la solicitud AJAX");
-                }
-            });
+                    },
+                    error: function() {
+                        alert("Error en la solicitud AJAX");
+                    }
+                });
+            }
+
         });
 
 
