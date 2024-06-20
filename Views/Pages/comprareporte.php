@@ -57,7 +57,7 @@
 
 <script>
     async function generateReport() {
-        const logoBase64 = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBx...';
+       
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
 
@@ -76,8 +76,9 @@
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
 
-                    // Agregar logo
-                    doc.addImage(logoBase64, 'JPEG', 10, 10, 30, 10);
+                    const logoBase64 = '../Views/Resources/dist/img/logroRac.jpg';
+
+                    doc.addImage(logoBase64, 'JPEG', 12, 10, 12, 10);
 
                     // Título del reporte con fondo rojo
                     doc.setFontSize(18);

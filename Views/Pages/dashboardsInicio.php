@@ -31,7 +31,7 @@ try {
         <div class="row m-2">
             <!-- Existing small boxes -->
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-info">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadvehiculos; ?></h3>
                         <p>Vehículos</p>
@@ -43,7 +43,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadventas; ?></h3>
                         <p>Ventas</p>
@@ -55,7 +55,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadcompras; ?></h3>
                         <p>Compras</p>
@@ -67,7 +67,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadmarcas; ?></h3>
                         <p>Marcas</p>
@@ -81,7 +81,7 @@ try {
 
         <div class="row m-2">
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-info">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadmodelos; ?></h3>
                         <p>Modelos</p>
@@ -93,7 +93,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadempleados; ?></h3>
                         <p>Empleados</p>
@@ -105,7 +105,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadclientes; ?></h3>
                         <p>Clientes</p>
@@ -117,7 +117,7 @@ try {
             </div>
 
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
+                <div class="small-box bg-image">
                     <div class="inner">
                         <h3><?php echo $cantidadsedes; ?></h3>
                         <p>Sedes</p>
@@ -134,7 +134,7 @@ try {
     <div class="col-lg-6">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white">
-                <h3 class="card-title">Top 5 Marcas Más Vendidas</h3>
+                <h3 class="card-title" style="font-weight:bold">Top 5 Marcas Más Vendidas</h3>
             </div>
             <div class="card-body">
                 <ul id="top5-automoviles" class="list-group">
@@ -152,7 +152,7 @@ try {
     <div class="col-lg-6">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white">
-                <h3 class="card-title">Top 5 Empleados del Mes</h3>
+                <h3 class="card-title" style="font-weight:bold">Top 5 Empleados del Mes</h3>
             </div>
             <div class="card-body">
                 <ul id="top5-empleados" class="list-group">
@@ -173,7 +173,7 @@ try {
         <div class="row">
           <div class="col-md-6">
             <!-- AREA CHART -->
-            <div class="card card-primary collapse">
+            <div class="card card-danger collapse">
               <div class="card-header">
                 <h3 class="card-title">Area Chart</h3>
 
@@ -201,9 +201,9 @@ try {
             <!-- /.card -->
 
             <!-- PIE CHART -->
-            <div class="card card-success">
+            <div class="card card-danger">
             <div class="card-header">
-              <h3 class="card-title">Ventas por Mes</h3>
+              <h3 class="card-title" style="font-weight:bold">Ventas por Mes</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
@@ -221,9 +221,9 @@ try {
             <!-- /.card-body -->
           </div>
             <!-- /.card -->
-            <div class="card card-warning">
+            <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Compras Por Cliente</h3>
+                <h3 class="card-title" style="font-weight:bold">Compras Por Cliente</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -245,7 +245,7 @@ try {
           <!-- /.col (LEFT) -->
           <div class="col-md-6">
             <!-- LINE CHART -->
-            <div class="card card-info collapse">
+            <div class="card card-danger collapse">
               <div class="card-header">
                 <h3 class="card-title">Line Chart</h3>
 
@@ -268,9 +268,9 @@ try {
             <!-- /.card -->
 
             <!-- BAR CHART -->
-            <div class="card card-warning">
+            <div class="card card-danger">
             <div class="card-header">
-              <h3 class="card-title">Compras Por Mes</h3>
+              <h3 class="card-title" style="font-weight:bold">Compras Por Mes</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
@@ -290,9 +290,9 @@ try {
             <!-- /.card -->
 
             <!-- STACKED BAR CHART -->
-            <div class="card card-success">
+            <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Ventas por Empleado</h3>
+                <h3 class="card-title" style="font-weight:bold">Ventas por Empleado</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -314,6 +314,26 @@ try {
           <!-- /.col (RIGHT) -->
         </div>
 
+      
+<style>
+  .bg-image
+  {
+    color: white;
+    background-image: url(https://www.ppt-backgrounds.net/images/dark-red-gradient-slides-templates-ppt-templates.jpg);
+  }
+
+  .bg-rojoo
+  {
+    color: white;
+    background-color: #ba0201;
+  }
+
+  .card-danger:not(.card-outline) > .card-header {
+  background-color: #000;
+  color: white
+  }
+
+</style>
         
 
 
@@ -340,7 +360,7 @@ try {
       datasets: [
         {
           label               : 'Digital Goods',
-          backgroundColor     : 'rgba(60,141,188,0.9)',
+          backgroundColor     : 'rgba(138,8,8,0.9)',
           borderColor         : 'rgba(60,141,188,0.8)',
           pointRadius          : false,
           pointColor          : '#3b8bba',
@@ -438,7 +458,7 @@ try {
                     labels: labelsCompras,
                     datasets: [{
                         data: dataCompras,
-                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                        backgroundColor: ['#c80b0b', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
                     }]
                 };
 
@@ -486,7 +506,7 @@ var donutData        = {
       datasets: [
         {
           data: [700,500,400,600,300,100],
-          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+          backgroundColor : ['#c80b0b', '#848484', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
         }
       ]
     }
@@ -523,7 +543,7 @@ var donutData        = {
                     labels: labelsVentas,
                     datasets: [{
                         data: dataVentas,
-                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                        backgroundColor: ['#c80b0b', '#848484', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
                     }]
                 };
 
@@ -591,8 +611,8 @@ var donutData        = {
                     labels: labelsVentas,
                     datasets: [{
                         label: 'Cantidad de Ventas',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
+                        backgroundColor: 'rgba(201,1,1,0.9)',
+                        borderColor: 'rgba(201,1,1,0.9)',
                         data: dataVentas
                     }]
                 };
@@ -660,8 +680,8 @@ var donutData        = {
                     labels: labelsCompras,
                     datasets: [{
                         label: 'Cantidad de Compras',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
+                        backgroundColor: 'rgba(201,1,1,0.9)',
+                        borderColor: 'rgba(201,1,1,0.9)',
                         data: dataCompras
                     }]
                 };
