@@ -309,6 +309,15 @@ try {
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <div class="card-body">
+                                <div class="text-right">
+                                    <p><strong>Subtotal:</strong> <span id="subtotal">L 0.00</span></p>
+                                    <p><strong>ISV (15%):</strong> <span id="isv15">L 0.00</span></p>
+                                 
+                                    <p><strong>Total a Pagar:</strong> <span id="totalPagar">L 0.00</span></p>
+                                </div>
+                                </div>
+                             
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -1030,6 +1039,7 @@ try {
                         console.log("Encabezado insertado correctamente", compraIDSumado);
 
                         encabezadoInsertado = true;
+                        localStorage.setItem('compraIDSumado', compraIDSumado); // 
                         insertarDetalle(compraIDSumado); // Pasar el ID de la compra al insertar el detalle
 
                     },
@@ -1062,20 +1072,20 @@ try {
         }
 
         function cargarDetallesCompra(compraId) {
-    $.ajax({
-        type: "GET",
-        url: "comprasDetalles_obtener.php",
-        data: {
-            id: compraId
-        },
-        success: function(response) {
-            var detalles = JSON.parse(response);
-            console.log("DETALLES :" + detalles);
-            var tbody = $("#detalleCompra tbody");
-            tbody.empty(); // Limpiar tabla
+            $.ajax({
+                type: "GET",
+                url: "comprasDetalles_obtener.php",
+                data: {
+                    id: compraId
+                },
+                success: function(response) {
+                    var detalles = JSON.parse(response);
+                    console.log("DETALLES :" + detalles);
+                    var tbody = $("#detalleCompra tbody");
+                    tbody.empty(); // Limpiar tabla
 
-            detalles.forEach(function(detalle) {
-                var fila = `<tr>
+                    detalles.forEach(function(detalle) {
+                        var fila = `<tr>
                     <td>${detalle.Veh_Placa}</td>
                     <td>${detalle.Veh_Color}</td>
                     <td>${detalle.Mod_Descripcion}</td>
@@ -1085,40 +1095,94 @@ try {
                     <td>${detalle.Imp_ISV}</td>
                     <td><button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="${detalle.Cdt_Id}"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>`;
-                tbody.append(fila);
+                        tbody.append(fila);
+                    });
+                    $("#detalleCompra").show();
+                },
+                error: function() {
+                    alert("Error al cargar los detalles de la compra");
+                }
             });
-            $("#detalleCompra").show();
-        },
-        error: function() {
-            alert("Error al cargar los detalles de la compra");
         }
-    });
-}
 
-// Manejar el evento de clic en el botón de eliminar detalle
-$(document).on('click', '.btnEliminarDetalle', function() {
-    let idDetalleAEliminar = $(this).data('id');
-    console.log("ID DETALLE: " + idDetalleAEliminar)
-    $('#modalEliminarDetalle').data('id', idDetalleAEliminar).modal('show');
-});
+        // Manejar el evento de clic en el botón de eliminar detalle
+        $(document).on('click', '.btnEliminarDetalle', function() {
+            let idDetalleAEliminar = $(this).data('id');
+            console.log("ID DETALLE: " + idDetalleAEliminar)
+            $('#modalEliminarDetalle').data('id', idDetalleAEliminar).modal('show');
+        });
 
-// Manejar la confirmación de eliminación en el modal
-$('#btnConfirmarEliminarDetalle').click(function() {
-    let idDetalleAEliminar = $('#modalEliminarDetalle').data('id');
-    $.ajax({
-        type: "POST",
-        url: "eliminarDetalle.php", // URL del script PHP para eliminar el detalle
-        data: { id: idDetalleAEliminar },
-        success: function(response) {
-            $('#modalEliminarDetalle').modal('hide');
-            cargarDetallesCompra(compraIDSumado); // Recargar la tabla de detalles después de eliminar
-        },
-        error: function() {
-            alert("Error al eliminar el detalle");
+        // Manejar la confirmación de eliminación en el modal
+        $('#btnConfirmarEliminarDetalle').click(function() {
+            let idDetalleAEliminar = $('#modalEliminarDetalle').data('id');
+            var compraIDSumado = localStorage.getItem('compraIDSumado'); // Obtener de local storage
+            $.ajax({
+                type: "GET",
+                url: "comprasDetalle_eliminar.php", // URL del script PHP para eliminar el detalle
+                data: {
+                    id: idDetalleAEliminar
+                },
+                success: function(response) {
+                    $('#modalEliminarDetalle').modal('hide');
+                    console.log("ID LOCAL: " + compraIDSumado)
+                    cargarDetallesCompraEliminado();
+                    console.log("EXITO")
+                },
+                error: function() {
+                    alert("Error al eliminar el detalle");
+                }
+            });
+        });
+
+        function cargarDetallesCompraEliminado() {
+            var compraIDSumado = localStorage.getItem('compraIDSumado'); // Obtener de local storage
+
+            if (!compraIDSumado) {
+                alert("No hay un ID de compra disponible.");
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                url: "comprasDetalles_obtener.php",
+                data: {
+                    id: compraIDSumado
+                },
+                success: function(response) {
+                    console.log("Respuesta del servidor:", response); // Log de la respuesta
+
+                    var detalles = JSON.parse(response);
+                    console.log("DETALLES :", detalles);
+
+                    var tbody = $("#detalleCompra tbody");
+                    tbody.empty(); // Limpiar tabla
+
+
+                    detalles.forEach(function(detalle) {
+                        if (detalle.Veh_Placa == null) {
+                            console.log("SIN DATOS");
+                            tbody.append('<tr><td colspan="8" class="text-center">No hay detalles de compra disponibles</td></tr>');
+                        } else {
+                            var fila = `<tr>
+                    <td>${detalle.Veh_Placa}</td>
+                    <td>${detalle.Veh_Color}</td>
+                    <td>${detalle.Mod_Descripcion}</td>
+                    <td>${detalle.Mod_Año}</td>
+                    <td>${detalle.Mar_Descripcion}</td>
+                    <td><input type="text" class="form-control" name="precioCompra[]" value="${detalle.Cdt_PrecioCompra}"></td>
+                    <td>${detalle.Imp_ISV}</td>
+                    <td><button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="${detalle.Cdt_Id}"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+                            tbody.append(fila);
+                        }
+
+                    });
+                    $("#detalleCompra").show();
+                },
+                error: function() {
+                    alert("Error al cargar los detalles de la compra");
+                }
+            });
         }
-    });
-});
-
 
         // Enviar formulario de vehiculo y luego insertar encabezado y detalle
         $("#btnGuardarVehiculo").click(function() {
