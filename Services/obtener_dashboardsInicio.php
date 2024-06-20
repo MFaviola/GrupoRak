@@ -3,12 +3,36 @@ require_once '../Services/DashboardsService.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $controller = new DashboardsServices();
+    $response = array();
 
     try {
-        $reporte = $controller->cantidadVentasMes();
-        echo json_encode($reporte);
+        $response['ventasMes'] = $controller->cantidadVentasMes();
     } catch (Exception $e) {
-        echo json_encode(['error' => $e->getMessage()]);
+        $response['ventasMes'] = ['error' => $e->getMessage()];
     }
+
+    try {
+        $response['comprasMes'] = $controller->cantidadComprasMes();
+    } catch (Exception $e) {
+        $response['comprasMes'] = ['error' => $e->getMessage()];
+    }
+
+
+    try {
+        $response['comprasClientesMes'] = $controller->comprasClientesMes();
+    } catch (Exception $e) {
+        $response['comprasMes'] = ['error' => $e->getMessage()];
+    }
+
+    try {
+        $response['ventasEmpleadosMes'] = $controller->ventasEmpleadosMes();
+    } catch (Exception $e) {
+        $response['comprasMes'] = ['error' => $e->getMessage()];
+    }
+
+
+
+    header('Content-Type: application/json');
+    echo json_encode($response);
 }
 ?>
