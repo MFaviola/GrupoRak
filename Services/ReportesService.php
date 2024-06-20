@@ -3,12 +3,12 @@ require_once '../config.php';
 
 class ReportesServices {
 
-    public function ReporteCompras1($filterMonth, $filterYear) {
+    public function ReporteCompras1($startDate , $endDate) {
         global $pdo;
         try {
             $sql = 'CALL `dbgruporac`.`SP_ComprasPorFecha_Reporte`(?, ?)';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$filterMonth, $filterYear]);
+            $stmt->execute([$startDate , $endDate]);
             
             // Use fetchAll to retrieve all rows
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
