@@ -855,9 +855,9 @@ $(document).ready(function() {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var timeout;
-        var initialTimeoutDuration = 300000; // 5 minutos en milisegundos
-        var extendedTimeoutDuration = 180000; // 3 minutos en milisegundos
-        var shortTimeoutDuration = 8000; // 1 minuto en milisegundos
+        var initialTimeoutDuration = 3000; // 5 minutos en milisegundos
+        var shortTimeoutDuration = 800; // 1 minuto en milisegundos
+        var isInteracting = false;
 
         // Función para mostrar el modal
         function showTimeoutModal() {
@@ -885,23 +885,33 @@ $(document).ready(function() {
         function resetTimer(duration) {
             clearTimeout(timeout);
             if (document.getElementById('nuevaApartadoForm').style.display === 'block') {
-                timeout = setTimeout(showTimeoutModal, duration);
+                timeout = setTimeout(function() {
+                    if (!isInteracting && duration === initialTimeoutDuration) {
+                        resetTimer(shortTimeoutDuration); // Cambiar a 1 minuto después de 5 minutos si no hay interacción
+                    } else if (!isInteracting && duration === shortTimeoutDuration) {
+                        showTimeoutModal(); // Mostrar modal después de 1 minuto sin interacción
+                    } else {
+                        isInteracting = false; // Resetear el flag de interacción
+                        resetTimer(initialTimeoutDuration); // Volver a 5 minutos si hubo interacción
+                    }
+                }, duration);
             }
         }
 
-        // Restablecer el temporizador a 3 minutos en caso de clic en los inputs
-        function handleClick() {
-            resetTimer(extendedTimeoutDuration);
+        // Función para manejar la interacción del usuario
+        function handleInteraction() {
+            isInteracting = true;
+            resetTimer(initialTimeoutDuration); // Restablecer a 5 minutos en caso de interacción
         }
 
         // Inicializar interacciones del formulario
         function setupFormInteractions() {
             const formElements = document.querySelectorAll('#nuevaApartadoForm input, #nuevaApartadoForm select, #nuevaApartadoForm textarea');
             formElements.forEach(function(element) {
-                element.addEventListener('click', handleClick);
-                element.addEventListener('mousemove', () => resetTimer(shortTimeoutDuration));
-                element.addEventListener('keypress', () => resetTimer(shortTimeoutDuration));
-                element.addEventListener('scroll', () => resetTimer(shortTimeoutDuration));
+                element.addEventListener('click', handleInteraction);
+                element.addEventListener('mousemove', handleInteraction);
+                element.addEventListener('keypress', handleInteraction);
+                element.addEventListener('scroll', handleInteraction);
             });
         }
 
@@ -917,15 +927,10 @@ $(document).ready(function() {
         document.getElementById('btnNuevo').addEventListener('click', function() {
             openNuevaApartadoForm();
         });
-
-        // Reiniciar el temporizador a 1 minuto después de 3 minutos sin clics
-        setInterval(function() {
-            if (document.getElementById('nuevaApartadoForm').style.display === 'block') {
-                resetTimer(shortTimeoutDuration);
-            }
-        }, extendedTimeoutDuration);
     });
 </script>
+
+
 
 
 
