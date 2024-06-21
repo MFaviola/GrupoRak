@@ -305,8 +305,6 @@ try {
 
 
 <script>
-    
-
     function validateForm() {
         let isValid = true;
         document.querySelectorAll('.error-message').forEach(function(error) {
@@ -382,91 +380,95 @@ try {
         $("#EsquemaGeneral").addClass('menu-open');
         $("#LinkGeneral").addClass('active');
         $("#LinkClientes").addClass('active');
-      // Función para cargar ciudades basadas en el departamento seleccionado
-      
-    function cargarCiudades(departamentoId, ciudadId) {
-        if (departamentoId != 0) {
-            $.ajax({
-                url: '../Services/ciudades_obtener.php',
-                type: 'GET',
-                data: { id: departamentoId },
-                success: function(response) {
-                    var ciudades = JSON.parse(response);
-                    var $ciudadSelect = $('#ciudadSelect');
-                    
-                    $ciudadSelect.empty();
-                    $ciudadSelect.append('<option value="0">Seleccione</option>');
-                    
-                    ciudades.forEach(function(ciudad) {
-                        $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
-                    });
+        // Función para cargar ciudades basadas en el departamento seleccionado
 
-                    // Seleccionar la ciudad si se proporciona un ID de ciudad
-                    if (ciudadId) {
-                        $ciudadSelect.val(ciudadId);
+        function cargarCiudades(departamentoId, ciudadId) {
+            if (departamentoId != 0) {
+                $.ajax({
+                    url: '../Services/ciudades_obtener.php',
+                    type: 'GET',
+                    data: {
+                        id: departamentoId
+                    },
+                    success: function(response) {
+                        var ciudades = JSON.parse(response);
+                        var $ciudadSelect = $('#ciudadSelect');
+
+                        $ciudadSelect.empty();
+                        $ciudadSelect.append('<option value="0">Seleccione</option>');
+
+                        ciudades.forEach(function(ciudad) {
+                            $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
+                        });
+
+                        // Seleccionar la ciudad si se proporciona un ID de ciudad
+                        if (ciudadId) {
+                            $ciudadSelect.val(ciudadId);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al cargar las ciudades');
                     }
-                },
-                error: function() {
-                    alert('Error al cargar las ciudades');
-                }
-            });
-        } else {
-            $('#ciudadSelect').empty().append('<option value="0">Seleccione</option>');
+                });
+            } else {
+                $('#ciudadSelect').empty().append('<option value="0">Seleccione</option>');
+            }
         }
-    }
 
-    $('#departamentoSelect').change(function() {
-        var departamentoId = $(this).val();
-        console.log('ID DEPARTAMENTO' + departamentoId)
-        cargarCiudades(departamentoId);
-    });
-
-    // Inicialización de DataTables
-    var table = $("#example1").DataTable({
-        "responsive": false,
-        "lengthChange": false,
-        "autoWidth": false,
-    });
-
-    function attachClickEvents() {
-        $(".abrir-editar").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/cliente_obtener.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const usuario = JSON.parse(response);
-                    $("#form-title").text('Editar Cliente');
-                    $("#id").val(usuario.Cli_Id);
-                    $("#txtNombre").val(usuario.Cli_Nombre);
-                    $("#txtIdentidad").val(usuario.Cli_DNI);
-                    $("#txtDireccion").val(usuario.Cli_Direccion);
-                    $("#txtApellido").val(usuario.Cli_Apellido);
-                    $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
-
-                    if (usuario.Cli_Sexo === "Femenino") {
-                        $("#rbfemenino").prop("checked", true);
-                    } else if (usuario.Cli_Sexo === "Masculino") {
-                        $("#rbmasculino").prop("checked", true);
-                    }
-
-                    $("#estadoCivilSelect").val(usuario.Est_ID);
-                    $("#departamentoSelect").val(usuario.Dep_ID);
-
-                    // Cargar las ciudades y seleccionar la ciudad correspondiente
-                    const prueba1 = usuario.Dep_ID;
-                    const prueba2 = usuario.Ciu_Id;
-                    console.log('PRUEBA 1: ' + prueba1);
-                    console.log('PRUEBA 2: ' + prueba2);
-
-                    cargarCiudades(prueba1, prueba2);
-
-                    $("#insertar").show();
-                    $("#tabla").hide();
-                }
-            });
+        $('#departamentoSelect').change(function() {
+            var departamentoId = $(this).val();
+            console.log('ID DEPARTAMENTO' + departamentoId)
+            cargarCiudades(departamentoId);
         });
+
+        // Inicialización de DataTables
+        var table = $("#example1").DataTable({
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+        });
+
+        function attachClickEvents() {
+            $(".abrir-editar").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '../Services/cliente_obtener.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        $("#form-title").text('Editar Cliente');
+                        $("#id").val(usuario.Cli_Id);
+                        $("#txtNombre").val(usuario.Cli_Nombre);
+                        $("#txtIdentidad").val(usuario.Cli_DNI);
+                        $("#txtDireccion").val(usuario.Cli_Direccion);
+                        $("#txtApellido").val(usuario.Cli_Apellido);
+                        $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
+
+                        if (usuario.Cli_Sexo === "Femenino") {
+                            $("#rbfemenino").prop("checked", true);
+                        } else if (usuario.Cli_Sexo === "Masculino") {
+                            $("#rbmasculino").prop("checked", true);
+                        }
+
+                        $("#estadoCivilSelect").val(usuario.Est_ID);
+                        $("#departamentoSelect").val(usuario.Dep_ID);
+
+                        // Cargar las ciudades y seleccionar la ciudad correspondiente
+                        const prueba1 = usuario.Dep_ID;
+                        const prueba2 = usuario.Ciu_Id;
+                        console.log('PRUEBA 1: ' + prueba1);
+                        console.log('PRUEBA 2: ' + prueba2);
+
+                        cargarCiudades(prueba1, prueba2);
+
+                        $("#insertar").show();
+                        $("#tabla").hide();
+                    }
+                });
+            });
 
             $(".btn-detalles").off('click').on('click', function() {
                 const id = $(this).data('id');
