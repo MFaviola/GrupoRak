@@ -3,72 +3,115 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once '../Services/ApartadoService.php';
-require_once '../Services/ClienteService.php';
-require_once '../Services/VentaService.php';
+//header('Content-Type: application/json');
+$root = $_SERVER['DOCUMENT_ROOT'] . '/GrupoRak/';
+
+require_once $root . 'Services/ApartadoService.php';
+require_once $root . 'Services/ClienteService.php';
+require_once $root . 'Services/VentaService.php';
 
 $controllerCompra = new ApartadoVehiculoService();
 $controllerCliente = new ClienteService();
 $ventasService = new VentaService();
+$controllerapartado = new ApartadoVehiculoService();
 
-$response = array("status" => "error", "message" => "Ocurrió un error");
+//$response = array("status" => "error", "message" => "Ocurrió un error");
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // header('Content-Type: application/json');
+try {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $response = array("status" => "error", "message" => "Ocurrió un error");
 
-    if (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
-        $FechaCompra = $_POST['txtFecha'];
-        $MetodoPago = $_POST['pagosSelect'];
-        $Monto = $_POST['txtMonto'];
-        $Caducacion =  $_POST['txtFechaCaducacion'];
-        $IdentidadBusqueda = $_POST['txtIdentidadBusqueda'];
-        $ClienteBusqueda = $_POST['txtClienteBusqueda'];
+        if (isset($_POST['action']) && $_POST['action'] == 'buscarCliente') {
+            $dni = $_POST['dni'];
+            try {
+                $cliente = $controllerapartado->buscarClientePorDNI($dni);
+                if ($cliente) {
+                    $response = array("status" => "success", "data" => $cliente);
+                } else {
+                    $response = array("status" => "error", "message" => "Cliente no encontrado");
+                }
+            } catch (Exception $e) {
+                $response = array("status" => "error", "message" => $e->getMessage());
+            }
+        }elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
+            $FechaCompra = $_POST['txtFecha'];
+            $MetodoPago = $_POST['pagosSelect'];
+            $Monto = $_POST['txtMonto'];
+            $Caducacion = $_POST['txtFechaCaducacion'];
+            $IdentidadBusqueda = $_POST['txtIdentidadBusqueda'];
+            $ClienteBusqueda = $_POST['txtClienteBusqueda'];
+            $Veh_Placa = $_POST['txtVehPlaca'];
+            $Cantidad = 1; // Suponiendo que siempre es 1, ajustar si es necesario
+            $PrecioCompra = $_POST['txtPrecioVehiculo']; // Asegúrate de obtener este valor correctamente
+            $Imp_ID = $_POST['txtImpID']; // Asegúrate de obtener este valor correctamente
 
-        try {
-            $Creacion = $_SESSION['ID'];
-            $resultadoEncabezado = $controllerCompra->insertarEncabezado($FechaCompra, $MetodoPago, $ClienteBusqueda, $Monto, $Caducacion, $Creacion);
-            $response = array("status" => "success", "message" => "Encabezado insertado correctamente");
-        } catch (Exception $e) {
-            $response['message'] = $e->getMessage();
+            try {
+                session_start();
+                $Creacion = $_SESSION['ID'];
+                $resultadoEncabezado = $controllerCompra->insertarEncabezado($FechaCompra, $MetodoPago, $ClienteBusqueda, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra, $Imp_ID);
+                $response = array("status" => "success", "message" => "Encabezado insertado correctamente");
+            } catch (Exception $e) {
+                $response['message'] = $e->getMessage();
+            }
+            echo json_encode($response);
+            exit;
+        } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarCliente') {
+            $nombre = $_POST['txtNombre'];
+            $apellido = $_POST['txtApellido'];
+            $FechaNacimiento = $_POST['txtFechaNacimiento'];
+            $Sexo = $_POST['rbSexo'];
+            $Identidad = $_POST['txtIdentidad'];
+            $Ciudad = $_POST['ciudadSelect'];
+            $Esciv = $_POST['estadoCivilSelect'];
+            $Direccion = $_POST['txtDireccion'];
+
+            try {
+                session_start();
+                $Creacion = $_SESSION['ID'];
+                $clienteID = $controllerCliente->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
+                $response = array("status" => "success", "message" => "Cliente insertado correctamente", "clienteID" => $clienteID);
+            } catch (Exception $e) {
+                $response = array("status" => "error", "message" => $e->getMessage());
+            }
+            echo json_encode($response);
+            exit;
+        } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarVehiculo') {
+            $Placa = $_POST['txtPlaca'];
+            $Color = $_POST['txtColor'];
+            $PrecioVehiculo = $_POST['txtPrecioVehiculo'];
+            $ModeloVehiculo = $_POST['modeloSelect'];
+            $Imagen = $_POST['txtImagen']; // Solo el nombre del archivo
+
+            try {
+                session_start();
+                $Creacion = $_SESSION['ID'];
+                $resultadoVehiculo = $controllerCompra->insertarVehiculo($Placa, $Color, $Imagen, $PrecioVehiculo, $ModeloVehiculo, $Creacion);
+                $response = array("status" => "success", "message" => "Vehículo insertado correctamente");
+            } catch (Exception $e) {
+                $response['message'] = $e->getMessage();
+            }
+            echo json_encode($response);
+            exit;
+        } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'buscarClientePorDNI') {
+            $dni = $_POST['txtIdentidadBusqueda'];
+            try {
+                $cliente = $controllerCompra->buscarClientePorDNI($dni);
+                $response = array("status" => "success", "cliente" => $cliente);
+            } catch (Exception $e) {
+                $response = array("status" => "error", "message" => $e->getMessage());
+            }
+        } else {
+            $response = array("status" => "error", "message" => "Acción no válida");
         }
-    } 
+        // Agregar un log para depuración
+        error_log("Response: " . json_encode($response));
 
-    elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarCliente') {
-        $nombre = $_POST['txtNombre'];
-        $apellido = $_POST['txtApellido'];
-        $FechaNacimiento = $_POST['txtFechaNacimiento'];
-        $Sexo = $_POST['rbSexo'];
-        $Identidad = $_POST['txtIdentidad'];
-        $Ciudad = $_POST['ciudadSelect'];
-        $Esciv = $_POST['estadoCivilSelect'];
-        $Direccion = $_POST['txtDireccion'];
-
-        try {
-            $Creacion = $_SESSION['ID'];
-            $clienteID = $controllerCliente->insertar($nombre, $apellido, $FechaNacimiento, $Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion);
-            $response = array("status" => "success", "message" => "Cliente insertado correctamente", "clienteID" => $clienteID);
-        } catch (Exception $e) {
-            $response = array("status" => "error", "message" => $e->getMessage());
-        }
-    } 
-    
-    elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarVehiculo') {
-        $Placa = $_POST['txtPlaca'];
-        $Color = $_POST['txtColor'];
-        $PrecioVehiculo = $_POST['txtPrecioVehiculo'];
-        $ModeloVehiculo = $_POST['modeloSelect'];
-        $Imagen = $_POST['txtImagen']; // Solo el nombre del archivo
-
-        try {
-            $Creacion = $_SESSION['ID'];
-            $resultadoVehiculo = $controllerCompra->insertarVehiculo($Placa, $Color, $Imagen, $PrecioVehiculo, $ModeloVehiculo, $Creacion);
-            $response = $resultadoVehiculo;
-        } catch (Exception $e) {
-            $response['message'] = $e->getMessage();
-        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
     }
-
-    echo json_encode($response);
+} catch (Exception $e) {
+    error_log($e->getMessage());
     exit;
 }
 
@@ -132,7 +175,7 @@ try {
     </div>
 </div>
 
-
+<div id="nuevaApartadoForm" style="display: block;">
 <div id="insertarEncabezado" style="display: none;">
     <div class="card card-primary">
         <div class="card-header">
@@ -153,34 +196,30 @@ try {
                     </div>
                 </div> -->
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Identidad:</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda">
-                                <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-primary"> <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
-                                </div>
-                                <!-- /btn-group -->
-
-                            </div>
-                            <span style="color:red" class="error-message" id="errorIdentidadBusqueda"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Cliente:</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="txtClienteBusqueda" name="txtClienteBusqueda">
-                                <div class="input-group-prepend">
+                <div class="col-md-6">
+        <div class="form-group">
+            <label>Identidad:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda">
+                <div class="input-group-prepend">
+                    <button id="btnBuscarCliente" type="button" class="btn btn-primary"> <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                </div>
+            </div>
+            <span style="color:red" class="error-message" id="errorIdentidadBusqueda"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Cliente:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="txtClienteBusqueda" name="txtClienteBusqueda" readonly>
+                <div class="input-group-prepend">
                                     <button id="btnAgregarCliente" type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i> Agregar</button>
-                                </div>
-                                <!-- /btn-group -->
-
-                            </div>
-                            <span style="color:red" class="error-message" id="errorClienteBusqueda"></span>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            <span style="color:red" class="error-message" id="errorClienteBusqueda"></span>
+        </div>
+    </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Monto: </label>
@@ -192,14 +231,14 @@ try {
                     </div>
 
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Fecha Limited: </label>
-                            <div class="input-group">
-                                <input type="date" class="form-control" name="txtFechaCaducacion" id="txtFechaCaducacion" hide>
-                            </div>
+    <div class="form-group">
+        <label>Fecha Limited: </label>
+        <div class="input-group">
+            <input type="date" class="form-control" name="txtFechaCaducacion" id="txtFechaCaducacion">
+        </div>
+    </div>
+</div>
 
-                        </div>
-                    </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
@@ -275,7 +314,7 @@ try {
         </div>
     </div>
 </div>
-
+</div>
 
 
 <!-- Formulario de Cliente -->
@@ -445,26 +484,65 @@ try {
     </div>
 </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="timeoutModal" tabindex="-1" role="dialog" aria-labelledby="timeoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timeoutModalLabel">Tiempo de espera agotado</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    El tiempo de espera se ha agotado para generar la factura de apartado.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="acceptButton">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!-- jQuery -->
 
 <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
 <script>
-    // Función para limpiar errores
-    function clearErrors() {
-        document.querySelectorAll('.error-message').forEach(function(error) {
-            error.textContent = '';
-        });
-        document.querySelectorAll('.form-control').forEach(function(input) {
-            input.classList.remove('is-invalid');
-        });
-    }
-    $(document).ready(function() {
+   // Función para limpiar errores
+function clearErrors() {
+    document.querySelectorAll('.error-message').forEach(function(error) {
+        error.textContent = '';
+    });
+    document.querySelectorAll('.form-control').forEach(function(input) {
+        input.classList.remove('is-invalid');
+    });
+}
 
-        $("#btnAgregarVehiculo").click(function() {
+document.addEventListener("DOMContentLoaded", function() {
+        // Obtener la fecha actual
+        var today = new Date();
+        
+        // Sumar 15 días a la fecha actual
+        var expirationDate = new Date(today);
+        expirationDate.setDate(expirationDate.getDate() + 15);
+
+        // Formatear la fecha en formato yyyy-mm-dd
+        var day = ("0" + expirationDate.getDate()).slice(-2);
+        var month = ("0" + (expirationDate.getMonth() + 1)).slice(-2);
+        var year = expirationDate.getFullYear();
+
+        var formattedDate = year + "-" + month + "-" + day;
+
+        // Establecer el valor del campo de fecha
+        document.getElementById("txtFechaCaducacion").value = formattedDate;
+    });
+
+$(document).ready(function() {
+    $("#btnAgregarVehiculo").click(function() {
         $("#modalVehiculos").modal('show');
     });
 
@@ -494,265 +572,362 @@ try {
         actualizarTotales();
         $("#modalVehiculos").modal('hide');
     });
-        $("#EsquemaVentas").addClass('menu-open');
-        $("#LinkVentas").addClass('active');
-        $("#LinkComprasVehiculos").addClass('active');
 
-        // Al cargar la página, establecer la fecha actual en el campo de fecha de compra
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0!
-        var yyyy = today.getFullYear();
+    $("#EsquemaVentas").addClass('menu-open');
+    $("#LinkVentas").addClass('active');
+    $("#LinkComprasVehiculos").addClass('active');
 
-        var fechaActual = yyyy + '-' + mm + '-' + dd;
-        $('#txtFecha').val(fechaActual);
-        // Función para cargar ciudades basadas en el departamento seleccionado
+    // Al cargar la página, establecer la fecha actual en el campo de fecha de compra
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0!
+    var yyyy = today.getFullYear();
+
+    var fechaActual = yyyy + '-' + mm + '-' + dd;
+    $('#txtFecha').val(fechaActual);
+
+    // Función para cargar ciudades basadas en el departamento seleccionado
+    $("#insertarEncabezado").hide();
+    $("#detalleCompra").hide();
+
+    $("#btnAgregarCliente").click(function() {
+        $("#insertar").show();
         $("#insertarEncabezado").hide();
-        $("#detalleCompra").hide();
+        $("#tabla").hide();
+        clearErrors();
+    });
 
-        $("#btnAgregarCliente").click(function() {
-            $("#insertar").show();
-            $("#insertarEncabezado").hide();
-            $("#tabla").hide();
+    $("#btnVolverCliente").click(function() {
+        $("#insertarEncabezado").show();
+        $("#insertar").hide();
+        $("#tabla").hide();
+        clearErrors();
+    });
 
-            clearErrors();
-        });
-
-        $("#btnVolverCliente").click(function() {
-            $("#insertarEncabezado").show();
-            $("#insertar").hide();
-            $("#tabla").hide();
-            clearErrors();
-
-        });
-
-        // $("#btnAgregarVehiculo").click(function() {
-        //     $("#insertarVehiculo").show();
-        //     $("#insertarEncabezado").hide();
-        // });
-
-
-        $("#btnVolverVehiculo").click(function() {
-            if ($("#txt"))
-                $("#insertarEncabezado").show();
-            $("#insertarVehiculo").hide();
-            $("#tabla").hide();
-
-            clearErrors();
-        });
-
-        function cargarCiudades(departamentoId, ciudadId) {
-            if (departamentoId != 0) {
-                $.ajax({
-                    url: '../Services/ciudades_obtener.php',
-                    type: 'GET',
-                    data: {
-                        id: departamentoId
-                    },
-                    success: function(response) {
-                        var ciudades = JSON.parse(response);
-                        var $ciudadSelect = $('#ciudadSelect');
-
-                        $ciudadSelect.empty();
-                        $ciudadSelect.append('<option value="0">Seleccione</option>');
-
-                        ciudades.forEach(function(ciudad) {
-                            $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
-                        });
-
-                        // Seleccionar la ciudad si se proporciona un ID de ciudad
-                        if (ciudadId) {
-                            $ciudadSelect.val(ciudadId);
-                        }
-                    },
-                    error: function() {
-                        alert('Error al cargar las ciudades');
-                    }
-                });
-            } else {
-                $('#ciudadSelect').empty().append('<option value="0">Seleccione</option>');
-            }
-        }
-
-        function cargarModelos(marcaId, modeloId) {
-            if (marcaId != 0) {
-                $.ajax({
-                    url: '../Services/marcas_obtener.php',
-                    type: 'GET',
-                    data: {
-                        id: marcaId
-                    },
-                    success: function(response) {
-                        var ciudades = JSON.parse(response);
-                        var $ciudadSelect = $('#modeloSelect');
-
-                        $ciudadSelect.empty();
-                        $ciudadSelect.append('<option value="0">Seleccione</option>');
-
-                        ciudades.forEach(function(ciudad) {
-                            $ciudadSelect.append('<option value="' + ciudad.Mod_Id + '">' + ciudad.Mod_Descripcion + '</option>');
-                        });
-
-                        // Seleccionar la ciudad si se proporciona un ID de ciudad
-                        if (modeloId) {
-                            $ciudadSelect.val(modeloId);
-                        }
-                    },
-                    error: function() {
-                        alert('Error al cargar las ciudades');
-                    }
-                });
-            } else {
-                $('#modeloSelect').empty().append('<option value="0">Seleccione</option>');
-            }
-        }
-
-        $('#departamentoSelect').change(function() {
-            var departamentoId = $(this).val();
-            console.log('ID DEPARTAMENTO' + departamentoId)
-            cargarCiudades(departamentoId);
-        });
-
-        $('#marcaSelect').change(function() {
-            var departamentoId = $(this).val();
-            console.log('ID DEPARTAMENTO' + departamentoId)
-            cargarModelos(departamentoId);
-        });
-
-
-        // Inicialización de DataTables
-        var table = $("#example1").DataTable({
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-        });
-
-        var table = $("#tablaVehiculos").DataTable({
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-        });
-
-
-        $("#btnNuevo").click(function() {
-            $("#form-title").text('Nueva Apartado de Vehiculo');
-            $("#id").val('');
-            $("#txtNombre").val('');
-            $("#txtApellido").val('');
-            $("#txtIdentidad").val('');
-            $("#txtDireccion").val('');
-            $("#txtFechaNacimiento").val('');
-            $("input[name='rbSexo']").prop("checked", false);
-            $("#departamentoSelect").val('0');
-            $("#ciudadSelect").val('0');
-            $("#estadoCivilSelect").val('0');
-            $("#insertarEncabezado").show();
-            $("#insertar").hide();
-            $("#detalleCompra").show();
-            $("#tabla").hide();
-        });
-
-
-        $("#Cancelar").click(function() {
-            $("#insertar").hide();
-            $("#tabla").show();
-            $("#insertarEncabezado").hide();
-            clearErrors();
-        });
-
-        // Enviar formularios
-        $("#btnGuardar").click(function() {
-            $("#frmInsertarEncabezado").submit();
-        });
-
-        $("#btnGuardarCliente").click(function() {
-            var formData = new FormData($("#frmInsertarCliente")[0]);
-
+    // Función para cargar ciudades
+    function cargarCiudades(departamentoId, ciudadId) {
+        if (departamentoId != 0) {
             $.ajax({
-                type: "POST",
-                url: "", // URL del script PHP
-                data: formData,
-                contentType: false,
-                processData: false,
+                url: '../Services/ciudades_obtener.php',
+                type: 'GET',
+                data: {
+                    id: departamentoId
+                },
                 success: function(response) {
-                    console.log(response); // Imprimir la respuesta en la consola para depuración
-                    try {
-                        var resultado = JSON.parse(response);
-                        if (resultado.status === "success") {
-                            var clienteID = resultado.clienteID;
-                            console.log("Cliente ID: " + clienteID);
-                            // Puedes usar el clienteID para otras operaciones
+                    var ciudades = JSON.parse(response);
+                    var $ciudadSelect = $('#ciudadSelect');
 
-                            alert(resultado.message);
-                            $("#frmInsertarCliente")[0].reset();
-                            $("#insertar").hide();
-                            $("#tabla").hide();
-                            $("#insertarEncabezado").show();
-                        } else {
-                            alert("Error: " + resultado.message);
-                        }
-                    } catch (e) {
-                        console.error("Error parsing JSON:", e);
-                        console.error("Response:", response);
+                    $ciudadSelect.empty();
+                    $ciudadSelect.append('<option value="0">Seleccione</option>');
+
+                    ciudades.forEach(function(ciudad) {
+                        $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
+                    });
+
+                    // Seleccionar la ciudad si se proporciona un ID de ciudad
+                    if (ciudadId) {
+                        $ciudadSelect.val(ciudadId);
                     }
                 },
                 error: function() {
-                    alert("Error en la solicitud AJAX");
+                    alert('Error al cargar las ciudades');
                 }
             });
+        } else {
+            $('#ciudadSelect').empty().append('<option value="0">Seleccione</option>');
+        }
+    }
 
-        });
-
-
-        $("#btnGuardarVehiculo").click(function() {
-            var formData = new FormData($("#frmInsertarVehiculo")[0]);
-
-            // Extraer el nombre del archivo
-            var fileName = $("#txtImagen").val().split('\\').pop();
-            formData.append("txtImagen", fileName);
-
+    function cargarModelos(marcaId, modeloId) {
+        if (marcaId != 0) {
             $.ajax({
-                type: "POST",
-                url: "", // URL del script PHP
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(resultadoVehiculo) {
-                    console.log('RESPONSE: ' + resultadoVehiculo);
+                url: '../Services/marcas_obtener.php',
+                type: 'GET',
+                data: {
+                    id: marcaId
+                },
+                success: function(response) {
+                    var ciudades = JSON.parse(response);
+                    var $ciudadSelect = $('#modeloSelect');
 
+                    $ciudadSelect.empty();
+                    $ciudadSelect.append('<option value="0">Seleccione</option>');
 
-                    alert(resultadoVehiculo.message);
-                    $("#frmInsertarVehiculo")[0].reset();
-                    $("#insertarVehiculo").hide();
-                    $("#insertarEncabezado").show();
+                    ciudades.forEach(function(ciudad) {
+                        $ciudadSelect.append('<option value="' + ciudad.Mod_Id + '">' + ciudad.Mod_Descripcion + '</option>');
+                    });
 
+                    // Seleccionar la ciudad si se proporciona un ID de ciudad
+                    if (modeloId) {
+                        $ciudadSelect.val(modeloId);
+                    }
                 },
                 error: function() {
-                    alert("Error en la solicitud AJAX");
+                    alert('Error al cargar las ciudades');
                 }
             });
+        } else {
+            $('#modeloSelect').empty().append('<option value="0">Seleccione</option>');
+        }
+    }
+
+    $('#departamentoSelect').change(function() {
+        var departamentoId = $(this).val();
+        console.log('ID DEPARTAMENTO' + departamentoId)
+        cargarCiudades(departamentoId);
+    });
+
+    $('#marcaSelect').change(function() {
+        var departamentoId = $(this).val();
+        console.log('ID DEPARTAMENTO' + departamentoId)
+        cargarModelos(departamentoId);
+    });
+
+    // Inicialización de DataTables
+    var table = $("#example1").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+    });
+
+    var table = $("#tablaVehiculos").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+    });
+
+    $("#btnNuevo").click(function() {
+        $("#form-title").text('Nueva Apartado de Vehiculo');
+        $("#id").val('');
+        $("#txtNombre").val('');
+        $("#txtApellido").val('');
+        $("#txtIdentidad").val('');
+        $("#txtDireccion").val('');
+        $("#txtFechaNacimiento").val('');
+        $("input[name='rbSexo']").prop("checked", false);
+        $("#departamentoSelect").val('0');
+        $("#ciudadSelect").val('0');
+        $("#estadoCivilSelect").val('0');
+        $("#insertarEncabezado").show();
+        $("#insertar").hide();
+        $("#detalleCompra").show();
+        $("#tabla").hide();
+    });
+
+    $("#Cancelar").click(function() {
+        $("#insertar").hide();
+        $("#tabla").show();
+        $("#insertarEncabezado").hide();
+        clearErrors();
+    });
+
+    // Enviar formularios
+    $("#btnGuardar").click(function() {
+        var formData = new FormData($("#frmInsertarEncabezado")[0]);
+
+        $.ajax({
+            type: "POST",
+            url: "../Services/apartado.php", // Ajusta la ruta a tu archivo PHP
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response); // Imprimir la respuesta en la consola para depuración
+                try {
+                    var resultado = JSON.parse(response);
+                    if (resultado.status === "success") {
+                        alert(resultado.message);
+                        $("#frmInsertarEncabezado")[0].reset();
+                    } else {
+                        alert("Error: " + resultado.message);
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    console.error("Response:", response);
+                }
+            },
+            error: function() {
+                alert("Error en la solicitud AJAX");
+            }
         });
+    });
 
-        // $("#btnGuardarVehiculo").click(function() {
+    $("#btnGuardarCliente").click(function() {
+        var formData = new FormData($("#frmInsertarCliente")[0]);
 
-        //     const placa = $("#txtPlaca").val();
-        //     const color = $("#txtColor").val();
-        //     const precio = $("#txtPrecioVehiculo").val();
-        //     const imagen = $("#txtImagen").val();
-        //     const modelo = $("#modeloSelect").val();
-        //     console.log('Placa: ' + placa);
-        //     console.log('Color: ' + color);
-        //     console.log('Precio: ' + precio);
-        //     console.log('Imagen: ' + imagen);
-        //     console.log('Modelo: ' + modelo);
+        $.ajax({
+            type: "POST",
+            url: "", // URL del script PHP
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response); // Imprimir la respuesta en la consola para depuración
+                try {
+                    var resultado = JSON.parse(response);
+                    if (resultado.status === "success") {
+                        var clienteID = resultado.clienteID;
+                        console.log("Cliente ID: " + clienteID);
+                        // Puedes usar el clienteID para otras operaciones
 
-
-        //     $("#frmInsertarVehiculo").submit(function(event) {
-        //         event.preventDefault();
-        //         console.log('Placa: ' + $("$txtPlaca").val());
-        //     });
-        // });
-
+                        alert(resultado.message);
+                        $("#frmInsertarCliente")[0].reset();
+                        $("#insertar").hide();
+                        $("#tabla").hide();
+                        $("#insertarEncabezado").show();
+                    } else {
+                        alert("Error: " + resultado.message);
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    console.error("Response:", response);
+                }
+            },
+            error: function() {
+                alert("Error en la solicitud AJAX");
+            }
+        });
 
     });
+
+    $("#btnBuscarCliente").click(function() {
+    var dni = $("#txtIdentidadBusqueda").val();
+    if (dni) {
+        $.ajax({
+            type: "POST",
+            url: "../Views/Pages/apartado.php",
+            data: {
+                action: 'buscarCliente',
+                dni: dni
+            },
+            success: function(response) {
+                console.log(response);  // Imprime la respuesta en la consola
+                try {
+                    if (typeof response === "string") {
+                        response = JSON.parse(response);
+                    }
+                    if (response.status === "success") {
+                        $("#txtClienteBusqueda").val(response.data.Cli_Nombre);
+                    } else {
+                        $("#errorClienteBusqueda").text(response.message);
+                    }
+                } catch (e) {
+                    $("#errorClienteBusqueda").text("Respuesta no es un JSON válido.");
+                }
+            },
+            error: function() {
+                $("#errorClienteBusqueda").text("Error en la solicitud AJAX");
+            }
+        });
+    } else {
+        $("#errorClienteBusqueda").text("Por favor, ingrese un número de identidad válido.");
+    }
+});
+
+
+
+
+
+
+    // $("#btnGuardarVehiculo").click(function() {
+
+    //     const placa = $("#txtPlaca").val();
+    //     const color = $("#txtColor").val();
+    //     const precio = $("#txtPrecioVehiculo").val();
+    //     const imagen = $("#txtImagen").val();
+    //     const modelo = $("#modeloSelect").val();
+    //     console.log('Placa: ' + placa);
+    //     console.log('Color: ' + color);
+    //     console.log('Precio: ' + precio);
+    //     console.log('Imagen: ' + imagen);
+    //     console.log('Modelo: ' + modelo);
+
+    //     $("#frmInsertarVehiculo").submit(function(event) {
+    //         event.preventDefault();
+    //         console.log('Placa: ' + $("$txtPlaca").val());
+    //     });
+    // });
+
+});
+
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var timeout;
+        var initialTimeoutDuration = 300000; // 5 minutos en milisegundos
+        var extendedTimeoutDuration = 180000; // 3 minutos en milisegundos
+        var shortTimeoutDuration = 8000; // 1 minuto en milisegundos
+
+        // Función para mostrar el modal
+        function showTimeoutModal() {
+            if (document.getElementById('nuevaApartadoForm').style.display === 'block') {
+                $('#timeoutModal').modal('show');
+            }
+        }
+
+        // Función para cerrar el formulario y mostrar la tabla
+        function closeFormAndShowTable() {
+            $('#timeoutModal').modal('hide');
+            document.getElementById('nuevaApartadoForm').style.display = 'none';
+            document.getElementById('tabla').style.display = 'block';
+            clearTimeout(timeout); // Desactivar el temporizador
+        }
+
+        // Función para abrir el formulario "Nueva Apartado de Vehiculo"
+        function openNuevaApartadoForm() {
+            document.getElementById('nuevaApartadoForm').style.display = 'block';
+            document.getElementById('tabla').style.display = 'none';
+            resetTimer(initialTimeoutDuration); // Activar el temporizador con 5 minutos
+        }
+
+        // Función para restablecer el temporizador
+        function resetTimer(duration) {
+            clearTimeout(timeout);
+            if (document.getElementById('nuevaApartadoForm').style.display === 'block') {
+                timeout = setTimeout(showTimeoutModal, duration);
+            }
+        }
+
+        // Restablecer el temporizador a 3 minutos en caso de clic en los inputs
+        function handleClick() {
+            resetTimer(extendedTimeoutDuration);
+        }
+
+        // Inicializar interacciones del formulario
+        function setupFormInteractions() {
+            const formElements = document.querySelectorAll('#nuevaApartadoForm input, #nuevaApartadoForm select, #nuevaApartadoForm textarea');
+            formElements.forEach(function(element) {
+                element.addEventListener('click', handleClick);
+                element.addEventListener('mousemove', () => resetTimer(shortTimeoutDuration));
+                element.addEventListener('keypress', () => resetTimer(shortTimeoutDuration));
+                element.addEventListener('scroll', () => resetTimer(shortTimeoutDuration));
+            });
+        }
+
+        // Inicializar interacciones del formulario
+        setupFormInteractions();
+
+        // Manejar el botón de aceptar en el modal
+        document.getElementById('acceptButton').addEventListener('click', function() {
+            closeFormAndShowTable();
+        });
+
+        // Manejar el botón de "Nuevo Apartado de Vehiculo"
+        document.getElementById('btnNuevo').addEventListener('click', function() {
+            openNuevaApartadoForm();
+        });
+
+        // Reiniciar el temporizador a 1 minuto después de 3 minutos sin clics
+        setInterval(function() {
+            if (document.getElementById('nuevaApartadoForm').style.display === 'block') {
+                resetTimer(shortTimeoutDuration);
+            }
+        }, extendedTimeoutDuration);
+    });
+</script>
+
+
+
+
+

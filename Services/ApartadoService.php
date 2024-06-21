@@ -1,5 +1,6 @@
 <?php
-require_once '../config.php';
+$root = $_SERVER['DOCUMENT_ROOT'] . '/GrupoRak/';
+require_once $root . 'config.php';
 
 class ApartadoVehiculoService {
     public function listar() {
@@ -145,34 +146,50 @@ class ApartadoVehiculoService {
         }
     }
       
-    public function insertarEncabezado($fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion) {
+    public function insertarEncabezado($fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra, $Imp_ID) {
         global $pdo;
-         if (session_status() == PHP_SESSION_NONE) {
-             session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
         $Creacion = $_SESSION['ID'];
-
+    
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Apartado_Insertar`(?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL `dbgruporac`.`sp_Apartado_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
-            error_log("insertarUsuario - Valores antes de ejecutar: " . json_encode([$fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion]));
-            $stmt->execute([$fecha, $MetodoPago, $Cliente, $Creacion]);
-            error_log("insertarUsuario - Valores enviados: " . json_encode([$fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion]));
+            $stmt->execute([$fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra, $Imp_ID]);
             $result = $stmt->fetch();
-            if (isset($result['Result']) && $result['Result'] == 1) {
-                return "1";
-            } else {
-                return "0";
-            }
+            return $result['Result'];
         } catch (Exception $e) {
-            throw new Exception('Error al insertar usuario: ' . $e->getMessage());
+            throw new Exception('Error al insertar apartado: ' . $e->getMessage());
         }
     }
 
-
-
+    public function buscarClientePorDNI($dni) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(?)';
+            $stmt = $pdo->prepare($sql);
+    
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$dni]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result === false) {
+                throw new Exception('Cliente no encontrado');
+            }
+    
+            return $result;
+    
+        } catch (Exception $e) {
+            throw new Exception('Error al buscar cliente por DNI: ' . $e->getMessage());
+        }
+    }
 }
 ?>
