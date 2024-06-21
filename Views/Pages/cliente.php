@@ -379,11 +379,12 @@ try {
     }
 
     $(document).ready(function() {
-        $("#EsquemaGeneral").addClass('menu-open');
-        $("#LinkGeneral").addClass('active');
-        var clienteactivo = $("#LinkItemGeneral").text();
-        console.log('ES CLIENTE?' + clienteactivo)
-        console.log()
+
+    $("#EsquemaGeneral").addClass('menu-open');
+    $("#LinkGeneral").addClass('active');
+    $("#cliente").addClass('active');
+    var clienteactivo = $("#cliente").text();
+    console.log('ES CLIENTE?' + clienteactivo)
     
       // Función para cargar ciudades basadas en el departamento seleccionado
       

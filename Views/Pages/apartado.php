@@ -546,6 +546,12 @@ try {
     });
 
     $(document).ready(function() {
+        $("#EsquemaVentas").addClass('menu-open');
+        $("#LinkVentas").addClass('active');
+        $("#apartado").addClass('active');
+        var clienteactivo = $("#cliente").text();
+        console.log('ES CLIENTE?' + clienteactivo)
+
         $("#btnAgregarVehiculo").click(function() {
             $("#modalVehiculos").modal('show');
         });
@@ -597,6 +603,7 @@ try {
 
         // Actualizar subtotal y total al cambiar la cantidad
         $(document).on('input', '.cantidad', function() {
+            
             let cantidad = $(this).val();
             let precio = $(this).data('precio');
             let subtotal = cantidad * precio;

@@ -773,7 +773,7 @@ try {
         console.log('Cliente ' + cliente);
 
         console.log('LOCAL STORAGE' + idcompra);
-     
+
         if (id) {
             console.log('ENTREE');
             idcompra = id;
@@ -1161,6 +1161,12 @@ try {
         });
     }
     $(document).ready(function() {
+        $("#EsquemaVentas").addClass('menu-open');
+        $("#LinkVentas").addClass('active');
+        $("#compravehiculo").addClass('active');
+        var clienteactivo = $("#cliente").text();
+        console.log('ES CLIENTE?' + clienteactivo)
+
         var Toast = Swal.mixin({
             toast: true,
             position: 'top-end',

@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         if ($id) {
             $Modifica = $_SESSION['ID'];
-            $resultado = $controller->actualizar($id, $nombre, $apellido,$Sexo, $FechaNacimiento, $Ciudad, $Esciv,$cargo, $sede,  $Correo,  $Identidad, $Modifica);
+            $resultado = $controller->actualizar($id, $nombre, $apellido, $Sexo, $FechaNacimiento, $Ciudad, $Esciv, $cargo, $sede,  $Correo,  $Identidad, $Modifica);
         } else {
             $Creacion = $_SESSION['ID'];
-            $resultado = $controller->insertar($nombre, $apellido, $Sexo,$FechaNacimiento, $Ciudad,$Esciv,$cargo, $sede, $Correo,  $Creacion, $Identidad);
+            $resultado = $controller->insertar($nombre, $apellido, $Sexo, $FechaNacimiento, $Ciudad, $Esciv, $cargo, $sede, $Correo,  $Creacion, $Identidad);
         }
 
         if ($resultado == 1) {
@@ -54,8 +54,8 @@ if (isset($mensajeError)) {
     echo '<div class="alert alert-danger">' . $mensajeError . '</div>';
 }
 ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <div id="tabla">
     <div class="card">
         <div class="card-body">
@@ -418,21 +418,25 @@ if (isset($mensajeError)) {
 
         $("#EsquemaGeneral").addClass('menu-open');
         $("#LinkGeneral").addClass('active');
-        $("#LinkItemGeneral").addClass('active');
-        
+        $("#empleados").addClass('active');
+        var clienteactivo = $("#empleados").text();
+        console.log('ES CLIENTE?' + clienteactivo)
+
         function cargarCiudades(departamentoId, ciudadId) {
             if (departamentoId != 0) {
                 $.ajax({
                     url: '../Services/ciudades_obtener.php',
                     type: 'GET',
-                    data: { id: departamentoId },
+                    data: {
+                        id: departamentoId
+                    },
                     success: function(response) {
                         var ciudades = JSON.parse(response);
                         var $ciudadSelect = $('#ciudadSelect');
-                        
+
                         $ciudadSelect.empty();
                         $ciudadSelect.append('<option value="0">Seleccione</option>');
-                        
+
                         ciudades.forEach(function(ciudad) {
                             $ciudadSelect.append('<option value="' + ciudad.Ciu_ID + '">' + ciudad.Ciu_Descripcion + '</option>');
                         });
@@ -467,7 +471,9 @@ if (isset($mensajeError)) {
                 $.ajax({
                     url: '../Services/empleado_obtener.php',
                     type: 'GET',
-                    data: { id: id },
+                    data: {
+                        id: id
+                    },
                     success: function(response) {
                         const empleado = JSON.parse(response);
                         $("#form-title").text('Editar Empleado');
@@ -500,7 +506,9 @@ if (isset($mensajeError)) {
                 $.ajax({
                     url: '../Services/empleado_obtener.php',
                     type: 'GET',
-                    data: { id: id },
+                    data: {
+                        id: id
+                    },
                     success: function(response) {
                         const empleado = JSON.parse(response);
 
@@ -585,13 +593,14 @@ if (isset($mensajeError)) {
             $('#eliminarUsuarioForm').submit();
         });
 
-        <?php if (isset($_SESSION['mensaje'])): ?>
+        <?php if (isset($_SESSION['mensaje'])) : ?>
             iziToast.<?php echo $_SESSION['mensaje_tipo']; ?>({
                 title: '<?php echo ucfirst($_SESSION['mensaje_tipo']); ?>',
                 message: '<?php echo $_SESSION['mensaje']; ?>',
                 position: 'topRight'
             });
-            <?php unset($_SESSION['mensaje']); unset($_SESSION['mensaje_tipo']); ?>
+            <?php unset($_SESSION['mensaje']);
+            unset($_SESSION['mensaje_tipo']); ?>
         <?php endif; ?>
     });
 </script>
