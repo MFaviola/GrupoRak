@@ -44,7 +44,7 @@ class ControllerLogin {
                 $_SESSION['Usu_Admin'] = $pantallas[0]['Usu_Admin'];
                 $_SESSION['pantallas'] = array_column($pantallas, 'Ptl_Identificador');
 
-                header("Location: ../Services/Template.Service.php?Pages=dashboardsInicio");
+                header("Location: ../Services/Template.Service.php?Pages=dashboardsInicio ");
                 exit();
             } else {
                 $_SESSION['error_message'] = "Usuario o contraseña incorrectos.";
