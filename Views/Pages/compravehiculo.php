@@ -18,35 +18,49 @@ $response = array("status" => "error", "message" => "Ocurrió un error");
 
 // Procesar la solicitud POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     if (isset($_POST['formulario'])) {
         switch ($_POST['formulario']) {
+
             case 'insertarEncabezado':
                 try {
+                    $id = isset($_POST['id']) ? $_POST['id'] : null;
                     $FechaCompra = date('Y-m-d'); // Obtener la fecha actual
                     $MetodoPago = $_POST['pagosSelect'];
                     $IdentidadBusqueda = $_POST['txtIdentidadBusqueda'];
                     $ClienteBusqueda = $_POST['txtClienteBusqueda'];
-
-
-                    // Insertar el encabezado de la compra
-                    $Creacion = $_SESSION['ID'];
-                    if (!isset($_SESSION['clienteID'])) {
-                        throw new Exception("Cliente ID no está disponible en la sesión");
-                    }
+                    $EsBusqueda = $_POST['IdCliente'];
                     $clienteID = $_SESSION['clienteID'];
-                    $CompraId = $controllerCompra->insertarEncabezado($FechaCompra, $MetodoPago, $clienteID, $Creacion);
-                    if ($CompraId != 0) {
-                        $_SESSION['CompraId'] = $CompraId; // Almacenar ID de compra en sesión
+                    $clienteIDUsado = !empty($EsBusqueda) ? $EsBusqueda : $clienteID;
+                    $Creacion = $_SESSION['ID'];
+
+                    if ($id) {
+                        // Editar encabezado existente
+                        $resultado = $controllerCompra->actualizarEncabezado($id, $FechaCompra, $MetodoPago, $clienteIDUsado, $Creacion);
+                        $response = array(
+                            "status" => "success",
+                            "message" => "Encabezado editado correctamente",
+                            "ID" => $id,
+                            "ID CLIENTE" => $clienteID,
+                            "MetodoPAGO" => $MetodoPago,
+                            "Fecha" => $FechaCompra,
+                            "Usuario" => $Creacion
+                        );
+                    } else {
+                        $CompraId = $controllerCompra->insertarEncabezado($FechaCompra, $MetodoPago, $clienteIDUsado, $Creacion);
+                        if ($CompraId != 0) {
+                            $_SESSION['CompraId'] = $CompraId; // Almacenar ID de compra en sesión
+                        }
+
+
+                        $response = array(
+                            "ID" => $CompraId,
+                            "ID CLIENTE" => $clienteID,
+                            "MetodoPAGO" => $MetodoPago,
+                            "Fecha" => $FechaCompra,
+                            "Usuario" => $Creacion
+                        );
                     }
-
-
-                    $response = array(
-                        "ID" => $CompraId,
-                        "ID CLIENTE" => $clienteID,
-                        "MetodoPAGO" => $MetodoPago,
-                        "Fecha" => $FechaCompra,
-                        "Usuario" => $Creacion
-                    );
                 } catch (Exception $e) {
                     $response['message'] = $e->getMessage();
                 }
@@ -158,7 +172,8 @@ try {
 }
 ?>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
 
 <div id="tabla">
@@ -170,6 +185,7 @@ try {
                 <i class="fa-solid fa-plus"></i>
                 Nuevo
             </button>
+
             <hr>
             <table id="example1" class="table  table-bordered table-striped">
                 <thead>
@@ -189,11 +205,19 @@ try {
                             <td><?php echo $compra['Mpg_Descripcion']; ?></td>
                             <td><?php echo $compra['Cli_Nombre']; ?></td>
                             <td class="d-flex justify-content-center" style="gap:10px">
-
-                                <button style="color:white" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $compra['Com_Id']; ?>"><i class="fas fa-edit"></i>Editar</button>
-                                <button class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $compra['Com_Id']; ?>"><i class="fas fa-eye"></i>Detalles</button>
-                                <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button>
-
+                                <?php if ($compra['Com_Estado'] == 1) : ?>
+                                    <button style="color:white" class="btn btn-dark btn-sm abrir-editar" data-id="<?php echo $compra['Com_Id']; ?>">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                <?php endif; ?>
+                                <button class="btn btn-secondary btn-sm btn-detalles" data-id="<?php echo $compra['Com_Id']; ?>">
+                                    <i class="fas fa-eye"></i> Detalles
+                                </button>
+                                <?php if ($compra['Com_Estado'] == 1) : ?>
+                                    <button class="btn btn-danger btn-sm btnFinalizarIndex" data-id="<?php echo $compra['Com_Id']; ?>">
+                                        <i class="fa-solid fa-check"></i> Finalizar
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -212,8 +236,9 @@ try {
         <div class="card-body">
             <form id="frmInsertarEncabezado" method="POST">
                 <input type="hidden" name="formulario" value="insertarEncabezado">
+                <input type="hidden" name="id" id="id">
                 <input type="hidden" id="CompraId" name="CompraId" value="<?php echo isset($_SESSION['CompraId']) ? htmlspecialchars($_SESSION['CompraId']) : ''; ?>">
-
+                <input type="hidden" class="form-control" id="IdCliente" name="IdCliente">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -237,12 +262,10 @@ try {
                         <div class="form-group">
                             <label>Identidad:</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda">
-                                <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-primary"> <i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                                <input type="text" class="form-control" id="txtIdentidadBusqueda" name="txtIdentidadBusqueda" maxlength="13">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 </div>
-                                <!-- /btn-group -->
-
                             </div>
                             <span style="color:red" class="error-message" id="errorIdentidadBusqueda"></span>
                         </div>
@@ -284,7 +307,7 @@ try {
                                             <th class="text-center">Año</th>
                                             <th class="text-center">Marca</th>
                                             <th class="text-center">Precio Compra</th>
-                                            <th class="text-center">Impuesto</th>
+
                                             <th class="text-center">Acciones</th>
                                         </tr>
                                     </thead>
@@ -301,7 +324,7 @@ try {
                                                         <input type="text" class="form-control" name="precioCompra[]" value="<?php echo $detalle['Cdt_PrecioCompra']; ?>">
                                                     </div>
                                                 </td>
-                                                <td><?php echo $detalle['Imp_ISV']; ?></td>
+
                                                 <td>
                                                     <button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="<?php echo $detalle['id']; ?>"><i class="fa-solid fa-trash"></i></button>
                                                 </td>
@@ -310,14 +333,13 @@ try {
                                     </tbody>
                                 </table>
                                 <div class="card-body">
-                                <div class="text-right">
-                                    <p><strong>Subtotal:</strong> <span id="subtotal">L 0.00</span></p>
-                                    <p><strong>ISV (15%):</strong> <span id="isv15">L 0.00</span></p>
-                                 
-                                    <p><strong>Total a Pagar:</strong> <span id="totalPagar">L 0.00</span></p>
+                                    <div class="text-right">
+                                        <p><strong>Subtotal:</strong> <span id="subtotal">L 0.00</span></p>
+                                        <p><strong>ISV (15%):</strong> <span id="isv15">L 0.00</span></p>
+                                        <p><strong>Total a Pagar:</strong> <span id="totalPagar">L 0.00</span></p>
+                                    </div>
                                 </div>
-                                </div>
-                             
+
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -328,7 +350,8 @@ try {
 
                 <div class="card-footer">
                     <div class="d-flex justify-content-end" style="gap:10px">
-                        <button type="button" class="btn btn-primary" id="btnFinalizar" disabled><i class="fa-solid fa-check"></i> Finalizar</button>
+                        <button type="button" class="btn btn-primary btnFinalizarCreate" disabled><i class="fa-solid fa-check"></i> Finalizar</button>
+                        <button type="button" onclick="generateReport()" class="btn btn-info"><i class="fa-solid fa-check"></i> Imprimir</button>
                         <button type="button" id="Cancelar" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                     </div>
                 </div>
@@ -338,7 +361,19 @@ try {
     </div>
 </div>
 
+<div class="container mt-3 pdfContenedor">
+    <div class="collapse" id="pdfPreview">
+        <div class="card card-body">
+            <div class="d-flex justify-content-end" style="gap:10px">
+                <button class="btn btn-primary btnVolverImpresion"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+            </div>
+            <div class="mt-2">
 
+            </div>
+            <embed id="pdfEmbed" src="" type="application/pdf" width="100%" height="600px" />
+        </div>
+    </div>
+</div>
 
 <!-- Formulario de Cliente -->
 <div id="insertar" style="display:none;">
@@ -356,8 +391,10 @@ try {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Identidad:</label>
-                            <input type="text" class="form-control" name="txtIdentidad" id="txtIdentidad" required>
+                            <input type="text" class="form-control" name="txtIdentidad" id="txtIdentidad" required maxlength="13">
                             <span style="color:red" class="error-message" id="errorIdentidad"></span>
+                            <span style="color:red" class="error-message" id="errorIdentidadLongitud"></span>
+
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -365,6 +402,7 @@ try {
                             <label>Nombre:</label>
                             <input type="text" class="form-control" name="txtNombre" id="txtNombre">
                             <span style="color:red" class="error-message" id="errorNombre"></span>
+
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -474,8 +512,10 @@ try {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Placa:</label>
-                            <input type="text" class="form-control" name="txtPlaca" id="txtPlaca">
+                            <input type="text" class="form-control" name="txtPlaca" id="txtPlaca" maxlength="7">
                             <span style="color:red" class="error-message" id="errorPlaca"></span>
+                            <span style="color:red" class="error-message" id="errorPlacaLongitud"></span>
+
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -557,13 +597,156 @@ try {
                 ¿Estás seguro de que deseas eliminar este registro?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                 <button type="button" class="btn btn-danger" id="btnConfirmarEliminarDetalle"><i class="fa-solid fa-trash"></i> Eliminar</button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal de Confirmación de Finalizacion -->
+<div class="modal fade" id="modalFinalizar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Confirmar Finalización</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas finalizar esta compra?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnConfirmarFinalizar"><i class="fa-solid fa-check"></i> Finalizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Finalizacion Create -->
+<div class="modal fade" id="modalFinalizarCreate" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Confirmar Finalización</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas finalizar esta compra?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnConfirmarFinalizarCreate"><i class="fa-solid fa-check"></i> Finalizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Detalles -->
+<div id="detalles" style="display:none;">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title" id="form-title">Detalle Compra</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Codigo:</strong> <span id="Detalle_Codigo"></span></p>
+                    <p><strong>Fecha:</strong> <span id="Detalle_Fecha"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Metodo de Pago:</strong> <span id="Detalle_Pago"></span></p>
+                    <p><strong>Cliente DNI:</strong> <span id="Detalle_DNI"></span></p>
+
+                </div>
+
+            </div>
+            <div class="mt-1 row">
+                <div class="col-md-6">
+                    <p><strong>Cliente:</strong> <span id="Detalle_Cliente"></span></p>
+                </div>
+            </div>
+            <div id="detalleCompra2" class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center">Placa</th>
+                                        <th class="text-center">Color</th>
+                                        <th class="text-center">Modelo</th>
+                                        <th class="text-center">Año</th>
+                                        <th class="text-center">Marca</th>
+                                        <th class="text-center">Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($listarDetalles as $detalle) : ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo $detalle['Veh_Placa']; ?></td>
+                                            <td class="text-center"><?php echo $detalle['Veh_Color']; ?></td>
+                                            <td class="text-center"><?php echo $detalle['Mod_Descripcion']; ?></td>
+                                            <td class="text-center"><?php echo $detalle['Mod_Año']; ?></td>
+                                            <td class="text-center"><?php echo $detalle['Mar_Descripcion']; ?></td>
+                                            <td class="d-flex justify-content-center">
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" name="precioCompra[]" value="<?php echo $detalle['Cdt_PrecioCompra']; ?>">
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="<?php echo $detalle['id']; ?>"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <hr>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Acción</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Creado por</td>
+                        <td id="Detalle_Creacion"></td>
+                        <td id="Detalle_FechaCreacion"></td>
+                    </tr>
+                    <tr>
+                        <td>Modificado por</td>
+                        <td id="Detalle_Modifica"></td>
+                        <td id="Detalle_FechaModifica"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery -->
 
 <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
@@ -571,6 +754,231 @@ try {
 
 
 <script>
+    async function generateReport() {
+        let idcompra = 0;
+        let id = $("#id").val();
+        var compraIDSumado = localStorage.getItem('compraIDSumado'); // Obtener de local storage
+        idcompra = compraIDSumado;
+
+        var clienteDNI = $("#txtIdentidadBusqueda").val();
+        var cliente = $("#txtClienteBusqueda").val();
+        var fecha = new Date().toLocaleDateString();
+        var subtotal = $("#subtotal").text();
+        var impuesto = $("#isv15").text();
+        var total = $("#totalPagar").text();
+        console.log(impuesto);
+        console.log(total);
+        console.log('SUBTOTAL ' + subtotal);
+        console.log('DNI ' + clienteDNI);
+        console.log('Cliente ' + cliente);
+
+        console.log('LOCAL STORAGE' + idcompra);
+     
+        if (id) {
+            console.log('ENTREE');
+            idcompra = id;
+        }
+        console.log('ID OTRA VEX' + idcompra);
+
+        try {
+            $.ajax({
+                url: '../Services/comprasDetalles_obtener.php',
+                type: 'GET',
+                data: {
+                    id: idcompra
+                },
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    const {
+                        jsPDF
+                    } = window.jspdf;
+                    const doc = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'px',
+                        format: 'letter'
+                    });
+                    const img = new Image();
+                    img.src = '../Views/Resources/dist/img/logroRac.jpg';
+
+                    const addHeader = () => {
+                        // Dibujar fondo del encabezado
+                        drawPolygonBackground(doc);
+
+                        // Dibujar la sombra
+                        const imgX = 20;
+                        const imgY = 40;
+                        const imgWidth = 70;
+                        const imgHeight = 60;
+                        const cornerRadius = 10;
+                        const shadowOffset = 5;
+                        doc.setFillColor(150, 150, 150); // Color de la sombra
+                        doc.roundedRect(imgX + shadowOffset, imgY + shadowOffset, imgWidth, imgHeight, cornerRadius, cornerRadius, 'F');
+
+                        // Dibujar el rectángulo para la imagen
+                        drawRoundedRect(doc, imgX, imgY, imgWidth, imgHeight, cornerRadius, [214, 39, 0]);
+                        doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
+
+                        // Agregar el texto del encabezado
+                        doc.setTextColor(0, 0, 0);
+                        doc.setFontSize(25);
+                        doc.setFont('helvetica', 'bold');
+                        doc.text('Factura', 200, 90, {
+                            align: 'left'
+                        });
+
+                        // Agregar fecha, DNI del cliente y nombre del cliente en nuevas líneas
+                        doc.setFontSize(15);
+                        const lineHeight = 20; // Espacio vertical entre líneas
+                        doc.text(`Fecha: ${fecha}`, imgX + imgWidth - 55, imgY + 90);
+                        doc.text(`DNI Cliente: ${clienteDNI}`, imgX + imgWidth - 55, imgY + 90 + lineHeight);
+                        doc.text(`Cliente: ${cliente}`, imgX + imgWidth - 55, imgY + 90 + 2 * lineHeight);
+                    };
+
+                    const addFooter = (pageNumber, pageCount) => {
+                        doc.setFillColor(247, 247, 247);
+                        doc.rect(doc.internal.pageSize.getWidth() - 80, doc.internal.pageSize.getHeight() - 35, 60, 25, 'F');
+                        doc.setFontSize(13);
+                        doc.setTextColor(0);
+                        doc.text(`Página ${pageNumber} de ${pageCount}`, doc.internal.pageSize.getWidth() - 50, doc.internal.pageSize.getHeight() - 22, {
+                            align: 'center'
+                        });
+                        const fechaImpresion = new Date().toLocaleDateString();
+                        doc.text(`Usuario: 'Hola'      Fecha: ${fechaImpresion}`, 10, doc.internal.pageSize.getHeight() - 22);
+                        doc.setFillColor(214, 39, 0);
+                        doc.rect(0, doc.internal.pageSize.getHeight() - 20, doc.internal.pageSize.getWidth(), 20, 'F');
+                    };
+
+                    const cuerpoConNumeros = data.map((row, index) => [
+                        index + 1,
+                        row.Veh_Placa,
+                        row.Veh_Color,
+                        row.Mod_Descripcion,
+                        row.Mod_Año,
+                        row.Mar_Descripcion
+                    ]);
+
+                    doc.autoTable({
+                        head: [
+                            ['N.', 'Placa', 'Color', 'Modelo', 'Año', 'Marca']
+                        ],
+                        body: cuerpoConNumeros,
+                        startY: 180,
+                        theme: 'grid',
+                        styles: {
+                            fontSize: 12,
+                            cellPadding: 5,
+                            textColor: [0, 0, 0],
+                            valign: 'middle',
+                            halign: 'center'
+                        },
+                        headStyles: {
+                            fillColor: [0, 0, 0],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold'
+                        },
+                        alternateRowStyles: {
+                            fillColor: [240, 240, 240]
+                        },
+                        didDrawPage: (data) => {
+                            addHeader();
+                            const pageCount = doc.getNumberOfPages();
+                            addFooter(data.pageNumber, pageCount);
+                        },
+                        margin: {
+                            top: 140
+                        }
+                    });
+
+                    // Agregar filas para Subtotal, Impuesto y Total a Pagar
+                    doc.autoTable({
+                        body: [
+                            ['Subtotal:', subtotal],
+                            ['Impuesto:', impuesto],
+                            [{
+                                content: 'Total a Pagar:',
+                                styles: {
+                                    fontStyle: 'bold',
+                                    fillColor: [241, 10, 10],
+                                    textColor: [255, 255, 255],
+                                    fontSize: 15
+                                }
+                            }, {
+                                content: total,
+                                styles: {
+                                    fontStyle: 'bold',
+                                    fontSize: 15
+                                }
+                            }]
+                        ],
+                        startY: doc.autoTableEndPosY() + 10, // Ajustar el inicio para que esté justo después de la tabla anterior
+                        theme: 'plain',
+                        styles: {
+                            fontSize: 12,
+                            textColor: [0, 0, 0],
+                            halign: 'right',
+                            valign: 'middle'
+                        },
+                        headStyles: {
+                            fontStyle: 'bold',
+                            fillColor: [255, 255, 255],
+                            textColor: [0, 0, 0]
+                        },
+                        columnStyles: {
+                            0: {
+                                halign: 'left',
+                                columnWidth: 80
+                            }
+                        }
+                    });
+
+                    const pdfDataUri = doc.output('datauristring');
+                    document.getElementById('pdfEmbed').setAttribute('src', pdfDataUri);
+
+                    $('#pdfPreview').collapse('show');
+                    $("#insertarEncabezado").hide();
+
+                }
+            });
+        } catch (error) {
+            console.error('Error generating report:', error.message);
+        }
+    }
+
+
+
+
+
+
+
+    // Función para dibujar el fondo de polígono
+    function drawPolygonBackground(doc) {
+        const width = 330;
+        const height = 95;
+        const x = 1;
+        const y = 3;
+
+        const points = [
+            [x, y],
+            [x + width, y],
+            [x + width, y],
+            [x + 0.9 + width, y + height],
+            [x, y + height]
+        ];
+
+        doc.setFillColor(241, 10, 10);
+        doc.setDrawColor(104, 200, 0);
+        doc.lines(points, x, y, [1, 1], 'F');
+    }
+
+    // Función para dibujar un rectángulo con esquinas redondeadas
+    function drawRoundedRect(doc, x, y, width, height, radius, color) {
+        doc.setFillColor(...color);
+        doc.roundedRect(x, y, width, height, radius, radius, 'F');
+    }
+
+
+
+
     function validateForm() {
         let isValid = true;
         document.querySelectorAll('.error-message').forEach(function(error) {
@@ -585,7 +993,12 @@ try {
             document.getElementById('errorIdentidad').textContent = 'El campo es requerido';
             identidad.classList.add('is-invalid');
             isValid = false;
+        } else if (identidad.value.length !== 13) {
+            document.getElementById('errorIdentidadLongitud').textContent = 'El campo debe tener 13 caracteres';
+            identidad.classList.add('is-invalid');
+            isValid = false;
         }
+
 
         const nombre = document.getElementById('txtNombre');
         if (!nombre.value) {
@@ -653,12 +1066,6 @@ try {
             input.classList.remove('is-invalid');
         });
 
-        // const identidadBusqueda = document.getElementById('txtIdentidadBusqueda');
-        // if (!identidadBusqueda.value) {
-        //     document.getElementById('errorIdentidadBusqueda').textContent = 'El campo es requerido';
-        //     identidadBusqueda.classList.add('is-invalid');
-        //     isValid = false;
-        // }
 
         const clienteBusqueda = document.getElementById('txtClienteBusqueda');
         if (!clienteBusqueda.value) {
@@ -686,9 +1093,14 @@ try {
             input.classList.remove('is-invalid');
         });
 
+
         const placa = document.getElementById('txtPlaca');
         if (!placa.value) {
             document.getElementById('errorPlaca').textContent = 'El campo es requerido';
+            placa.classList.add('is-invalid');
+            isValid = false;
+        } else if (placa.value.length !== 7) {
+            document.getElementById('errorPlacaLongitud').textContent = 'El campo debe tener 7 caracteres';
             placa.classList.add('is-invalid');
             isValid = false;
         }
@@ -749,7 +1161,69 @@ try {
         });
     }
     $(document).ready(function() {
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        if (localStorage.getItem('operacionExitosa') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa'); // Limpiar la señal para futuras operaciones
+        }
+
+        if (localStorage.getItem('operacionExitosa2') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa2'); // Limpiar la señal para futuras operaciones
+        }
         var encabezadoInsertado = false; // Variable de control para evitar insertar el encabezado más de una vez
+        $("#detalleCompra2").hide();
+
+
+        $(".btnVolverImpresion").click(function() {
+            console.log('OFDF');
+            $('#pdfPreview').collapse('hide');
+            $("#insertarEncabezado").show();
+        });
+
+        // Evento de tecla para buscar cliente por DNI
+        $("#txtIdentidadBusqueda").on("keyup", function() {
+            const dni = $(this).val();
+            if (dni.length === 13) {
+                console.log('13');
+
+                $.ajax({
+                    url: '../Services/cliente_Buscar.php',
+                    type: 'GET',
+                    data: {
+                        id: dni
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+
+                        if (usuario != false) {
+                            $("#txtClienteBusqueda").val(usuario.Cli_Nombre + ' ' + usuario.Cli_Apellido);
+                            var IdCliente = usuario.Cli_Id;
+                            $("#IdCliente").val(IdCliente);
+                            console.log('ID CLIENTE: ' + IdCliente);
+                        } else {
+                            $("#txtClienteBusqueda").val('');
+                            $("#IdCliente").val('0');
+                        }
+
+                    }
+                });
+
+
+            }
+        });
 
 
         $("#EsquemaVentas").addClass('menu-open');
@@ -766,7 +1240,6 @@ try {
         $('#txtFecha').val(fechaActual);
         // Función para cargar ciudades basadas en el departamento seleccionado
         $("#insertarEncabezado").hide();
-        $("#detalleCompra").hide();
 
 
 
@@ -923,7 +1396,8 @@ try {
             $("#estadoCivilSelect").val('0');
             $("#insertarEncabezado").show();
             $("#insertar").hide();
-            $("#detalleCompra").hide();
+            $("#detalleCompra").show();
+
             $("#tabla").hide();
             encabezadoInsertado = false;
         });
@@ -936,39 +1410,6 @@ try {
             window.location.reload();
             clearErrors();
         });
-
-        // Enviar formularios
-        $("#btnGuardar").click(function() {
-            // $("#frmInsertarEncabezado").submit();
-
-            var formData = new FormData($("#frmInsertarEncabezado")[0]);
-            $.ajax({
-                type: "POST",
-                url: "", // URL del script PHP
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-
-                    console.log(response)
-
-                    // $("#frmInsertarCliente")[0].reset();
-                    // $("#insertar").hide();
-                    // $("#tabla").hide();
-                    // $("#insertarEncabezado").show();
-                    // $("#txtIdentidadBusqueda").val(identidadBusqeda);
-                    // $("#txtClienteBusqueda").val(clienteBusqueda);
-                    // } catch (e) {
-                    //     console.error("Error parsing JSON:", e);
-                    //     console.error("Response:", response);
-                    // }
-                },
-                error: function() {
-                    alert("Error en la solicitud AJAX");
-                }
-            });
-        });
-
 
 
         $("#btnGuardarCliente").click(function() {
@@ -995,6 +1436,10 @@ try {
                         $("#insertarEncabezado").show();
                         $("#txtIdentidadBusqueda").val(identidadBusqeda);
                         $("#txtClienteBusqueda").val(clienteBusqueda);
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Cliente Ingresado Con Exito.'
+                        });
                     },
                     error: function() {
                         alert("Error en la solicitud AJAX");
@@ -1013,6 +1458,49 @@ try {
             $("#modalEliminarDetalle").show();
         });
 
+        // Enviar formulario de vehiculo y luego insertar encabezado y detalle
+        $("#btnGuardarVehiculo").click(function() {
+
+            if (validateFormVehiculo()) {
+                var formData = new FormData($("#frmInsertarVehiculo")[0]);
+
+                // Extraer el nombre del archivo
+                var fileName = $("#txtImagen").val().split('\\').pop();
+                formData.append("txtImagen", fileName);
+                var Precio = $("#txtPrecioVehiculo").val();
+                formData.append("txtPrecioVehiculo", Precio);
+                var id = $("#id").val();
+                $.ajax({
+                    type: "POST",
+                    url: "", // URL del script PHP
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        $("#frmInsertarVehiculo")[0].reset();
+                        $("#insertarVehiculo").hide();
+                        $("#insertarEncabezado").show();
+
+
+                        // Deshabilitar el campo #txtIdentidadBusqueda
+                        $("#txtIdentidadBusqueda").prop('disabled', true);
+
+                        $(".btnFinalizarCreate").prop('disabled', false);
+                        $("#pagosSelect").prop('disabled', true);
+                        // Insertar el encabezado después de insertar el vehículo
+                        insertarEncabezado();
+
+
+                    },
+                    error: function() {
+                        alert("Error en la solicitud AJAX");
+                    }
+                });
+            }
+
+        });
+
         function insertarEncabezado() {
 
             var compraID = $("#CompraId").val();
@@ -1022,6 +1510,9 @@ try {
                 var pagosSelect = $("#pagosSelect").val();
                 var txtIdentidadBusqueda = $("#txtIdentidadBusqueda").val();
                 var txtClienteBusqueda = $("#txtClienteBusqueda").val();
+                var IdCliente = $("#IdCliente").val();
+                console.log('IIDE CLIENTE' + IdCliente);
+                var id = $("#id").val();
 
                 console.log('COMPRA ID: ' + compraIDSumado);
 
@@ -1032,15 +1523,22 @@ try {
                         formulario: 'insertarEncabezado',
                         pagosSelect: pagosSelect,
                         txtIdentidadBusqueda: txtIdentidadBusqueda,
-                        txtClienteBusqueda: txtClienteBusqueda
+                        txtClienteBusqueda: txtClienteBusqueda,
+                        IdCliente: IdCliente,
+                        id: id
                     },
                     success: function(response) {
 
                         console.log("Encabezado insertado correctamente", compraIDSumado);
 
                         encabezadoInsertado = true;
-                        localStorage.setItem('compraIDSumado', compraIDSumado); // 
-                        insertarDetalle(compraIDSumado); // Pasar el ID de la compra al insertar el detalle
+                        if (id) {
+                            insertarDetalle(id);
+                        } else {
+                            localStorage.setItem('compraIDSumado', compraIDSumado); //
+                            insertarDetalle(compraIDSumado); // Pasar el ID de la compra al insertar el detalle
+                        }
+
 
                     },
                     error: function() {
@@ -1062,7 +1560,10 @@ try {
                     formulario: 'insertarDetalle'
                 },
                 success: function(response) {
-
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Operacion Realizada Con Exito.'
+                    });
                     cargarDetallesCompra(compraId); // Cargar los detalles de la compra después de insertar el detalle
                 },
                 error: function() {
@@ -1086,24 +1587,144 @@ try {
 
                     detalles.forEach(function(detalle) {
                         var fila = `<tr>
-                    <td>${detalle.Veh_Placa}</td>
-                    <td>${detalle.Veh_Color}</td>
-                    <td>${detalle.Mod_Descripcion}</td>
-                    <td>${detalle.Mod_Año}</td>
-                    <td>${detalle.Mar_Descripcion}</td>
-                    <td><input type="text" class="form-control" name="precioCompra[]" value="${detalle.Cdt_PrecioCompra}"></td>
-                    <td>${detalle.Imp_ISV}</td>
-                    <td><button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="${detalle.Cdt_Id}"><i class="fa-solid fa-trash"></i></button></td>
+                    <td class="text-center">${detalle.Veh_Placa}</td>
+                    <td class="text-center">${detalle.Veh_Color}</td>
+                    <td class="text-center">${detalle.Mod_Descripcion}</td>
+                    <td class="text-center">${detalle.Mod_Año}</td>
+                    <td class="text-center">${detalle.Mar_Descripcion}</td>
+                    <td class="d-flex justify-content-center"><div class="col-md-6"><input type="text" class="form-control precioCompra" name="precioCompra[]" value="${detalle.Cdt_PrecioCompra}"></div></td>
+                
+                    <td class="text-center"><button type="button" class="btn btn-danger btn-sm btnEliminarDetalle" data-id="${detalle.Cdt_Id}"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>`;
                         tbody.append(fila);
                     });
                     $("#detalleCompra").show();
+
+                    // Recalcular totales
+                    recalcularTotales();
+
+                    // Añadir evento para recalcular totales cuando se modifique el precio
+                    $('.precioCompra').on('input', function() {
+                        console.log('NETRE 2')
+                        recalcularTotales();
+                    });
                 },
                 error: function() {
                     alert("Error al cargar los detalles de la compra");
                 }
             });
         }
+
+        function cargarDetallesCompra2(compraId) {
+            $.ajax({
+                type: "GET",
+                url: "comprasDetalles_obtener.php",
+                data: {
+                    id: compraId
+                },
+                success: function(response) {
+                    var detalles = JSON.parse(response);
+                    console.log("DETALLES :" + detalles);
+                    var tbody = $("#detalleCompra2 tbody");
+                    tbody.empty(); // Limpiar tabla
+
+                    detalles.forEach(function(detalle) {
+                        var fila = `<tr>
+                    <td class="text-center">${detalle.Veh_Placa}</td>
+                    <td class="text-center">${detalle.Veh_Color}</td>
+                    <td class="text-center">${detalle.Mod_Descripcion}</td>
+                    <td class="text-center">${detalle.Mod_Año}</td>
+                    <td class="text-center">${detalle.Mar_Descripcion}</td>
+                    <td class="text-center">${detalle.Cdt_PrecioCompra}</td>
+                
+                </tr>`;
+                        tbody.append(fila);
+                    });
+                    $("#detalleCompra2").show();
+
+
+                },
+                error: function() {
+                    alert("Error al cargar los detalles de la compra");
+                }
+            });
+        }
+
+        function recalcularTotales() {
+            var subtotal = 0;
+            $('.precioCompra').each(function() {
+                var precio = parseFloat($(this).val()) || 0;
+                subtotal += precio;
+            });
+
+            var isv = subtotal * 0.15;
+            var total = subtotal + isv;
+
+            $('#subtotal').text('L ' + subtotal.toFixed(2));
+            $('#isv15').text('L ' + isv.toFixed(2));
+            $('#totalPagar').text('L ' + total.toFixed(2));
+        }
+
+
+        // Manejar el evento de clic en el botón de eliminar detalle
+        $(document).on('click', '.btnFinalizarIndex', function() {
+            let idDetalleAEliminar = $(this).data('id');
+            console.log("ID DETALLE: " + idDetalleAEliminar)
+            $('#modalFinalizar').data('id', idDetalleAEliminar).modal('show');
+        });
+
+        // Manejar el evento de clic en el botón de eliminar detalle
+        $(document).on('click', '.btnFinalizarCreate', function() {
+
+            var compraIDSumado = localStorage.getItem('compraIDSumado'); // Obtener de local storage
+            console.log("ID DETALLE: " + compraIDSumado)
+            $('#modalFinalizarCreate').data('id', compraIDSumado).modal('show');
+        });
+
+        // Manejar la confirmación de eliminación en el modal
+        $('#btnConfirmarFinalizarCreate').click(function() {
+            let idDetalleAEliminar = $('#modalFinalizarCreate').data('id');
+
+            $.ajax({
+                type: "GET",
+                url: "compra_Finalizar.php", // URL del script PHP para eliminar el detalle
+                data: {
+                    id: idDetalleAEliminar
+                },
+                success: function(response) {
+                    $('#modalFinalizarCreate').modal('hide');
+
+                    localStorage.setItem('operacionExitosa2', 'true'); // Guardar señal en local storage
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Error al eliminar el detalle");
+                }
+            });
+        });
+
+        // Manejar la confirmación de eliminación en el modal
+        $('#btnConfirmarFinalizar').click(function() {
+            let idDetalleAEliminar = $('#modalFinalizar').data('id');
+            var compraIDSumado = localStorage.getItem('compraIDSumado'); // Obtener de local storage
+            $.ajax({
+                type: "GET",
+                url: "compra_Finalizar.php", // URL del script PHP para eliminar el detalle
+                data: {
+                    id: idDetalleAEliminar
+                },
+                success: function(response) {
+                    $('#modalFinalizar').modal('hide');
+
+                    localStorage.setItem('operacionExitosa', 'true'); // Guardar señal en local storage
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Error al eliminar el detalle");
+                }
+            });
+        });
+
 
         // Manejar el evento de clic en el botón de eliminar detalle
         $(document).on('click', '.btnEliminarDetalle', function() {
@@ -1126,6 +1747,10 @@ try {
                     $('#modalEliminarDetalle').modal('hide');
                     console.log("ID LOCAL: " + compraIDSumado)
                     cargarDetallesCompraEliminado();
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Operacion Realizada Con Exito.'
+                    });
                     console.log("EXITO")
                 },
                 error: function() {
@@ -1184,45 +1809,114 @@ try {
             });
         }
 
-        // Enviar formulario de vehiculo y luego insertar encabezado y detalle
-        $("#btnGuardarVehiculo").click(function() {
 
-            if (validateFormVehiculo()) {
-                var formData = new FormData($("#frmInsertarVehiculo")[0]);
 
-                // Extraer el nombre del archivo
-                var fileName = $("#txtImagen").val().split('\\').pop();
-                formData.append("txtImagen", fileName);
-                var Precio = $("#txtPrecioVehiculo").val();
-                formData.append("txtPrecioVehiculo", Precio);
-
+        function attachClickEvents() {
+            $(".abrir-editar").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $(".btnFinalizarCreate").prop('disabled', false);
+                console.log('ID COMPRA: ' + id)
                 $.ajax({
-                    type: "POST",
-                    url: "", // URL del script PHP
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        console.log(response);
-                        $("#frmInsertarVehiculo")[0].reset();
-                        $("#insertarVehiculo").hide();
-                        $("#insertarEncabezado").show();
-                        // Deshabilitar el campo #txtIdentidadBusqueda
-                        $("#txtIdentidadBusqueda").prop('disabled', true);
-                        $("#txt").prop('disabled', true);
-                        $("#btnFinalizar").prop('disabled', false);
-                        $("#pagosSelect").prop('disabled', true);
-                        // Insertar el encabezado después de insertar el vehículo
-                        insertarEncabezado();
-
-
+                    url: '../Services/compra_obtener.php',
+                    type: 'GET',
+                    data: {
+                        IdCompra: id
                     },
-                    error: function() {
-                        alert("Error en la solicitud AJAX");
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        console.log('EDITAR: ' + usuario)
+                        $("#form-title").text('Editar Compra');
+                        console.log(response);
+                        $("#id").val(id);
+                        $("#pagosSelect").val(usuario.Mpg_ID);
+                        $("#txtIdentidadBusqueda").val(usuario.Cli_DNI);
+                        $("#txtClienteBusqueda").val(usuario.Cli_Nombre + ' ' + usuario.Cli_Apellido);
+                        // $("#txtDireccion").val(usuario.Cli_Direccion);
+                        // $("#txtApellido").val(usuario.Cli_Apellido);
+                        // $("#txtFechaNacimiento").val(usuario.Cli_FechaNac);
+
+
+                        cargarDetallesCompra(id);
+
+                        // $("#departamentoSelect").val(usuario.Dep_ID);
+
+
+                        $("#insertarEncabezado").show();
+                        $("#tabla").hide();
                     }
                 });
-            }
+            });
 
+            $(".btn-detalles").off('click').on('click', function() {
+                const id = $(this).data('id');
+                console.log('ESTE ES EL ID: ' + id)
+                $.ajax({
+                    url: '../Services/compra_obtener.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        console.log(response);
+                        $("#Detalle_Codigo").text(id);
+                        $("#Detalle_Fecha").text(usuario.Com_Fecha);
+                        $("#Detalle_Pago").text(usuario.Mpg_Descripcion);
+                        $("#Detalle_DNI").text(usuario.Cli_DNI);
+                        $("#Detalle_Cliente").text(usuario.Cli_Nombre + ' ' + usuario.Cli_Apellido);
+                        $("#Detalle_Creacion").text(usuario.Creacion);
+                        $("#Detalle_FechaCreacion").text(usuario.Com_Fecha_Creacion);
+                        $("#Detalle_Modifica").text(usuario.Modifica);
+                        $("#Detalle_FechaModifica").text(usuario.Com_Fecha_Modifica);
+                        $("#tabla").hide();
+                        $("#detalles").show();
+                    }
+                });
+                $.ajax({
+                    url: '../Services/compra_obtener.php',
+                    type: 'GET',
+                    data: {
+                        IdCompra: id
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        console.log('EDITAR: ' + usuario)
+                        $("#form-title").text('Detalle Compra');
+
+
+                        $("#Detalle_Codigo").text(id);
+                        $("#Detalle_DNI").text(usuario.Cli_DNI);
+                        $("#Detalle_Fecha").text(usuario.Com_Fecha);
+                        $("#Detalle_Pago").text(usuario.Mpg_Descripcion);
+                        $("#Detalle_Cliente").text(usuario.Cli_Nombre + ' ' + usuario.Cli_Apellido);
+
+                        $("#Detalle_Creacion").text(usuario.Creacion);
+
+                        $("#Detalle_FechaCreacion").text(usuario.Com_Fecha_Creacion);
+                        $("#Detalle_Modifica").text(usuario.Modifica);
+                        $("#Detalle_FechaModifica").text(usuario.Com_Fecha_Modifica);
+                        cargarDetallesCompra2(id);
+
+
+                        $("#detalles").show();
+                        $("#tabla").hide();
+                    }
+                });
+            });
+
+
+
+
+        }
+        attachClickEvents();
+
+        table.on('draw', function() {
+            attachClickEvents();
+        });
+
+        $("#btnVolver").click(function() {
+            $("#detalles").hide();
+            $("#tabla").show();
         });
 
 
