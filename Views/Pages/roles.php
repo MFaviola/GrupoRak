@@ -55,6 +55,21 @@ try {
                 <div class="col-md-6">
                     <p><strong>Rol:</strong> <span id="Detalle_Rol_Descripcion"></span></p>
                 </div>
+
+                <div class="col-md-12 " style="background-color: #fff; color: black;">
+                                    <table class="table" id="tbPantRole">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="background-color: #D0D3D4  ; color: black; size:50px;">
+                                                    Pantallas
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Aquí se llenarán las pantallas asignadas a un rol específico -->
+                                        </tbody>
+                                    </table>
+                                </div>
             </div>
             <hr>
             <table class="table table-striped table-hover table-bordered">
@@ -188,6 +203,9 @@ try {
 
 <script>
 $(document).ready(function() {
+    $("#EsquemaAcceso").addClass('menu-open');
+    $("#LinkAcceso").addClass('active');
+    $("#LinkRoles").addClass('active');
     var table = $("#example1").DataTable({
         "responsive": false,
         "lengthChange": false,
@@ -204,10 +222,24 @@ $(document).ready(function() {
                 success: function(response) {
                     const rol = JSON.parse(response);
                     $("#Detalle_Rol_Descripcion").text(rol.rol.Rol_Descripcion);
+                    //$("#Detalle_Rol_Asignada").text(rol.rol.pantallasAsignadas);
                     $("#Detalle_Usuario_Creador").text(rol.rol.Usuario_Creador);
                     $("#Detalle_Rol_FechaCreacion").text(rol.rol.Rol_FechaCreacion);
                     $("#Detalle_Usuario_Modificador").text(rol.rol.Usuario_Modificador);
                     $("#Detalle_Rol_FechaModificacion").text(rol.rol.Rol_FechaModificacion);
+                    
+                    
+                    $("#tbPantRole tbody").empty();
+                    if (rol.pantallasAsignadas) {
+                        rol.pantallasAsignadas.forEach(pantalla => {
+                            $("#tbPantRole tbody").append(
+                                `<tr  id="pantalla-${pantalla.Ptl_Id}" class="item text-center" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
+                                    <td>${pantalla.Ptl_Descripcion}</td>
+                                </tr>`
+                            );
+                        });
+                    }
+
                     $("#tabla").hide();
                     $("#detalles").show();
                 },

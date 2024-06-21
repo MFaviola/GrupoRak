@@ -1,12 +1,17 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(https://i.pinimg.com/736x/95/62/3d/95623dc132235138cfa75403d63aeef3.jpg);">
     <!-- Brand Logo -->
     <a href="../Views/Resources/index3.html" class="brand-link" style="background-color:#000">
-      <img src="../Views\Resources\dist\img\logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light" style="color:white">Grupo Rac</span>
+      <img src="../Views/Resources\dist\img\logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <!-- <span class="brand-text" style="font-weight:bold; font-size:17px; color:white; font-family: Arial, sans-serif;">GRUPO<span class="brand-text" style="font-weight:bold; color:#cb0002; font-family: Arial, sans-serif;">RAC</span></span> -->
+      <img src="../Views/Resources\dist\img\letras.png" class="ml-2" style="height:20px; width:100px; opacity: .8" alt="">
     </a>
     
     <?php
-      session_start();
+      if (session_status() == PHP_SESSION_NONE) {
+          session_start();
+      }
+      include '../config.php'; // Asegúrate de incluir la conexión a la base de datos.
+      include '../Services/MenuService.php';
       $nombreCompleto = isset($_SESSION['nombre_completo']) ? $_SESSION['nombre_completo'] : 'Usuario invitado';
     ?>
     
@@ -24,173 +29,9 @@
         </div>
       </div>
 
-
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
-        
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-               <li class="nav-item">
-            <a href="#" class="nav-link" style="color:white" >
-            <i class="fa-solid fa-house"></i>
-              <p>
-                Inicio
-               
-              </p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="?Pages=dashboardsInicio" class="nav-link" style="color:white">
-            <i class="fa-solid fa-chart-simple"></i>
-              <p>
-                Dashboards
-              </p>
-            </a>
-          </li>
-
-          <li class="nav-item" id="EsquemaReportes">
-            <a href="#" class="nav-link" style="color:white" id="LinkReportes">
-            <i class="fa-solid fa-file"></i>
-              <p>
-                Reportes
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="?Pages=comprareporte" class="nav-link" id="LinkReporteCompras">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Compras</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?Pages=ventareporte" class="nav-link" id="LinkReporteVentas">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Ventas</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="?Pages=empleadoreporte" class="nav-link" id="LinkEmpleadosPorVentas">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Empleados por Ventas</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="?Pages=vehiculoreporte" class="nav-link" id="LinkVehiculosPorRango">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Vehiculos por Rangos</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-     
-
-         <li class="nav-item" id="EsquemaAcceso">
-            <a href="#" class="nav-link" style="color:white" id="LinkAcceso">
-            <i class="fa-solid fa-lock"></i>
-              <p>
-                Accesos
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="?Pages=usuario" class="nav-link" id="LinkUsuarios">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Usuarios</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?Pages=roles" class="nav-link" id="LinkRoles">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Roles</p>
-                </a>
-              </li>
-
-            
-            </ul>
-          </li>
-          
-
-          <li class="nav-item" id="EsquemaGeneral">
-            <a href="#" class="nav-link" style="color:white" id="LinkGeneral">
-            <i class="fa-solid fa-globe"></i>
-              <p>
-                Genarales
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="?Pages=empleados" class="nav-link" id="LinkEmpleados">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Empleados</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?Pages=cliente" class="nav-link" id="LinkClientes">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Clientes</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Modelos</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-     
-          <li class="nav-item" id="EsquemaVentas">
-            <a href="factura" class="nav-link" id="LinkVentas" style="color:white">
-            <i class="fa-solid fa-bag-shopping"></i>
-              <p>
-                Ventas
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="?Pages=factura" class="nav-link" id="LinkVentasVehiculos">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Ventas Vehiculos</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?Pages=compravehiculo" class="nav-link" id="LinkComprasVehiculos">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Compras Vehiculos</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="inventario" class="nav-link" style="color:white">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Vehiculos</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-
-          
-          <li class="nav-item">
-            <a href="cerrar-sesion.php" class="close-sesion nav-link text-center" style="color:white; background-color: red; margin-top:350px;">              <p>
-                Cerrar sesion
-              </p>
-            </a>
-          </li>
-
-        
-          
-       
-        </ul>
+        <?php generarMenu($pdo); ?>
       </nav>
       <!-- /.sidebar-menu -->
     </div>

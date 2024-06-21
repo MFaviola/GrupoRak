@@ -34,14 +34,17 @@ class ControllerLogin {
             $stmt->bindParam(':contrasena', $contrasena);
             $stmt->execute();
 
-            $user = $stmt->fetch();
+            $pantallas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($user) {
-                $_SESSION['ID'] = $user['Usu_ID'];
-                $_SESSION['usuario'] = $user['Usu_Usua'];
-                $_SESSION['nombre_completo'] = $user['Usu_Nombrecompleto'];
-                $_SESSION['rol'] = $user['Admin'];
-                header("Location: ./Template.Service.php");
+            if (!empty($pantallas)) {
+                $_SESSION['ID'] = $pantallas[0]['Usu_ID'];
+                $_SESSION['usuario'] = $pantallas[0]['Usu_Usua'];
+                $_SESSION['nombre_completo'] = $pantallas[0]['Usu_Nombrecompleto'];
+                $_SESSION['rol'] = $pantallas[0]['Rol_Id'];
+                $_SESSION['Usu_Admin'] = $pantallas[0]['Usu_Admin'];
+                $_SESSION['pantallas'] = array_column($pantallas, 'Ptl_Identificador');
+
+                header("Location: ../Services/Template.Service.php");
                 exit();
             } else {
                 $_SESSION['error_message'] = "Usuario o contraseña incorrectos.";
