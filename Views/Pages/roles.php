@@ -28,7 +28,7 @@ try {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($roles as $role): ?>
+                    <?php foreach ($roles as $role) : ?>
                         <tr>
                             <td><?php echo $role['Rol_Id']; ?></td>
                             <td><?php echo $role['Rol_Descripcion']; ?></td>
@@ -57,19 +57,19 @@ try {
                 </div>
 
                 <div class="col-md-12 " style="background-color: #fff; color: black;">
-                                    <table class="table" id="tbPantRole">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" style="background-color: #D0D3D4  ; color: black; size:50px;">
-                                                    Pantallas
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Aquí se llenarán las pantallas asignadas a un rol específico -->
-                                        </tbody>
-                                    </table>
-                                </div>
+                    <table class="table" id="tbPantRole">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="background-color: #D0D3D4  ; color: black; size:50px;">
+                                    Pantallas
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se llenarán las pantallas asignadas a un rol específico -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <hr>
             <table class="table table-striped table-hover table-bordered">
@@ -139,11 +139,11 @@ try {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach ($pantallas as $pantalla): ?>
-                                            <tr id="pantalla-<?php echo $pantalla['Ptl_Id']; ?>" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="<?php echo $pantalla['Ptl_Id']; ?>" data-rol-id="">
-                                                <td><?php echo $pantalla['Ptl_Descripcion']; ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
+                                            <?php foreach ($pantallas as $pantalla) : ?>
+                                                <tr id="pantalla-<?php echo $pantalla['Ptl_Id']; ?>" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="<?php echo $pantalla['Ptl_Id']; ?>" data-rol-id="">
+                                                    <td><?php echo $pantalla['Ptl_Descripcion']; ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -202,198 +202,195 @@ try {
 <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    $("#EsquemaAcceso").addClass('menu-open');
-    $("#LinkAcceso").addClass('active');
-    $("#roles").addClass('active');
-    var pantallaactiva = $("#roles").text();
-    console.log('ES SELECT' + pantallaactiva)
+    $(document).ready(function() {
+        $("#EsquemaAcceso").addClass('menu-open');
+        $("#LinkAcceso").addClass('active');
+        $("#LinkItemAcceso").addClass('active');
+        var table = $("#example1").DataTable({
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+        });
+
+        function attachClickEvents() {
+            $(".btn-detalles").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '../Services/obtener_rol.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const rol = JSON.parse(response);
+                        $("#Detalle_Rol_Descripcion").text(rol.rol.Rol_Descripcion);
+                        //$("#Detalle_Rol_Asignada").text(rol.rol.pantallasAsignadas);
+                        $("#Detalle_Usuario_Creador").text(rol.rol.Rol_Creador);
+                        $("#Detalle_Rol_FechaCreacion").text(rol.rol.Rol_Modificador);
+                        $("#Detalle_Usuario_Modificador").text(rol.rol.Rol_FechaCreacion);
+                        $("#Detalle_Rol_FechaModificacion").text(rol.rol.Rol_FechaModificacion);
 
 
-    var table = $("#example1").DataTable({
-        "responsive": false,
-        "lengthChange": false,
-        "autoWidth": false,
-    });
-
-    function attachClickEvents() {
-        $(".btn-detalles").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/obtener_rol.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const rol = JSON.parse(response);
-                    $("#Detalle_Rol_Descripcion").text(rol.rol.Rol_Descripcion);
-                    //$("#Detalle_Rol_Asignada").text(rol.rol.pantallasAsignadas);
-                    $("#Detalle_Usuario_Creador").text(rol.rol.Usuario_Creador);
-                    $("#Detalle_Rol_FechaCreacion").text(rol.rol.Rol_FechaCreacion);
-                    $("#Detalle_Usuario_Modificador").text(rol.rol.Usuario_Modificador);
-                    $("#Detalle_Rol_FechaModificacion").text(rol.rol.Rol_FechaModificacion);
-                    
-                    
-                    $("#tbPantRole tbody").empty();
-                    if (rol.pantallasAsignadas) {
-                        rol.pantallasAsignadas.forEach(pantalla => {
-                            $("#tbPantRole tbody").append(
-                                `<tr  id="pantalla-${pantalla.Ptl_Id}" class="item text-center" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
+                        $("#tbPantRole tbody").empty();
+                        if (rol.pantallasAsignadas) {
+                            rol.pantallasAsignadas.forEach(pantalla => {
+                                $("#tbPantRole tbody").append(
+                                    `<tr  id="pantalla-${pantalla.Ptl_Id}" class="item text-center" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
                                     <td>${pantalla.Ptl_Descripcion}</td>
                                 </tr>`
-                            );
-                        });
-                    }
+                                );
+                            });
+                        }
 
-                    $("#tabla").hide();
-                    $("#detalles").show();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al obtener los detalles del rol:', error);
-                }
+                        $("#tabla").hide();
+                        $("#detalles").show();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener los detalles del rol:', error);
+                    }
+                });
             });
-        });
 
-        $(".abrir-editar").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/obtener_rol.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const rol = JSON.parse(response);
-                    $("#form-title").text('Editar Rol');
-                    $("#Rol_Id").val(rol.rol.Rol_Id);
-                    $("#Rol_Descripcion").val(rol.rol.Rol_Descripcion);
+            $(".abrir-editar").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '../Services/obtener_rol.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const rol = JSON.parse(response);
+                        $("#form-title").text('Editar Rol');
+                        $("#Rol_Id").val(rol.rol.Rol_Id);
+                        $("#Rol_Descripcion").val(rol.rol.Rol_Descripcion);
 
-                    // Limpiar las tablas
-                    $("#tbPant tbody").empty();
-                    $("#tbPantRole tbody").empty();
+                        // Limpiar las tablas
+                        $("#tbPant tbody").empty();
+                        $("#tbPantRole tbody").empty();
 
-                    // Añadir las pantallas disponibles
-                    if (rol.pantallasDisponibles) {
-                        rol.pantallasDisponibles.forEach(pantalla => {
-                            $("#tbPant tbody").append(
-                                `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
+                        // Añadir las pantallas disponibles
+                        if (rol.pantallasDisponibles) {
+                            rol.pantallasDisponibles.forEach(pantalla => {
+                                $("#tbPant tbody").append(
+                                    `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
                                     <td>${pantalla.Ptl_Descripcion}</td>
                                 </tr>`
-                            );
-                        });
-                    }
+                                );
+                            });
+                        }
 
-                    // Añadir las pantallas asignadas al rol
-                    if (rol.pantallasAsignadas) {
-                        rol.pantallasAsignadas.forEach(pantalla => {
-                            $("#tbPantRole tbody").append(
-                                `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
+                        // Añadir las pantallas asignadas al rol
+                        if (rol.pantallasAsignadas) {
+                            rol.pantallasAsignadas.forEach(pantalla => {
+                                $("#tbPantRole tbody").append(
+                                    `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
                                     <td>${pantalla.Ptl_Descripcion}</td>
                                 </tr>`
-                            );
-                        });
-                    }
+                                );
+                            });
+                        }
 
-                    $("#insertar").show();
-                    $("#tabla").hide();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al obtener los detalles del rol:', error);
-                }
+                        $("#insertar").show();
+                        $("#tabla").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al obtener los detalles del rol:', error);
+                    }
+                });
             });
-        });
 
-        $('#example1 tbody').on('click', '.btn-danger', function() {
-            const id = $(this).closest('tr').find('.abrir-editar').data('id');
-            $('#modalEliminar').data('id', id).modal('show');
-        });
-    }
+            $('#example1 tbody').on('click', '.btn-danger', function() {
+                const id = $(this).closest('tr').find('.abrir-editar').data('id');
+                $('#modalEliminar').data('id', id).modal('show');
+            });
+        }
 
-    attachClickEvents();
-
-    table.on('draw', function() {
         attachClickEvents();
-    });
- 
-    $("#btnNuevo").click(function() {
-        $("#form-title").text('Crear Nuevo Rol');
-        $("#Rol_Id").val('');
-        $("#Rol_Descripcion").val('');
-        $("#tbPant tbody").empty();
-        $("#tbPantRole tbody").empty();
 
-        const pantallas = <?php echo json_encode($pantallas); ?>;
-        pantallas.forEach(pantalla => {
-            $("#tbPant tbody").append(
-                `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
+        table.on('draw', function() {
+            attachClickEvents();
+        });
+
+        $("#btnNuevo").click(function() {
+            $("#form-title").text('Crear Nuevo Rol');
+            $("#Rol_Id").val('');
+            $("#Rol_Descripcion").val('');
+            $("#tbPant tbody").empty();
+            $("#tbPantRole tbody").empty();
+
+            const pantallas = <?php echo json_encode($pantallas); ?>;
+            pantallas.forEach(pantalla => {
+                $("#tbPant tbody").append(
+                    `<tr id="pantalla-${pantalla.Ptl_Id}" class="item" draggable="true" ondragstart="drag(event)" data-pantalla-id="${pantalla.Ptl_Id}">
                     <td>${pantalla.Ptl_Descripcion}</td>
                 </tr>`
-            );
+                );
+            });
+
+            $("#insertar").show();
+            $("#tabla").hide();
         });
 
-        $("#insertar").show();
-        $("#tabla").hide();
-    });
-
-    $("#Cancelar").click(function() {
-        $("#insertar").hide();
-        $("#tabla").show();
-    });
-
-    $("#frmInsertar").submit(function(e) {
-        e.preventDefault();
-
-        var rolId = $("#Rol_Id").val();
-        var rolDescripcion = $("#Rol_Descripcion").val();
-        var pantallasSeleccionadas = [];
-        $("#pantallasPorRol .item").each(function() {
-            pantallasSeleccionadas.push($(this).data("pantalla-id"));
+        $("#Cancelar").click(function() {
+            $("#insertar").hide();
+            $("#tabla").show();
         });
 
-        var url = rolId ? '../Services/actualizar_pantalla_rol.php' : '../Services/insertar_rol.php';
+        $("#frmInsertar").submit(function(e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                Rol_Id: rolId,
-                Rol_Descripcion: rolDescripcion,
-                pantallasSeleccionadas: pantallasSeleccionadas.join(",")
-            },
-            success: function(response) {
-                console.log(response);
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+            var rolId = $("#Rol_Id").val();
+            var rolDescripcion = $("#Rol_Descripcion").val();
+            var pantallasSeleccionadas = [];
+            $("#pantallasPorRol .item").each(function() {
+                pantallasSeleccionadas.push($(this).data("pantalla-id"));
+            });
+
+            var url = rolId ? '../Services/actualizar_pantalla_rol.php' : '../Services/insertar_rol.php';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    Rol_Id: rolId,
+                    Rol_Descripcion: rolDescripcion,
+                    pantallasSeleccionadas: pantallasSeleccionadas.join(",")
+                },
+                success: function(response) {
+                    console.log(response);
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        $("#btnVolver").click(function() {
+            $("#detalles").hide();
+            $("#tabla").show();
+        });
+
+        $("#btnConfirmarEliminar").click(function() {
+            const id = $('#modalEliminar').data('id');
+            $('#eliminarUsuarioId').val(id);
+            $('#eliminarUsuarioForm').submit();
         });
     });
 
-    $("#btnVolver").click(function() {
-        $("#detalles").hide();
-        $("#tabla").show();
-    });
+    function allowDrop(event) {
+        event.preventDefault();
+    }
 
-    $("#btnConfirmarEliminar").click(function() {
-        const id = $('#modalEliminar').data('id');
-        $('#eliminarUsuarioId').val(id);
-        $('#eliminarUsuarioForm').submit();
-    });
-});
+    function drag(event) {
+        event.dataTransfer.setData("text", event.target.id);
+    }
 
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-function drag(event) {
-    event.dataTransfer.setData("text", event.target.id);
-}
-
-function drop(event, targetId) {
-    event.preventDefault();
-    var data = event.dataTransfer.getData("text");
-    var element = document.getElementById(data);
-    document.getElementById(targetId).appendChild(element);
-}
-
+    function drop(event, targetId) {
+        event.preventDefault();
+        var data = event.dataTransfer.getData("text");
+        var element = document.getElementById(data);
+        document.getElementById(targetId).appendChild(element);
+    }
 </script>
-
-
