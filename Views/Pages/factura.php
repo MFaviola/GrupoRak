@@ -4,6 +4,8 @@ require_once '../Services/VentaService.php';
 $ventasService = new VentaService();
 
 try {
+    $venta = $ventasService->listar();
+
     $vehiculos = $ventasService->listarVehiculos();
     $metodosPago = $ventasService->listarMetodosPago();
     if (!is_array($metodosPago)) {
@@ -21,12 +23,7 @@ unset($_SESSION['mensaje']);
 unset($_SESSION['mensaje_tipo']);
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturación</title>
+ <title>Facturación</title>
     <style>
         #detalleFactura thead th {
             background-color: #000; 
@@ -57,24 +54,88 @@ unset($_SESSION['mensaje_tipo']);
         }
     </style>
     <!-- jQuery -->
-    <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
+ 
     <!-- Bootstrap 4 -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-</head>
-<body>
-<div class="container mt-5">
+
+
+
+
+
+    <div id="tabla">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center" style="font-size:34px !important">Ventas</h2>
+
+            <button class="btn btn-primary" id="btnNuevo">
+                <i class="fa-solid fa-plus"></i>
+                Nuevo
+            </button>
+            <hr>
+            <table id="example1" class="table table-bordered table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Metodo de Pago</th>
+                        <th>Sede</th>
+                        <th>Atendido Por</th>
+
+
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($venta as $venta) : ?>
+                        <tr>
+                            <td><?php echo $venta['Vnt_ID']; ?></td>
+                            <td><?php echo $venta['Vnt_Fecha']; ?></td>
+                            <td><?php echo $venta['Cliente']; ?></td>
+                            <td><?php echo $venta['Metodo_Pago']; ?></td>
+                            <td><?php echo $venta['Sede']; ?></td>
+                            <td><?php echo $venta['Cliente']; ?></td>
+
+                            <td class="d-flex justify-content-center" style="gap:10px">
+
+                            <button type="button" class="btn btn-primary" id="btnImprimirFactura"><i class="fa-solid fa-check"></i>Imprimir</button>
+                            <!-- <button class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i> Eliminar</button> -->
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    
+
+<div class="container mt-5" id="insertarEncabezado">
     <div class="card">
         <div class="card-header text-center">
             Facturación
         </div>
+
+
+
+        
         <div class="card-body">
             <?php if (!empty($mensaje)): ?>
                 <div class="alert alert-<?php echo $mensaje_tipo; ?>" role="alert">
                     <?php echo $mensaje; ?>
                 </div>
             <?php endif; ?>
+
+
+            
             <form id="frmFactura" method="POST" action="facturacion_procesar.php">
                 <div class="row">
                     <div class="col-md-4">
@@ -126,12 +187,16 @@ unset($_SESSION['mensaje_tipo']);
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-primary mt-4" id="btnAgregarProducto">Agregar Vehículo</button>
+                        <button type="button" class="btn btn-danger mt-4" id="btnAgregarProducto"><i class="fa-solid fa-car"></i> Agregar Vehículo</button>
                     </div>
                 </div>
                 <hr>
+                <div class="card card-danger">
+
                 <table id="detalleFactura" class="table table-bordered table-striped">
-                    <thead>
+                <div class="card-header">
+
+                <thead class="thead-dark">
                         <tr>
                             <th>No</th>
                             <th>Placa</th>
@@ -141,6 +206,7 @@ unset($_SESSION['mensaje_tipo']);
                             <th>Acciones</th>
                         </tr>
                     </thead>
+                </div>
                     <tbody>
                     </tbody>
                 </table>
@@ -150,18 +216,31 @@ unset($_SESSION['mensaje_tipo']);
                     <p><strong>Descuento:</strong> <span id="descuento">L 0.00</span></p>
                     <p><strong>Total a Pagar:</strong> <span id="totalPagar">L 0.00</span></p>
                 </div>
-                <button type="button" class="btn btn-success" id="btnImprimirFactura">Imprimir</button>
-                <button type="button" class="btn btn-danger" id="btnCancelarFactura">Cancelar</button>
+                </div>
+                <div class="card-footer">
+                <div class="d-flex justify-content-end" style="gap:10px">
+
+                <button type="button" class="btn btn-primary" id="btnImprimirFactura"><i class="fa-solid fa-check"></i>Imprimir</button>
+                <button type="button" class="btn btn-danger" id="btnCancelarFactura"><i class="fa-solid fa-xmark"></i>Cancelar</button>
+                </div>
+                </div>
+
             </form>
         </div>
     </div>
 </div>
 
+
+
+
+
+
+
 <!-- Modal para Buscar Vehículos -->
 <div class="modal fade" id="modalVehiculos" tabindex="-1" role="dialog" aria-labelledby="modalVehiculosLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" >
                 <h5 class="modal-title" id="modalVehiculosLabel">Lista de Vehículos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -169,7 +248,7 @@ unset($_SESSION['mensaje_tipo']);
             </div>
             <div class="modal-body">
                 <table id="tablaVehiculos" class="table table-bordered table-striped">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
                             <th>Placa</th>
                             <th>Modelo</th>
@@ -209,12 +288,28 @@ unset($_SESSION['mensaje_tipo']);
         </div>
     </div>
 </div>
-
+<script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
     let ventaId = 0;
+    $("#insertarEncabezado").hide();
 
-    // Evento de tecla para buscar cliente por DNI
+     // Inicialización de DataTables
+     var table = $("#example1").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+    });
+
+    
+
+    var table2 = $("#tablaVehiculos").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+    });
+
+
     $("#dniCliente").on("keyup", function() {
         const dni = $(this).val();
         if (dni.length === 13) {
@@ -243,7 +338,6 @@ $(document).ready(function() {
         }
     });
 
-    // Evento de click para agregar vehículo
     $("#btnAgregarProducto").click(function() {
         if ($("#dniCliente").val() === '' || $("#metodoPagoSelect").val() === '') {
             alert('Debe ingresar el DNI del cliente y seleccionar un método de pago.');
@@ -257,7 +351,6 @@ $(document).ready(function() {
         }
     });
 
-    // Evento para filtrar vehículo por placa
     $("#filtrarPlaca").on("keyup", function() {
         const placa = $(this).val();
         if (placa.length > 0) {
@@ -280,10 +373,17 @@ $(document).ready(function() {
                     console.log("Error en la solicitud AJAX de vehículo:", error);
                 }
             });
+
+            
         }
     });
 
-    // Evento para seleccionar vehículo del modal
+
+
+
+
+
+
     $(".seleccionar-vehiculo").click(function() {
         var vehiculo = {
             placa: $(this).data('placa'),
@@ -314,6 +414,36 @@ $(document).ready(function() {
         actualizarTotales();
         insertarVentaDetalle(vehiculo.placa, vehiculo.precio);
     }
+
+
+
+
+
+
+
+    $("#btnNuevo").click(function() {
+            $("#form-title").text('Nueva Compra');
+            $("#id").val('');
+            $("#txtNombre").val('');
+            $("#txtApellido").val('');
+            $("#txtIdentidad").val('');
+            $("#txtDireccion").val('');
+            $("#txtFechaNacimiento").val('');
+            $("input[name='rbSexo']").prop("checked", false);
+            $("#departamentoSelect").val('0');
+            $("#ciudadSelect").val('0');
+            $("#estadoCivilSelect").val('0');
+            $("#insertarEncabezado").show();
+            $("#insertar").hide();
+            $("#detalleCompra").hide();
+            $("#tabla").hide();
+            encabezadoInsertado = false;
+        });
+
+
+
+
+
 
     function actualizarTotales() {
         let subtotal = 0;
@@ -376,7 +506,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(response) {
-                console.log(response); // Añade este log para ver la respuesta del servidor
+                console.log(response); 
                 if (response.status !== 'success') {
                     alert(response.message);
                 }
@@ -387,7 +517,6 @@ $(document).ready(function() {
         });
     }
 
-    // Eliminar vehículo de la tabla de detalles
     $(document).on('click', '.eliminar-vehiculo', function() {
         const vehPlaca = $(this).closest('tr').find('td').eq(1).text();
         $.ajax({
@@ -414,9 +543,15 @@ $(document).ready(function() {
 
     // Cancelar y limpiar el formulario
     $("#btnCancelarFactura").click(function() {
-        if (ventaId > 0) {
-            eliminarVenta();
-        }
+        $("#tabla").show();
+        $("#insertarEncabezado").hide();
+
+        window.location.reload();
+
+        // if (ventaId > 0) {
+
+        //     eliminarVenta();
+        // }
         limpiarFormulario();
     });
 
@@ -452,7 +587,6 @@ $(document).ready(function() {
         $("#totalPagar").text("L 0.00");
     }
 
-    // Función para imprimir la factura en PDF
     function imprimirFactura() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -485,5 +619,5 @@ $(document).ready(function() {
     $("#btnImprimirFactura").click(imprimirFactura);
 });
 </script>
-</body>
-</html>
+
+

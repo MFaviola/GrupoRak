@@ -3,6 +3,35 @@ require_once '../config.php';
 
 class VentaService {
 
+
+    public function listar() {
+        global $pdo;
+
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Ventas_Listar`()';
+            $stmt = $pdo->prepare($sql);
+
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+
+            if ($result === false) {
+                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
+            }
+
+            return $result;
+
+        } catch (Exception $e) {
+            throw new Exception('Error al listar facturas: ' . $e->getMessage());
+        }
+    }
+
+
+
+
     public function listarMetodosPago() {
         global $pdo;
 
@@ -67,31 +96,72 @@ class VentaService {
         }
     }
 
+    // public function buscarVehiculoPorPlaca($placa) {
+    //     global $pdo;
+
+    //     try {
+    //         $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Detalle`(:placa)';
+    //         $stmt = $pdo->prepare($sql);
+
+    //         if ($stmt === false) {
+    //             throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+    //         }
+
+    //         $stmt->execute();
+    //         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //         foreach ($result as $vehiculo) {
+    //             if ($vehiculo['Veh_Placa'] === $placa) {
+    //                 return $vehiculo;
+    //             }
+    //         }
+    //         return null;
+
+    //     } catch (Exception $e) {
+    //         throw new Exception('Error al buscar vehículo por placa: ' . $e->getMessage());
+    //     }
+    // }
+
+
+
+
+
+
     public function buscarVehiculoPorPlaca($placa) {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Listar`()'; // Reutilizamos este procedimiento para obtener todos los vehículos y filtrar por placa
+            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Detalle`(:placa)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
 
+            $stmt->bindParam(':placa', $placa, PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($result as $vehiculo) {
-                if ($vehiculo['Veh_Placa'] === $placa) {
-                    return $vehiculo;
-                }
+            if ($result) {
+                return $result[0]; 
+            } else {
+                return null;
             }
-            return null;
 
         } catch (Exception $e) {
-            throw new Exception('Error al buscar vehículo por placa: ' . $e->getMessage());
+            throw new Exception('Error al buscar la placa: ' . $e->getMessage());
         }
     }
+
+
+
+
+
+
+
+
+
+
 
     public function insertarVenta($fecha, $empId, $mpgId, $sedId, $desId, $cliId, $impId, $usuIdCre) {
         global $pdo;
@@ -134,18 +204,18 @@ class VentaService {
         }
     }
 
-    public function eliminarVentaDetalle($vehPlaca) {
+    public function eliminarVentaDetalle($vntId) {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Eliminar`(:vehPlaca)';
+            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Eliminar`(:vntId)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
 
-            $stmt->bindParam(':vehPlaca', $vehPlaca, PDO::PARAM_STR);
+            $stmt->bindParam(':vntId', $vntId, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
 
