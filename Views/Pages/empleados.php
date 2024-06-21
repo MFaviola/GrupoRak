@@ -416,6 +416,22 @@ if (isset($mensajeError)) {
 
     $(document).ready(function() {
 
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        if (localStorage.getItem('operacionExitosa') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa'); // Limpiar la señal para futuras operaciones
+        }
+
+        
         $("#EsquemaGeneral").addClass('menu-open');
         $("#LinkGeneral").addClass('active');
         $("#empleados").addClass('active');
@@ -579,6 +595,7 @@ if (isset($mensajeError)) {
         $("#btnGuardarUsuario").click(function() {
             if (validateForm()) {
                 $("#frmInsertar").submit();
+                localStorage.setItem('operacionExitosa', 'true');
             }
         });
 
@@ -591,16 +608,9 @@ if (isset($mensajeError)) {
             const id = $('#modalEliminar').data('id');
             $('#eliminarUsuarioId').val(id);
             $('#eliminarUsuarioForm').submit();
+            localStorage.setItem('operacionExitosa', 'true');
         });
 
-        <?php if (isset($_SESSION['mensaje'])) : ?>
-            iziToast.<?php echo $_SESSION['mensaje_tipo']; ?>({
-                title: '<?php echo ucfirst($_SESSION['mensaje_tipo']); ?>',
-                message: '<?php echo $_SESSION['mensaje']; ?>',
-                position: 'topRight'
-            });
-            <?php unset($_SESSION['mensaje']);
-            unset($_SESSION['mensaje_tipo']); ?>
-        <?php endif; ?>
+    
     });
 </script>

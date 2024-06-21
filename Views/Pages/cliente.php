@@ -385,6 +385,23 @@ try {
     $("#cliente").addClass('active');
     var clienteactivo = $("#cliente").text();
     console.log('ES CLIENTE?' + clienteactivo)
+
+    var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        if (localStorage.getItem('operacionExitosa') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa'); // Limpiar la señal para futuras operaciones
+        }
+
+       
     
       // Función para cargar ciudades basadas en el departamento seleccionado
       
@@ -549,10 +566,9 @@ try {
 
         $("#btnGuardarUsuario").click(function() {
             if (validateForm()) {
-                // const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
-                // const adminHiddenInput = document.getElementById('Usu_Admin');
-                // adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
+                
                 $("#frmInsertar").submit();
+                localStorage.setItem('operacionExitosa', 'true');
             }
         });
 
@@ -565,6 +581,7 @@ try {
             const id = $('#modalEliminar').data('id');
             $('#eliminarUsuarioId').val(id);
             $('#eliminarUsuarioForm').submit();
+            localStorage.setItem('operacionExitosa', 'true');
         });
     });
 </script>
