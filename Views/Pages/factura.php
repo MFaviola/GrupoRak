@@ -72,7 +72,7 @@ unset($_SESSION['mensaje_tipo']);
                 Nuevo
             </button>
             <hr>
-            <table id="example1" class="table table-bordered table-striped table-responsive">
+            <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Codigo</th>

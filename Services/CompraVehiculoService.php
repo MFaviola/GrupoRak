@@ -57,7 +57,7 @@ class CompraVehiculoService {
     public function buscarClientePorDNI($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(?)';
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_Buscar`(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
