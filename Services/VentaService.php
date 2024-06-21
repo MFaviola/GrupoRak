@@ -28,7 +28,7 @@ class VentaService {
             throw new Exception('Error al listar facturas: ' . $e->getMessage());
         }
     }
-    
+
     public function listarMetodosPago() {
         global $pdo;
 
@@ -157,7 +157,10 @@ class VentaService {
 
     public function insertarVenta($fecha, $empId, $mpgId, $sedId, $desId, $cliId, $impId, $usuIdCre) {
         global $pdo;
-
+        if (session_status() == PHP_SESSION_NONE) {
+             session_start();
+        }
+        $Creacion = $_SESSION['ID'];
         try {
             $sql = 'CALL `dbgruporac`.`sp_Ventas_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, @Vnt_ID)';
             $stmt = $pdo->prepare($sql);
@@ -166,7 +169,7 @@ class VentaService {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
 
-            $stmt->execute([$fecha, $empId, $mpgId, $sedId, $desId, $cliId, $impId, $usuIdCre]);
+            $stmt->execute([$fecha, $empId, $mpgId, $sedId, $desId, $cliId, $impId, $Creacion]);
 
             $result = $pdo->query("SELECT @Vnt_ID AS Vnt_ID")->fetch(PDO::FETCH_ASSOC);
             return $result['Vnt_ID'];
@@ -178,7 +181,10 @@ class VentaService {
 
     public function insertarVentaDetalle($vntId, $precioVenta, $vehPlaca, $usuIdCre) {
         global $pdo;
-
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+       }
+       $Creacion = $_SESSION['ID'];
         try {
             $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Insertar`(?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
@@ -187,7 +193,7 @@ class VentaService {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
 
-            $stmt->execute([$vntId, $precioVenta, $vehPlaca, $usuIdCre]);
+            $stmt->execute([$vntId, $precioVenta, $vehPlaca, $Creacion]);
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
 
