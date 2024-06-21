@@ -22,7 +22,6 @@ $mensaje_tipo = isset($_SESSION['mensaje_tipo']) ? $_SESSION['mensaje_tipo'] : '
 unset($_SESSION['mensaje']);
 unset($_SESSION['mensaje_tipo']);
 ?>
-
  <title>Facturación</title>
     <style>
         #detalleFactura thead th {
@@ -317,10 +316,9 @@ unset($_SESSION['mensaje_tipo']);
 
 <script>
         async function generateReport() {
-            $("#tabla").hide();
-
-            let idventa = 11;  // Update this based on your logic
-
+            // $("#tabla").hide();
+            var ventaId = localStorage.getItem('VentaId'); // Obtener de local storage
+            let idventa = 51  
             var clienteDNI = $("#dniCliente").val();
             var cliente = $("#nombreCliente").val();
             var fecha = new Date().toLocaleDateString();
@@ -333,7 +331,7 @@ unset($_SESSION['mensaje_tipo']);
                     url: '../Services/ventaDetalles_obtener.php',
                     type: 'GET',
                     data: {
-                        id: idventa
+                        id: ventaId
                     },
                     
                     success: function(response) {
@@ -490,6 +488,10 @@ unset($_SESSION['mensaje_tipo']);
             doc.roundedRect(x, y, width, height, radius, radius, 'F');
         }
 
+
+
+
+        
         $(document).ready(function() {
             let ventaId = 0;
             $("#insertarEncabezado").hide();
@@ -536,6 +538,9 @@ unset($_SESSION['mensaje_tipo']);
 
             $("#btnAgregarProducto").click(function() {
                 if ($("#dniCliente").val() === '' || $("#metodoPagoSelect").val() === '') {
+
+
+
                     alert('Debe ingresar el DNI del cliente y seleccionar un método de pago.');
                     return;
                 }
@@ -632,6 +637,8 @@ unset($_SESSION['mensaje_tipo']);
                     success: function(response) {
                         if (response.status === 'success') {
                             ventaId = response.data.Vnt_ID;
+                            console.log('ID VENTA NUEVO ' + ventaId)
+                            localStorage.setItem('VentaId', ventaId); //
                             $("#modalVehiculos").modal('show');
                         } else {
                             alert(response.message);
