@@ -110,7 +110,7 @@ async function generateReport() {
                 const addFooter = (pageNumber, pageCount) => {
                     const pageWidth = doc.internal.pageSize.getWidth();
                     const pageHeight = doc.internal.pageSize.getHeight();
-                    doc.setFillColor(214, 39, 0); // Rojo
+                    doc.setFillColor(241, 10, 10); // Rojo
                     doc.rect(0, pageHeight - 20, pageWidth, 20, 'F'); // Fondo rojo para el pie de página que cubre todo el ancho
                     doc.setFontSize(10);
                     doc.setTextColor(255, 255, 255); // Blanco
@@ -186,7 +186,7 @@ function drawPolygonBackground(doc) {
         [x, y + height]
     ];
 
-    doc.setFillColor(214, 39, 0);
+    doc.setFillColor(241, 10, 10);
     doc.lines(points, x, y, [1, 1], 'F');
 }
 

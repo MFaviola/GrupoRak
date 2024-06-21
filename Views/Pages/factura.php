@@ -383,7 +383,7 @@ unset($_SESSION['mensaje_tipo']);
                             doc.text(`Página ${pageNumber} de ${pageCount}`, doc.internal.pageSize.getWidth() - 50, doc.internal.pageSize.getHeight() - 22, { align: 'center' });
                             const fechaImpresion = new Date().toLocaleDateString();
                             doc.text(`Usuario: 'Mindy Campos'      Fecha: ${fechaImpresion}`, 10, doc.internal.pageSize.getHeight() - 22);
-                            doc.setFillColor(214, 39, 0);
+                            doc.setFillColor(241, 10, 10);
                             doc.rect(0, doc.internal.pageSize.getHeight() - 20, doc.internal.pageSize.getWidth(), 20, 'F');
                         };
 
@@ -430,7 +430,7 @@ unset($_SESSION['mensaje_tipo']);
                             body: [
                                 ['Subtotal:', subtotal],
                                 ['Impuesto:', impuesto],
-                                [{ content: 'Total a Pagar:', styles: { fontStyle: 'bold', fillColor: [214, 39, 0], textColor: [255, 255, 255], fontSize: 15 } }, { content: total, styles: { fontStyle: 'bold', fontSize: 15 } }]
+                                [{ content: 'Total a Pagar:', styles: { fontStyle: 'bold', fillColor: [241, 10, 10], textColor: [255, 255, 255], fontSize: 15 } }, { content: total, styles: { fontStyle: 'bold', fontSize: 15 } }]
                             ],
                             startY: doc.lastAutoTable.finalY + 10,
                             theme: 'plain',
@@ -478,7 +478,7 @@ unset($_SESSION['mensaje_tipo']);
                 [x, y + height]
             ];
 
-            doc.setFillColor(214, 39, 0);
+            doc.setFillColor(241, 10, 10);
             doc.setDrawColor(104, 200, 0);
             doc.lines(points, x, y, [1, 1], 'F');
         }

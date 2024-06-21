@@ -209,7 +209,7 @@ function drawPolygonBackground(doc) {
         [x, y + height]
     ];
 
-    doc.setFillColor(214, 39, 0);
+    doc.setFillColor(241, 10, 10);
     doc.lines(points, x, y, [1, 1], 'F');
 }
 

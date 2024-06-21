@@ -822,7 +822,7 @@ try {
                         doc.setTextColor(0, 0, 0);
                         doc.setFontSize(25);
                         doc.setFont('helvetica', 'bold');
-                        doc.text('Factura', 200, 90, {
+                        doc.text('Compras', 200, 90, {
                             align: 'left'
                         });
 
@@ -844,7 +844,7 @@ try {
                         });
                         const fechaImpresion = new Date().toLocaleDateString();
                         doc.text(`Usuario: 'Hola'      Fecha: ${fechaImpresion}`, 10, doc.internal.pageSize.getHeight() - 22);
-                        doc.setFillColor(214, 39, 0);
+                        doc.setFillColor(241, 10, 10);
                         doc.rect(0, doc.internal.pageSize.getHeight() - 20, doc.internal.pageSize.getWidth(), 20, 'F');
                     };
 
