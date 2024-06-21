@@ -92,7 +92,7 @@ class ApartadoVehiculoService {
         }
     }
 
-    public function insertarCompraVehiculo($nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad,$Esciv, $Direccion, $Creacion) {
+    public function insertarCompraVehiculo($nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad, $Esciv, $Direccion, $Creacion) {
         global $pdo;
          if (session_status() == PHP_SESSION_NONE) {
              session_start();
@@ -146,7 +146,7 @@ class ApartadoVehiculoService {
         }
     }
       
-    public function insertarEncabezado($fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra, $Imp_ID) {
+    public function insertarEncabezado($fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra) {
         global $pdo;
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -154,12 +154,12 @@ class ApartadoVehiculoService {
         $Creacion = $_SESSION['ID'];
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Apartado_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL `dbgruporac`.`sp_Apartado_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
-            $stmt->execute([$fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra, $Imp_ID]);
+            $stmt->execute([$fecha, $MetodoPago, $Cliente, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra]);
             $result = $stmt->fetch();
             return $result['Result'];
         } catch (Exception $e) {
