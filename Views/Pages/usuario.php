@@ -58,7 +58,7 @@ try {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($clientes as $cliente): ?>
+                    <?php foreach ($clientes as $cliente) : ?>
                         <tr>
                             <td><?php echo $cliente['Usu_ID']; ?></td>
                             <td><?php echo $cliente['Usu_Usua']; ?></td>
@@ -107,7 +107,7 @@ try {
                             <label>Rol:</label>
                             <select class="form-control" name="Rol_Id" id="Rol_Id" required>
                                 <option value="">--Seleccione un Rol--</option>
-                                <?php foreach ($roles as $rol): ?>
+                                <?php foreach ($roles as $rol) : ?>
                                     <option value="<?php echo $rol['Rol_Id']; ?>"><?php echo $rol['Rol_Descripcion']; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -119,7 +119,7 @@ try {
                             <label>Empleado:</label>
                             <select class="form-control" id="Empl_Id" name="Empl_Id" required>
                                 <option value="">--Seleccione un empleado--</option>
-                                <?php foreach ($empleados as $empleado): ?>
+                                <?php foreach ($empleados as $empleado) : ?>
                                     <option value="<?php echo $empleado['Empl_Id']; ?>"><?php echo $empleado['Empl_Nombre']; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -147,48 +147,48 @@ try {
 
 
 <div id="detalles" style="display:none;">
-<div class="card card-dark">
+    <div class="card card-dark">
         <div class="card-header">
             <h3 class="card-title" id="form-title">Detalle de Usuario</h3>
         </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <p><strong>Usuario:</strong> <span id="Detalle_Usu_Usua"></span></p>
-                <p><strong>Administrador:</strong> <span id="Detalle_Admin"></span></p>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Usuario:</strong> <span id="Detalle_Usu_Usua"></span></p>
+                    <p><strong>Administrador:</strong> <span id="Detalle_Admin"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Rol:</strong> <span id="Detalle_Rol_Descripcion"></span></p>
+                    <p><strong>Empleado:</strong> <span id="Detalle_Nombre_Completo"></span></p>
+                </div>
             </div>
-            <div class="col-md-6">
-                <p><strong>Rol:</strong> <span id="Detalle_Rol_Descripcion"></span></p>
-                <p><strong>Empleado:</strong> <span id="Detalle_Nombre_Completo"></span></p>
+            <hr>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Acción</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Creado por</td>
+                        <td id="Detalle_Usuario_Creador"></td>
+                        <td id="Detalle_Usu_Fecha_Creacion"></td>
+                    </tr>
+                    <tr>
+                        <td>Modificado por</td>
+                        <td id="Detalle_Usuario_Modificador"></td>
+                        <td id="Detalle_Usu_Fecha_Modifica"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
             </div>
-        </div>
-        <hr>
-        <table class="table table-striped table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th>Acción</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Creado por</td>
-                    <td id="Detalle_Usuario_Creador"></td>
-                    <td id="Detalle_Usu_Fecha_Creacion"></td>
-                </tr>
-                <tr>
-                    <td>Modificado por</td>
-                    <td id="Detalle_Usuario_Modificador"></td>
-                    <td id="Detalle_Usu_Fecha_Modifica"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-secondary btn-sm" id="btnVolver"><i class="fa-solid fa-arrow-left"></i> Volver</button>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Modal de Confirmación de Eliminación -->
@@ -223,161 +223,165 @@ try {
 
 <script src="../Views/Resources/plugins/jquery/jquery.min.js"></script>
 <script>
-function validateForm() {
-    let isValid = true;
-    document.querySelectorAll('.error-message').forEach(function(error) {
-        error.textContent = '';
-    });
-    document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
-        input.classList.remove('is-invalid');
-    });
-
-    const usuario = document.getElementById('Usu_Usua');
-    if (!usuario.value) {
-        document.getElementById('errorUsuario').textContent = 'El campo es requerido';
-        usuario.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    const contraseña = document.getElementById('Usu_Contra');
-    if (!contraseña.value && document.getElementById('password-field').style.display !== 'none') {
-        document.getElementById('errorContraseña').textContent = 'El campo es requerido';
-        contraseña.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    const rol = document.getElementById('Rol_Id');
-    if (!rol.value) {
-        document.getElementById('errorRol').textContent = 'El campo es requerido';
-        rol.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    const empleado = document.getElementById('Empl_Id');
-    if (!empleado.value) {
-        document.getElementById('errorEmpleado').textContent = 'El campo es requerido';
-        empleado.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-$(document).ready(function() {
-    $("#EsquemaAcceso").addClass('menu-open');
-    $("#LinkAcceso").addClass('active');
-    $("#LinkItemAcceso").addClass('active');
-
-    // Inicialización de DataTables
-    var table = $("#example1").DataTable({
-        "responsive": false,
-        "lengthChange": false,
-        "autoWidth": false,
-    });
-
-    function attachClickEvents() {
-        $(".abrir-editar").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/obtener_usuario.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const usuario = JSON.parse(response);
-                    $("#form-title").text('Editar Usuario');
-                    $("#id").val(usuario.Usu_ID);
-                    $("#Usu_Usua").val(usuario.Usu_Usua);
-                    $("#Usu_Contra").val('');
-                    $("#Usu_Admin_checkbox").prop('checked', usuario.Usu_Admin == 1);
-                    $("#Usu_Admin").val(usuario.Usu_Admin);
-                    $("#Rol_Id").val(usuario.Rol_Id);
-                    $("#Empl_Id").val(usuario.Empl_Id);
-                    $("#password-field").hide();
-                    $("#insertar").show();
-                    $("#tabla").hide();
-                }
-            });
-        });
-
-        $(".btn-detalles").off('click').on('click', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                url: '../Services/obtener_usuario.php',
-                type: 'GET',
-                data: { id: id },
-                success: function(response) {
-                    const usuario = JSON.parse(response);
-                    $("#Detalle_Usu_Usua").text(usuario.Usu_Usua);
-                    $("#Detalle_Admin").text(usuario.Usu_Admin == 1 ? 'Admin' : 'Usuario');
-                    $("#Detalle_Rol_Descripcion").text(usuario.Rol_Descripcion);
-                    $("#Detalle_Nombre_Completo").text(usuario.Nombre_Completo_2);
-                    $("#Detalle_Usuario_Creador").text(usuario.Usuario_Creador);
-                    $("#Detalle_Usu_Fecha_Creacion").text(usuario.Usu_Fecha_Creacion);
-                    $("#Detalle_Usuario_Modificador").text(usuario.Usuario_Modificador);
-                    $("#Detalle_Usu_Fecha_Modifica").text(usuario.Usu_Fecha_Modifica);
-
-                    $("#tabla").hide();
-                    $("#detalles").show();
-                }
-            });
-        });
-
-        // Delegación de eventos para los botones de eliminar
-        $('#example1 tbody').on('click', '.btn-danger', function() {
-            const id = $(this).closest('tr').find('.abrir-editar').data('id');
-            $('#modalEliminar').data('id', id).modal('show');
-        });
-    }
-
-    attachClickEvents();
-
-    table.on('draw', function() {
-        attachClickEvents();
-    });
-
-    $("#btnNuevo").click(function() {
-        $("#form-title").text('Crear Nuevo Usuario');
-        $("#id").val('');
-        $("#Usu_Usua").val('');
-        $("#Usu_Contra").val('');
-        $("#Usu_Admin_checkbox").prop('checked', false);
-        $("#Usu_Admin").val('0');
-        $("#Rol_Id").val('');
-        $("#Empl_Id").val('');
-        $("#password-field").show();
-        $("#insertar").show();
-        $("#tabla").hide();
-    });
-
-    $("#Cancelar").click(function() {
-        $("#insertar").hide();
-        $("#tabla").show();
+    function validateForm() {
+        let isValid = true;
         document.querySelectorAll('.error-message').forEach(function(error) {
             error.textContent = '';
         });
-        document.querySelectorAll('.form-control').forEach(function(input) {
+        document.querySelectorAll('.form-control, .form-check-input').forEach(function(input) {
             input.classList.remove('is-invalid');
         });
-    });
 
-    $("#btnGuardarUsuario").click(function() {
-        if (validateForm()) {
-            const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
-            const adminHiddenInput = document.getElementById('Usu_Admin');
-            adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
-            $("#frmInsertar").submit();
+        const usuario = document.getElementById('Usu_Usua');
+        if (!usuario.value) {
+            document.getElementById('errorUsuario').textContent = 'El campo es requerido';
+            usuario.classList.add('is-invalid');
+            isValid = false;
         }
-    });
 
-    $("#btnVolver").click(function() {
-        $("#detalles").hide();
-        $("#tabla").show();
-    });
+        const contraseña = document.getElementById('Usu_Contra');
+        if (!contraseña.value && document.getElementById('password-field').style.display !== 'none') {
+            document.getElementById('errorContraseña').textContent = 'El campo es requerido';
+            contraseña.classList.add('is-invalid');
+            isValid = false;
+        }
 
-    $("#btnConfirmarEliminar").click(function() {
-        const id = $('#modalEliminar').data('id');
-        $('#eliminarUsuarioId').val(id);
-        $('#eliminarUsuarioForm').submit();
+        const rol = document.getElementById('Rol_Id');
+        if (!rol.value) {
+            document.getElementById('errorRol').textContent = 'El campo es requerido';
+            rol.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        const empleado = document.getElementById('Empl_Id');
+        if (!empleado.value) {
+            document.getElementById('errorEmpleado').textContent = 'El campo es requerido';
+            empleado.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    $(document).ready(function() {
+        $("#EsquemaAcceso").addClass('menu-open');
+        $("#LinkAcceso").addClass('active');
+        $("#LinkItemAcceso").addClass('active');
+
+        // Inicialización de DataTables
+        var table = $("#example1").DataTable({
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+        });
+
+        function attachClickEvents() {
+            $(".abrir-editar").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '../Services/obtener_usuario.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        $("#form-title").text('Editar Usuario');
+                        $("#id").val(usuario.Usu_ID);
+                        $("#Usu_Usua").val(usuario.Usu_Usua);
+                        $("#Usu_Contra").val('');
+                        $("#Usu_Admin_checkbox").prop('checked', usuario.Usu_Admin == 1);
+                        $("#Usu_Admin").val(usuario.Usu_Admin);
+                        $("#Rol_Id").val(usuario.Rol_Id);
+                        $("#Empl_Id").val(usuario.Empl_Id);
+                        $("#password-field").hide();
+                        $("#insertar").show();
+                        $("#tabla").hide();
+                    }
+                });
+            });
+
+            $(".btn-detalles").off('click').on('click', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '../Services/obtener_usuario.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        const usuario = JSON.parse(response);
+                        $("#Detalle_Usu_Usua").text(usuario.Usu_Usua);
+                        $("#Detalle_Admin").text(usuario.Usu_Admin == 1 ? 'Admin' : 'Usuario');
+                        $("#Detalle_Rol_Descripcion").text(usuario.Rol_Descripcion);
+                        $("#Detalle_Nombre_Completo").text(usuario.Nombre_Completo_2);
+                        $("#Detalle_Usuario_Creador").text(usuario.Usuario_Creador);
+                        $("#Detalle_Usu_Fecha_Creacion").text(usuario.Usu_Fecha_Creacion);
+                        $("#Detalle_Usuario_Modificador").text(usuario.Usuario_Modificador);
+                        $("#Detalle_Usu_Fecha_Modifica").text(usuario.Usu_Fecha_Modifica);
+
+                        $("#tabla").hide();
+                        $("#detalles").show();
+                    }
+                });
+            });
+
+            // Delegación de eventos para los botones de eliminar
+            $('#example1 tbody').on('click', '.btn-danger', function() {
+                const id = $(this).closest('tr').find('.abrir-editar').data('id');
+                $('#modalEliminar').data('id', id).modal('show');
+            });
+        }
+
+        attachClickEvents();
+
+        table.on('draw', function() {
+            attachClickEvents();
+        });
+
+        $("#btnNuevo").click(function() {
+            $("#form-title").text('Crear Nuevo Usuario');
+            $("#id").val('');
+            $("#Usu_Usua").val('');
+            $("#Usu_Contra").val('');
+            $("#Usu_Admin_checkbox").prop('checked', false);
+            $("#Usu_Admin").val('0');
+            $("#Rol_Id").val('');
+            $("#Empl_Id").val('');
+            $("#password-field").show();
+            $("#insertar").show();
+            $("#tabla").hide();
+        });
+
+        $("#Cancelar").click(function() {
+            $("#insertar").hide();
+            $("#tabla").show();
+            document.querySelectorAll('.error-message').forEach(function(error) {
+                error.textContent = '';
+            });
+            document.querySelectorAll('.form-control').forEach(function(input) {
+                input.classList.remove('is-invalid');
+            });
+        });
+
+        $("#btnGuardarUsuario").click(function() {
+            if (validateForm()) {
+                const adminCheckbox = document.getElementById('Usu_Admin_checkbox');
+                const adminHiddenInput = document.getElementById('Usu_Admin');
+                adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
+                $("#frmInsertar").submit();
+            }
+        });
+
+        $("#btnVolver").click(function() {
+            $("#detalles").hide();
+            $("#tabla").show();
+        });
+
+        $("#btnConfirmarEliminar").click(function() {
+            const id = $('#modalEliminar').data('id');
+            $('#eliminarUsuarioId').val(id);
+            $('#eliminarUsuarioForm').submit();
+        });
     });
-});
 </script>
