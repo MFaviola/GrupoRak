@@ -121,7 +121,7 @@
       width: 35%;
       border-radius: 10px;
       box-shadow: rgba(0, 0, 0, 0.25) 10px 14px 28px, rgba(0, 0, 0, 0.22) 8px 10px 10px;
-      animation: unfoldAside 1s ease-out forwards;
+      animation: unfoldAside 0.7s ease-out forwards;
       position: relative;
     }
 
@@ -141,8 +141,8 @@
       align-items: center;
       width: 0%;
       transform-origin: left;
-      animation: unfoldAsideContainer 0.5s ease-out forwards;
-      animation-delay: 1.2s;
+      animation: unfoldAsideContainer 0.2s ease-out forwards;
+      animation-delay: 0.3s;
       position: relative;
     }
 
@@ -151,7 +151,7 @@
       justify-content: center;
       align-items: center;
       z-index: 4;
-      transition: width 2s, opacity 1s ease-out;
+      transition: width 0.5s, opacity 1s ease-out;
       width: 100%;
       height: 95%;
       background: #f1f1f1;

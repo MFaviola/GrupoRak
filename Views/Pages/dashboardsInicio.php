@@ -26,111 +26,109 @@ try {
 ?>
 
 
-      <!-- CANTIDADES -->
-      <div class="card">       
-        <div class="row m-2">
-            <!-- Existing small boxes -->
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadvehiculos; ?></h3>
-                        <p>Vehículos</p>
-                    </div>
-                    <div class="icon">
-                        <i style="margin-top:-30px" class="ion-android-car"></i>
-                    </div>
+<!-- CANTIDADES -->
+<div class="card">       
+    <div class="row m-2">
+        <!-- Tarjetas ajustadas -->
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadvehiculos; ?></h3>
+                    <p>Vehículos</p>
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadventas; ?></h3>
-                        <p>Ventas</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadcompras; ?></h3>
-                        <p>Compras</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadmarcas; ?></h3>
-                        <p>Marcas</p>
-                    </div>
-                    <div class="icon">
-                        <i style="margin-top:-30px" class="ion-ios-speedometer"></i>
-                    </div>
+                <div class="icon">
+                    <i style="margin-top:-30px" class="ion-android-car"></i>
                 </div>
             </div>
         </div>
 
-        <div class="row m-2">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadmodelos; ?></h3>
-                        <p>Modelos</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-model-s"></i> <!-- Icono acorde -->
-                    </div>
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadventas; ?></h3>
+                    <p>Ventas</p>
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadempleados; ?></h3>
-                        <p>Empleados</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person"></i> <!-- Icono acorde -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadclientes; ?></h3>
-                        <p>Clientes</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person-stalker"></i> <!-- Icono acorde -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-image">
-                    <div class="inner">
-                        <h3><?php echo $cantidadsedes; ?></h3>
-                        <p>Sedes</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-location"></i> <!-- Icono acorde -->
-                    </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
                 </div>
             </div>
         </div>
 
-        <!-- New larger boxes for top 5 -->
-        <div class="row m-2">
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadcompras; ?></h3>
+                    <p>Compras</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadmarcas; ?></h3>
+                    <p>Marcas</p>
+                </div>
+                <div class="icon">
+                    <i style="margin-top:-30px" class="ion-ios-speedometer"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadmodelos; ?></h3>
+                    <p>Modelos</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-model-s"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadempleados; ?></h3>
+                    <p>Empleados</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadclientes; ?></h3>
+                    <p>Clientes</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-stalker"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-3 col-sm-6">
+            <div class="small-box bg-image">
+                <div class="inner">
+                    <h3><?php echo $cantidadsedes; ?></h3>
+                    <p>Sedes</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-location"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+           <!-- New larger boxes for top 5 -->
+           <div class="row m-2">
     <div class="col-lg-6">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white">
@@ -167,6 +165,25 @@ try {
         </div>
     </div>
 </div>
+</div>
+
+<style>
+    .small-box {
+        height: 120px;
+    }
+    .col-lg-1 {
+        flex: 0 0 auto;
+        max-width: 12.5%;
+    }
+    .col-md-3 {
+        max-width: 12.5%;
+    }
+    .col-sm-6 {
+        max-width: 12.5%;
+    }
+</style>
+
+ 
 
 
 
@@ -606,13 +623,29 @@ var donutData        = {
                     return item.CantidadVentas;
                 });
 
+                // Conjunto de colores
+                var colors = [
+                    'rgba(201,1,1,0.9)',
+                    'rgba(1,102,255,0.9)',
+                    'rgba(1,201,1,0.9)',
+                    'rgba(255,165,0,0.9)',
+                    'rgba(201,1,255,0.9)',
+                    'rgba(255,215,0,0.9)',
+                    'rgba(0,128,128,0.9)',
+                    'rgba(128,0,128,0.9)',
+                    'rgba(255,69,0,0.9)',
+                    'rgba(75,0,130,0.9)',
+                    'rgba(255,20,147,0.9)',
+                    'rgba(0,255,127,0.9)'
+                ];
+
                 var barChartCanvas = $('#barChart').get(0).getContext('2d');
                 var barChartData = {
                     labels: labelsVentas,
                     datasets: [{
                         label: 'Cantidad de Ventas',
-                        backgroundColor: 'rgba(201,1,1,0.9)',
-                        borderColor: 'rgba(201,1,1,0.9)',
+                        backgroundColor: labelsVentas.map((_, index) => colors[index % colors.length]),
+                        borderColor: labelsVentas.map((_, index) => colors[index % colors.length]),
                         data: dataVentas
                     }]
                 };
@@ -651,7 +684,7 @@ var donutData        = {
 });
 
 
-    $.ajax({
+$.ajax({
     url: '../Services/obtener_dashboardsInicio.php',
     method: 'GET',
     dataType: 'json',
@@ -675,19 +708,35 @@ var donutData        = {
                     return item.CantidadCompras;
                 });
 
+                // Conjunto de colores
+                var colors = [
+                    'rgba(201,1,1,0.9)',
+                    'rgba(1,102,255,0.9)',
+                    'rgba(1,201,1,0.9)',
+                    'rgba(255,165,0,0.9)',
+                    'rgba(201,1,255,0.9)',
+                    'rgba(255,215,0,0.9)',
+                    'rgba(0,128,128,0.9)',
+                    'rgba(128,0,128,0.9)',
+                    'rgba(255,69,0,0.9)',
+                    'rgba(75,0,130,0.9)',
+                    'rgba(255,20,147,0.9)',
+                    'rgba(0,255,127,0.9)'
+                ];
+
                 var barChartCanvasCompras = $('#barChart1').get(0).getContext('2d');
                 var barChartDataCompras = {
                     labels: labelsCompras,
                     datasets: [{
                         label: 'Cantidad de Compras',
-                        backgroundColor: 'rgba(201,1,1,0.9)',
-                        borderColor: 'rgba(201,1,1,0.9)',
+                        backgroundColor: labelsCompras.map((_, index) => colors[index % colors.length]),
+                        borderColor: labelsCompras.map((_, index) => colors[index % colors.length]),
                         data: dataCompras
                     }]
                 };
 
                 var barChartOptionsCompras = {
-                  responsive: true,
+                    responsive: true,
                     maintainAspectRatio: false,
                     datasetFill: false,
                     plugins: {
@@ -718,6 +767,7 @@ var donutData        = {
         console.error(error);
     }
 });
+
 
     //---------------------
     //- STACKED BAR CHART -

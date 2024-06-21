@@ -67,31 +67,13 @@ function generarMenu($conn) {
     
     // Menu Items
     echo '<li class="nav-item">';
-    echo '<a href="inicio.php" class="nav-link"><i class="fa-solid fa-house"></i><p>Inicio</p></a>';
+    echo '<a href="?Pages=dashboardsInicio" class="nav-link"  style="color:#fff"><i class="fa-solid fa-house mr-2"></i><p>Inicio</p></a>';
     echo '</li>';
-    
-    if (!empty($menu['Dashboards'])) {
-        echo '<li class="nav-item">';
-        echo '<a href="?Pages=dashboardsInicio" class="nav-link"><i class="fa-solid fa-chart-simple"></i><p>Dashboards</p></a>';
-        echo '</li>';
-    }
-
-    // Reportes
-    if (!empty($menu['Reportes'])) {
-        echo '<li class="nav-item" id="EsquemaReportes">';
-        echo '<a href="#" class="nav-link" id="LinkReportes"><i class="fa-solid fa-file"></i><p>Reportes<i class="fas fa-angle-left right"></i></p></a>';
-        echo '<ul class="nav nav-treeview">';
-        foreach ($menu['Reportes'] as $item) {
-            echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
-        }
-        echo '</ul>';
-        echo '</li>';
-    }
 
     // Accesos
     if (!empty($menu['Accesos'])) {
         echo '<li class="nav-item" id="EsquemaAcceso">';
-        echo '<a href="#" class="nav-link" id="LinkAcceso"><i class="fa-solid fa-lock"></i><p>Accesos<i class="fas fa-angle-left right"></i></p></a>';
+        echo '<a href="#" class="nav-link" id="LinkAcceso" style="color:#fff"><i class="fa-solid fa-lock mr-2"></i><p>Accesos<i class="fas fa-angle-left right"></i></p></a>';
         echo '<ul class="nav nav-treeview">';
         foreach ($menu['Accesos'] as $item) {
             echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
@@ -103,7 +85,7 @@ function generarMenu($conn) {
     // Generales
     if (!empty($menu['Generales'])) {
         echo '<li class="nav-item" id="EsquemaGeneral">';
-        echo '<a href="#" class="nav-link" id="LinkGeneral"><i class="fa-solid fa-globe"></i><p>Generales<i class="fas fa-angle-left right"></i></p></a>';
+        echo '<a href="#" class="nav-link" id="LinkGeneral" style="color:#fff"><i class="fa-solid fa-globe mr-2"></i><p>Generales<i class="fas fa-angle-left right"></i></p></a>';
         echo '<ul class="nav nav-treeview">';
         foreach ($menu['Generales'] as $item) {
             echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
@@ -115,12 +97,30 @@ function generarMenu($conn) {
     // Ventas
     if (!empty($menu['Ventas'])) {
         echo '<li class="nav-item" id="EsquemaVentas">';
-        echo '<a href="#" class="nav-link" id="LinkVentas"><i class="fa-solid fa-bag-shopping"></i><p>Ventas<i class="fas fa-angle-left right"></i></p></a>';
+        echo '<a href="#" class="nav-link" id="LinkVentas" style="color:#fff"><i class="fa-solid fa-bag-shopping mr-2"></i><p>Ventas<i class="fas fa-angle-left right"></i></p></a>';
         echo '<ul class="nav nav-treeview">';
         foreach ($menu['Ventas'] as $item) {
             echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
         }
         echo '</ul>';
+        echo '</li>';
+    }
+
+        // Reportes
+        if (!empty($menu['Reportes'])) {
+            echo '<li class="nav-item" id="EsquemaReportes">';
+            echo '<a href="#" class="nav-link" id="LinkReportes" style="color:#fff"><i class="fa-solid fa-file mr-2"></i><p>Reportes<i class="fas fa-angle-left right"></i></p></a>';
+            echo '<ul class="nav nav-treeview">';
+            foreach ($menu['Reportes'] as $item) {
+                echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
+            }
+            echo '</ul>';
+            echo '</li>';
+        }
+
+    if (!empty($menu['Dashboards'])) {
+        echo '<li class="nav-item">';
+        echo '<a href="?Pages=dashboards" class="nav-link" style="color:#fff"><i class="fa-solid fa-chart-simple mr-2"></i><p>Dashboards</p></a>';
         echo '</li>';
     }
     

@@ -381,5 +381,107 @@ class DashboardsServices {
             throw new Exception('Error al listar: ' . $e->getMessage());
         }
     }
+
+
+    public function cantidadComprasFiltro($fecha_inicio, $fecha_fin) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL `dbgruporac`.`SP_ComprasCantidad_FiltroFecha`(?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$fecha_inicio, $fecha_fin]);
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result === false) {
+                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
+            }
+    
+            return $result;
+    
+        } catch (Exception $e) {
+            throw new Exception('Error al listar: ' . $e->getMessage());
+        }
+    }
+    
+    public function cantidadVentasFiltro($fecha_inicio, $fecha_fin) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL `dbgruporac`.`SP_VentasCantidad_FiltroFecha`(?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$fecha_inicio, $fecha_fin]);
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result === false) {
+                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
+            }
+    
+            return $result;
+    
+        } catch (Exception $e) {
+            throw new Exception('Error al listar: ' . $e->getMessage());
+        }
+    }
+    
+    public function cantidadVentasEmpleadosFiltro($fecha_inicio, $fecha_fin) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL `dbgruporac`.`SP_VentasEmpleadosCantidad_FiltroFecha`(?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$fecha_inicio, $fecha_fin]);
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result === false) {
+                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
+            }
+    
+            return $result;
+    
+        } catch (Exception $e) {
+            throw new Exception('Error al listar: ' . $e->getMessage());
+        }
+    }
+    
+    public function cantidadComprasClientesFiltro($fecha_inicio, $fecha_fin) {
+        global $pdo;
+    
+        try {
+            $sql = 'CALL `dbgruporac`.`SP_ComprasClientesCantidad_FiltroFecha`(?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+    
+            $stmt->execute([$fecha_inicio, $fecha_fin]);
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result === false) {
+                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
+            }
+    
+            return $result;
+    
+        } catch (Exception $e) {
+            throw new Exception('Error al listar: ' . $e->getMessage());
+        }
+    }
+    
+
+
+
+
 }
 ?>

@@ -24,12 +24,12 @@ class ReportesServices {
     }
 
 
-    public function ReporteEmpleados($DNI) {
+    public function ReporteEmpleados($DNI, $fecha_inicio , $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasPorEmpleado_Reporte`(?)';
+            $sql = 'CALL `dbgruporac`.`SP_VentasPorEmpleado_Reporte`(?,?,?)';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$DNI]);
+            $stmt->execute([$DNI, $fecha_inicio, $fecha_fin]);
             
             // Use fetchAll to retrieve all rows
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,12 +44,12 @@ class ReportesServices {
         }
     }
 
-    public function ReporteVehiculos($modelo) {
+    public function ReporteVehiculos($modelo, $fecha_inicio, $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VehiculosPorModelos_Reporte`(?)';
+            $sql = 'CALL `dbgruporac`.`SP_VehiculosPorModelos_Reporte`(?,?,?)';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$modelo]);
+            $stmt->execute([$modelo, $fecha_inicio, $fecha_fin]);
             
             // Use fetchAll to retrieve all rows
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -64,12 +64,12 @@ class ReportesServices {
         }
     }
 
-    public function ReporteVentas($ciudad) {
+    public function ReporteVentas($ciudad, $fecha_inicio, $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasPorCiudad_Reporte`(?)';
+            $sql = 'CALL `dbgruporac`.`SP_VentasPorCiudad_Reporte`(?,?,?)';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$ciudad]);
+            $stmt->execute([$ciudad, $fecha_inicio, $fecha_fin]);
             
             // Use fetchAll to retrieve all rows
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
