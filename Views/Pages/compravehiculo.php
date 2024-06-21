@@ -218,7 +218,6 @@ try {
                                         <i class="fa-solid fa-check"></i> Finalizar
                                     </button>
                                 <?php endif; ?>
-
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -362,9 +361,15 @@ try {
     </div>
 </div>
 
-<div class="container mt-3">
+<div class="container mt-3 pdfContenedor">
     <div class="collapse" id="pdfPreview">
         <div class="card card-body">
+            <div class="d-flex justify-content-end" style="gap:10px">
+                <button class="btn btn-primary btnVolverImpresion"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+            </div>
+            <div class="mt-2">
+
+            </div>
             <embed id="pdfEmbed" src="" type="application/pdf" width="100%" height="600px" />
         </div>
     </div>
@@ -768,6 +773,7 @@ try {
         console.log('Cliente ' + cliente);
 
         console.log('LOCAL STORAGE' + idcompra);
+     
         if (id) {
             console.log('ENTREE');
             idcompra = id;
@@ -892,7 +898,7 @@ try {
                                 content: 'Total a Pagar:',
                                 styles: {
                                     fontStyle: 'bold',
-                                    fillColor: [214, 39, 0],
+                                    fillColor: [241, 10, 10],
                                     textColor: [255, 255, 255],
                                     fontSize: 15
                                 }
@@ -930,6 +936,7 @@ try {
 
                     $('#pdfPreview').collapse('show');
                     $("#insertarEncabezado").hide();
+
                 }
             });
         } catch (error) {
@@ -958,7 +965,7 @@ try {
             [x, y + height]
         ];
 
-        doc.setFillColor(214, 39, 0);
+        doc.setFillColor(241, 10, 10);
         doc.setDrawColor(104, 200, 0);
         doc.lines(points, x, y, [1, 1], 'F');
     }
@@ -1180,6 +1187,12 @@ try {
         $("#detalleCompra2").hide();
 
 
+        $(".btnVolverImpresion").click(function() {
+            console.log('OFDF');
+            $('#pdfPreview').collapse('hide');
+            $("#insertarEncabezado").show();
+        });
+
         // Evento de tecla para buscar cliente por DNI
         $("#txtIdentidadBusqueda").on("keyup", function() {
             const dni = $(this).val();
@@ -1211,6 +1224,7 @@ try {
 
             }
         });
+
 
         $("#EsquemaVentas").addClass('menu-open');
         $("#LinkVentas").addClass('active');
@@ -1497,6 +1511,7 @@ try {
                 var txtIdentidadBusqueda = $("#txtIdentidadBusqueda").val();
                 var txtClienteBusqueda = $("#txtClienteBusqueda").val();
                 var IdCliente = $("#IdCliente").val();
+                console.log('IIDE CLIENTE' + IdCliente);
                 var id = $("#id").val();
 
                 console.log('COMPRA ID: ' + compraIDSumado);
