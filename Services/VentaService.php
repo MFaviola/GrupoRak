@@ -51,6 +51,42 @@ class VentaService {
         }
     }
 
+
+
+
+    public function eliminarDetalle($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_VentasDetalles_Eliminar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return "Usuario eliminado correctamente.";
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar usuario: ' . $e->getMessage());
+        }
+    }
+    
+
+
+
+    public function ListarVentaDetalles($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_VentasDetalle_Listar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener ciudades: ' . $e->getMessage());
+        }
+    }
+
+
+
+
+
+
     public function listarVehiculos() {
         global $pdo;
 
@@ -204,18 +240,18 @@ class VentaService {
         }
     }
 
-    public function eliminarVentaDetalle($vntId) {
+    public function eliminarVentaDetalle($vehPlaca) {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Eliminar`(:vntId)';
+            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Eliminar`(:vehPlaca)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
             }
 
-            $stmt->bindParam(':vntId', $vntId, PDO::PARAM_STR);
+            $stmt->bindParam(':vehPlaca', $vehPlaca, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -322,6 +358,17 @@ class VentaService {
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+    
 }
 
 // Ejecutar la lógica de manejo de AJAX si es una solicitud POST
