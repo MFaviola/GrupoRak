@@ -381,7 +381,7 @@ try {
     $(document).ready(function() {
         $("#EsquemaGeneral").addClass('menu-open');
         $("#LinkGeneral").addClass('active');
-        $("#LinkClientes").addClass('active');
+        $("#LinkItemGeneral").addClass('active');
       // Función para cargar ciudades basadas en el departamento seleccionado
       
     function cargarCiudades(departamentoId, ciudadId) {

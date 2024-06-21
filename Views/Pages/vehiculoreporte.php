@@ -1,6 +1,7 @@
 <?php
-require_once '../Services/ReportesService.php';
-$service = new ReportesServices();
+require_once '../Services/CompraVehiculoService.php';
+
+$service = new CompraVehiculoService();
 
 // function isAjax() {
 //     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
@@ -22,7 +23,7 @@ $service = new ReportesServices();
 // }
 
 try {
-    $modelos = $service->listarModelo();
+    $marcas = $service->listarMarcas();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -45,24 +46,18 @@ try {
                 </div>
                 <div class="col mb-3">
                 <label for="ddlMonth">Marcas</label>
-                    <select class="form-control" name="Mod_Descripcion" id="Mar_Descripcion" required>
-                                <option value="">--SELECCIONE UNA MARCA--</option>
-                                <option value="Mostrar todo">Mostrar todo</option>
-                                <?php foreach ($modelos as $modelo): ?>
-                                    <option value="<?php echo $modelo['Mar_Descripcion']; ?>"><?php echo $modelo['Mod_Descripcion']; ?></option>
+                <select class="form-control select2" id="marcaSelect" name="marcaSelect">
+                                <option value="0">--SELECCIONE UNA MARCA--</option>
+                                <?php foreach ($marcas as $marca) : ?>
+                                    <option value="<?php echo $marca['Mar_Id']; ?>"><?php echo $marca['Mar_Descripcion']; ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <span style="color:red" class="error-message" id="errorRol"></span>
                 </div>
 
                 <div class="col mb-3">
                 <label for="ddlMonth">Modelos</label>
-                    <select class="form-control" name="Mod_Descripcion" id="Mod_Descripcion" required>
-                                <option value="">--SELECCIONE UN MODELO--</option>
-                                <option value="Mostrar todo">Mostrar todo</option>
-                                <?php foreach ($modelos as $modelo): ?>
-                                    <option value="<?php echo $modelo['Mod_Descripcion']; ?>"><?php echo $modelo['Mod_Descripcion']; ?></option>
-                                <?php endforeach; ?>
+                <select class="form-control select2" id="modeloSelect" name="modeloSelect">
+                                <option value="0">--SELECCIONE UN MODELO--</option>
                             </select>
                             <span style="color:red" class="error-message" id="errorRol"></span>
                 </div>
@@ -89,10 +84,58 @@ try {
 
 
 <script>
+
+
+$(document).ready(function() {
+    function cargarModelos(marcaId, modeloId) {
+            if (marcaId != 0) {
+                $.ajax({
+                    url: '../Services/marcas_obtener.php',
+                    type: 'GET',
+                    data: {
+                        id: marcaId
+                    },
+                    success: function(response) {
+                        var modelos = JSON.parse(response);
+                        var $modeloSelect = $('#modeloSelect');
+
+                        $modeloSelect.empty();
+                        $modeloSelect.append('<option value="0">--SELECCIONE UN MODELO--</option>');
+                        $modeloSelect.append('<option value="Mostrar todo">Mostrar todo</option>');
+
+
+                        modelos.forEach(function(modelo) {
+                            $modeloSelect.append('<option value="' + modelo.Mod_Descripcion + '">' + modelo.Mod_Descripcion + '</option>');
+                        });
+
+                        
+                        if (modeloId) {
+                            $modeloSelect.val(modeloId);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al cargar las ciudades');
+                    }
+                });
+            } else {
+                $('#modeloSelect').empty().append('<option value="0">--SELECCIONE UN MODELO--</option>');
+            }
+        }
+
+        $('#marcaSelect').change(function() {
+            var marcaId = $(this).val();
+            cargarModelos(marcaId);
+        });
+    });
+
+
+
+
+
 async function generateReport() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
-    const ddl = document.getElementById('Mod_Descripcion');
+    const ddl = document.getElementById('modeloSelect');
 
     if (!startDate || !endDate || !ddl.value) {
         alert('Por favor, seleccione un rango de fechas válido.');

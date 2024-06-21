@@ -12931,16 +12931,16 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active, [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active:hover, [class*="sidebar-dark-"] .nav-treeview > .nav-item > .nav-link.active:focus {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.4);
   color: #343a40;
 }
 
 [class*="sidebar-dark-"] .nav-flat .nav-item .nav-treeview .nav-treeview {
-  border-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 [class*="sidebar-dark-"] .nav-flat .nav-item .nav-treeview > .nav-item > .nav-link, [class*="sidebar-dark-"] .nav-flat .nav-item .nav-treeview > .nav-item > .nav-link.active {
-  border-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
@@ -27019,7 +27019,7 @@ body.text-sm .input-group-text {
 }
 
 .card-danger:not(.card-outline) > .card-header a.active {
-  color: #1f2d3d;
+  color: #dc3545;
 }
 
 .card-danger.card-outline {
@@ -27027,7 +27027,7 @@ body.text-sm .input-group-text {
 }
 
 .card-danger.card-outline-tabs > .card-header a:hover {
-  border-top: 3px solid #dee2e6;
+  border-top: 3px solid #dc3545;
 }
 
 .card-danger.card-outline-tabs > .card-header a.active,
