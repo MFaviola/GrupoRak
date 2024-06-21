@@ -27019,7 +27019,7 @@ body.text-sm .input-group-text {
 }
 
 .card-danger:not(.card-outline) > .card-header a.active {
-  color: #1f2d3d;
+  color: #dc3545;
 }
 
 .card-danger.card-outline {
@@ -27027,7 +27027,7 @@ body.text-sm .input-group-text {
 }
 
 .card-danger.card-outline-tabs > .card-header a:hover {
-  border-top: 3px solid #dee2e6;
+  border-top: 3px solid #dc3545;
 }
 
 .card-danger.card-outline-tabs > .card-header a.active,

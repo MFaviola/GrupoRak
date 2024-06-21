@@ -8,22 +8,11 @@ class CompraVehiculoService {
         try {
             $sql = 'CALL `dbgruporac`.`sp_Compras_Listar`()';
             $stmt = $pdo->prepare($sql);
-
-            if ($stmt === false) {
-                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
-            }
-
             $stmt->execute();
-            $result = $stmt->fetchAll();
-
-            if ($result === false) {
-                throw new Exception('Error al obtener resultados: ' . implode(", ", $stmt->errorInfo()));
-            }
-
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
             return $result;
-
         } catch (Exception $e) {
-            throw new Exception('Error al listar facturas: ' . $e->getMessage());
+            throw new Exception('Error al obtener ciudades: ' . $e->getMessage());
         }
     }
 
@@ -64,6 +53,21 @@ class CompraVehiculoService {
             throw new Exception('Error al obtener ciudades: ' . $e->getMessage());
         }
     }
+ 
+    public function buscarClientePorDNI($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            $result = $stmt->fetch();
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener usuario: ' . $e->getMessage());
+        }
+    }
+
+  
 
     public function ListarComprasDetalles($id) {
         global $pdo;
@@ -190,6 +194,25 @@ class CompraVehiculoService {
         }
     }
 
+    public function actualizarEncabezado($id, $fecha, $MetodoPago, $Cliente, $Modificacion) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Compras_Actualizar`(?, ?, ?, ?, ?)';
+            $stmt = $pdo->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
+            }
+            $stmt->execute([$id, $fecha, $MetodoPago, $Cliente, $Modificacion]);
+            $result = $stmt->fetch();
+            if (isset($result['Result']) && $result['Result'] == 1) {
+                return "Usuario actualizado correctamente.";
+            } else {
+                return "No se pudo actualizar el usuario.";
+            }
+        } catch (Exception $e) {
+            throw new Exception('Error al actualizar usuario: ' . $e->getMessage());
+        }
+    }
     public function insertarDetalle($PrecioCompra, $CompraId, $Placa,$Impuesto, $Creacion) {
         global $pdo;
          if (session_status() == PHP_SESSION_NONE) {
@@ -220,6 +243,44 @@ class CompraVehiculoService {
             throw new Exception('Error al insertar usuario: ' . $e->getMessage());
         }
     }
+    public function finalizar($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Compras_Finalizar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return "Usuario eliminado correctamente.";
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar usuario: ' . $e->getMessage());
+        }
+    }
+
+    public function obtenerCompras($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_Compras_Detalle`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            $result = $stmt->fetch();
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception('Error al obtener usuario: ' . $e->getMessage());
+        }
+    }
+
+
+    public function eliminarDetalle($id) {
+        global $pdo;
+        try {
+            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalles_Eliminar`(?)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return "Usuario eliminado correctamente.";
+        } catch (Exception $e) {
+            throw new Exception('Error al eliminar usuario: ' . $e->getMessage());
+        }
+    }
+    
 
 }
 ?>

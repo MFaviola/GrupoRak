@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="../Views/Resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../Views/Resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="../Views/Resources/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="../Views/Resources/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 <body class="hold-transition  sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <!-- Site wrapper -->
@@ -68,6 +70,8 @@
 <script src="../Views/Resources/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../Views/Resources/dist/js/demo.js"></script>
+<!-- SweetAlert2 -->
+<script src="../Views/Resources/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- DataTables  & Plugins -->
 <script src="../Views/Resources/plugins/datatables/jquery.dataTables.min.js"></script>
 <!-- DataTables  & Plugins -->
