@@ -33,22 +33,32 @@ try {
             } catch (Exception $e) {
                 $response = array("status" => "error", "message" => $e->getMessage());
             }
-        } elseif (isset($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
+        } elseif (isset($_POST['formulario']) && !empty($_POST['formulario']) && $_POST['formulario'] == 'insertarEncabezado') {
             $fecha = $_POST['txtFecha'];
             $MetodoPago = $_POST['pagosSelect'];
             $Monto = $_POST['txtMonto'];
             $Caducacion = $_POST['txtFechaCaducacion'];
             $IdentidadBusqueda = $_POST['txtIdentidadBusqueda'];
             $ClienteBusqueda = $_POST['txtClienteBusqueda'];
-            $Veh_Placa = $_POST['txtVehPlaca'];
+            //$Veh_Placa = (!empty($_POST['txtVehPlaca']));
             $Cantidad = 1; // Suponiendo que siempre es 1, ajustar si es necesario
-            $PrecioCompra = $_POST['txtPrecioVehiculo']; // Asegúrate de obtener este valor correctamente
+            //$PrecioCompra = (!empty($_POST['txtPrecioVehiculo'])); // Asegúrate de obtener este valor correctamente
             // $Imp_ID = $_POST['txtImpID']; // Asegúrate de obtener este valor correctamente
+            
+            if(!empty($Veh_Placa))
+            {
+                $Veh_Placa_A->$_POST['txtVehPlaca'] = $Veh_Placa;
+            }
 
+            if(!empty($PrecioCompra))
+            {
+                $PrecioCompra_A->$_POST['txtPrecioVehiculo'] = $PrecioCompra;
+            }
+            
             try {
                 session_start();
                 $Creacion = $_SESSION['ID'];
-                $resultadoEncabezado = $controllerCompra->insertarEncabezado($fecha, $MetodoPago, $ClienteBusqueda, $Monto, $Caducacion, $Creacion, $Veh_Placa, $Cantidad, $PrecioCompra);
+                $resultadoEncabezado = $controllerCompra->insertarEncabezado($fecha, $Veh_Placa_A, $PrecioCompra_A, $MetodoPago, $ClienteBusqueda, $Monto, $Caducacion, $Creacion, $Cantidad, $Creacion);
                 $response = array("status" => "success", "message" => "Encabezado insertado correctamente");
             } catch (Exception $e) {
                 $response['message'] = $e->getMessage();
@@ -579,14 +589,16 @@ try {
             var newRow = `
             <tr>
                 <td>${$("#detalleFactura tbody tr").length + 1}</td>
-                <td id="txtVehPlaca">${vehiculo.placa}</td>
+                <td name="txtVehPlaca">${vehiculo.placa}</td>
                 <td>${vehiculo.modelo} (${vehiculo.color})</td>
-                <td id="txtPrecioVehiculo">${vehiculo.precio}</td>
+                <td name="txtPrecioVehiculo">${vehiculo.precio}</td>
                 <td><input type="number" class="form-control cantidad" value="1" min="1" data-precio="${vehiculo.precio}"></td>
                 <td class="subtotal">${vehiculo.precio}</td>
                 <td><button class="btn btn-danger btn-sm eliminar-vehiculo">Eliminar</button></td>
             </tr>
         `;
+
+
 
 
             // Añadir la nueva fila a la tabla de detalles
