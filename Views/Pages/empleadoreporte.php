@@ -76,6 +76,23 @@ try {
 
 
 <script>
+
+
+$(document).ready(function() {
+    $("#EsquemaReportes").addClass('menu-open');
+    $("#LinkReportes").addClass('active');
+    $("#empleadoreporte").addClass('active');
+    var pantallaactiva = $("#empleadoreporte").text();
+    console.log('ES SELECT' + pantallaactiva)
+
+    });
+
+
+
+
+
+
+
 async function generateReport() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;

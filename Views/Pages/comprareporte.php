@@ -57,6 +57,22 @@
 
 
 <script>
+
+
+
+$(document).ready(function() {
+
+$("#EsquemaReportes").addClass('menu-open');
+$("#LinkReportes").addClass('active');
+$("#comprareporte").addClass('active');
+var pantallaactiva = $("#comprareporte").text();
+console.log('ES SELECT' + pantallaactiva)
+
+});
+
+
+
+
 async function generateReport() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;

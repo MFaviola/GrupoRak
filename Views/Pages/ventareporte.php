@@ -68,6 +68,17 @@ try {
 
 
 $(document).ready(function() {
+
+    $("#EsquemaReportes").addClass('menu-open');
+    $("#LinkReportes").addClass('active');
+    $("#ventareporte").addClass('active');
+    var pantallaactiva = $("#ventareporte").text();
+    console.log('ES SELECT' + pantallaactiva)
+
+
+
+
+
         function cargarCiudades(departamentoId, ciudadId) {
             if (departamentoId != 0) {
                 $.ajax({

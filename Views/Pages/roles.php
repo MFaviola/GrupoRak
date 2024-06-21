@@ -205,7 +205,11 @@ try {
 $(document).ready(function() {
     $("#EsquemaAcceso").addClass('menu-open');
     $("#LinkAcceso").addClass('active');
-    $("#LinkItemAcceso").addClass('active');
+    $("#roles").addClass('active');
+    var pantallaactiva = $("#roles").text();
+    console.log('ES SELECT' + pantallaactiva)
+
+
     var table = $("#example1").DataTable({
         "responsive": false,
         "lengthChange": false,

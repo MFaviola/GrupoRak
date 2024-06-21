@@ -87,6 +87,18 @@ try {
 
 
 $(document).ready(function() {
+
+
+    $("#EsquemaReportes").addClass('menu-open');
+    $("#LinkReportes").addClass('active');
+    $("#vehiculoreporte").addClass('active');
+    var pantallaactiva = $("#vehiculoreporte").text();
+    console.log('ES SELECT' + pantallaactiva)
+
+
+
+
+
     function cargarModelos(marcaId, modeloId) {
             if (marcaId != 0) {
                 $.ajax({
