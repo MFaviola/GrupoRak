@@ -1,5 +1,6 @@
 <?php
-require_once '../config.php';
+$root = $_SERVER['DOCUMENT_ROOT'] . '/GrupoRak/';
+require_once $root . 'config.php';
 
 class VentaService {
 
