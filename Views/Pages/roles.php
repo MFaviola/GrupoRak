@@ -205,12 +205,28 @@ try {
     $(document).ready(function() {
         $("#EsquemaAcceso").addClass('menu-open');
         $("#LinkAcceso").addClass('active');
-        $("#LinkItemAcceso").addClass('active');
+        $("#roles").addClass('active');
+        var clienteactivo = $("#cliente").text();
         var table = $("#example1").DataTable({
             "responsive": false,
             "lengthChange": false,
             "autoWidth": false,
         });
+
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        if (localStorage.getItem('operacionExitosa') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa'); // Limpiar la señal para futuras operaciones
+        }
 
         function attachClickEvents() {
             $(".btn-detalles").off('click').on('click', function() {
@@ -360,6 +376,7 @@ try {
                 success: function(response) {
                     console.log(response);
                     window.location.reload();
+                    localStorage.setItem('operacionExitosa', 'true');
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -376,6 +393,7 @@ try {
             const id = $('#modalEliminar').data('id');
             $('#eliminarUsuarioId').val(id);
             $('#eliminarUsuarioForm').submit();
+            localStorage.setItem('operacionExitosa', 'true');
         });
     });
 

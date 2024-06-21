@@ -264,9 +264,27 @@ try {
     }
 
     $(document).ready(function() {
+   
+
         $("#EsquemaAcceso").addClass('menu-open');
         $("#LinkAcceso").addClass('active');
-        $("#LinkItemAcceso").addClass('active');
+        $("#usuario").addClass('active');
+        var clienteactivo = $("#cliente").text();
+
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        if (localStorage.getItem('operacionExitosa') === 'true') {
+            Toast.fire({
+                icon: 'success',
+                title: 'Operación Realizada Con Éxito.'
+            });
+            localStorage.removeItem('operacionExitosa'); // Limpiar la señal para futuras operaciones
+        }
 
         // Inicialización de DataTables
         var table = $("#example1").DataTable({
@@ -370,6 +388,7 @@ try {
                 const adminHiddenInput = document.getElementById('Usu_Admin');
                 adminHiddenInput.value = adminCheckbox.checked ? '1' : '0';
                 $("#frmInsertar").submit();
+                localStorage.setItem('operacionExitosa', 'true');
             }
         });
 
@@ -382,6 +401,7 @@ try {
             const id = $('#modalEliminar').data('id');
             $('#eliminarUsuarioId').val(id);
             $('#eliminarUsuarioForm').submit();
+            localStorage.setItem('operacionExitosa', 'true');
         });
     });
 </script>
