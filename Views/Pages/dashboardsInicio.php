@@ -359,6 +359,18 @@ try {
 <script src="../Views/Resources/plugins/chart.js/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script>
+
+
+
+$(document).ready(function() {
+
+$("#inicio").addClass('active');
+$("#dashboardsInicio").addClass('active');
+
+});
+
+
+
   $(function () {
     /* ChartJS
      * -------
