@@ -205,7 +205,7 @@ try {
 $(document).ready(function() {
     $("#EsquemaAcceso").addClass('menu-open');
     $("#LinkAcceso").addClass('active');
-    $("#LinkRoles").addClass('active');
+    $("#LinkItemAcceso").addClass('active');
     var table = $("#example1").DataTable({
         "responsive": false,
         "lengthChange": false,

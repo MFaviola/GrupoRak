@@ -76,7 +76,7 @@ function generarMenu($conn) {
         echo '<a href="#" class="nav-link" id="LinkAcceso" style="color:#fff"><i class="fa-solid fa-lock mr-2"></i><p>Accesos<i class="fas fa-angle-left right"></i></p></a>';
         echo '<ul class="nav nav-treeview">';
         foreach ($menu['Accesos'] as $item) {
-            echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
+            echo '<li class="nav-item"><a id="LinkItemAcceso" href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
         }
         echo '</ul>';
         echo '</li>';
@@ -88,7 +88,7 @@ function generarMenu($conn) {
         echo '<a href="#" class="nav-link" id="LinkGeneral" style="color:#fff"><i class="fa-solid fa-globe mr-2"></i><p>Generales<i class="fas fa-angle-left right"></i></p></a>';
         echo '<ul class="nav nav-treeview">';
         foreach ($menu['Generales'] as $item) {
-            echo '<li class="nav-item"><a href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
+            echo '<li class="nav-item"><a id="LinkItemGeneral" href="?Pages=' . $item['Ptl_Identificador'] . '" class="nav-link"><i class="far fa-circle nav-icon"></i><p>' . $item['Ptl_Descripcion'] . '</p></a></li>';
         }
         echo '</ul>';
         echo '</li>';

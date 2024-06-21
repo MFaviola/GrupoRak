@@ -415,6 +415,11 @@ if (isset($mensajeError)) {
     }
 
     $(document).ready(function() {
+
+        $("#EsquemaGeneral").addClass('menu-open');
+        $("#LinkGeneral").addClass('active');
+        $("#LinkItemGeneral").addClass('active');
+        
         function cargarCiudades(departamentoId, ciudadId) {
             if (departamentoId != 0) {
                 $.ajax({

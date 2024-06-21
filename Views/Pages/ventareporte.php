@@ -1,9 +1,10 @@
 <?php
-require_once '../Services/ClienteService.php';
-$service = new ClienteService();
+require_once '../Services/EmpleadoService.php';
+
+$serviceEmpleados = new EmpleadoService();
 
 try {
-    $ciudades = $service->listarCiudades();
+    $departamentos = $serviceEmpleados->listarDepartamentos();
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
@@ -25,24 +26,19 @@ try {
                     <input type="date" id="endDate" class="form-control">
                 </div>
                 <div class="col mb-3">
-                <label for="ddlMonth">Departamentos</label>
-                    <select class="form-control" name="Ciu_Descripcion" id="Dep_Descripcion" required>
-                                <option value="">--SELECCIONE UN DEPARTAMENTO--</option>
-                                <?php foreach ($ciudades as $ciudad): ?>
-                                    <option value="<?php echo $ciudad['Ciu_Descripcion']; ?>"><?php echo $ciudad['Ciu_Descripcion']; ?></option>
+                <label for="">Departamentos</label>
+                            <select class="form-control select2" id="departamentoSelect" name="departamentoSelect">
+                                <option value="0">--SELECCIONE UN DEPARTAMENTO--</option>
+                                <?php foreach ($departamentos as $departamento) : ?>
+                                    <option value="<?php echo $departamento['Dep_ID']; ?>"><?php echo $departamento['Dep_Descripcion']; ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <span style="color:red" class="error-message" id="errorRol"></span>
                 </div>
 
                 <div class="col mb-3">
                 <label for="ddlMonth">Ciudades</label>
-                    <select class="form-control" name="Ciu_Descripcion" id="Ciu_Descripcion" required>
-                                <option value="">--SELECCIONE UNA CIUDAD--</option>
-                                <option value="Mostrar todo">Mostrar todo</option>
-                                <?php foreach ($ciudades as $ciudad): ?>
-                                    <option value="<?php echo $ciudad['Ciu_Descripcion']; ?>"><?php echo $ciudad['Ciu_Descripcion']; ?></option>
-                                <?php endforeach; ?>
+                            <select class="form-control select2" id="ciudadSelect" name="ciudadSelect">
+                                <option value="0">--SELECCIONE UNA CIUDAD--</option>
                             </select>
                             <span style="color:red" class="error-message" id="errorRol"></span>
                 </div>
@@ -69,10 +65,57 @@ try {
 
 
 <script>
+
+
+$(document).ready(function() {
+        function cargarCiudades(departamentoId, ciudadId) {
+            if (departamentoId != 0) {
+                $.ajax({
+                    url: '../Services/ciudades_obtener.php',
+                    type: 'GET',
+                    data: { id: departamentoId },
+                    success: function(response) {
+                        var ciudades = JSON.parse(response);
+                        var $ciudadSelect = $('#ciudadSelect');
+                        
+                        $ciudadSelect.empty();
+                        $ciudadSelect.append('<option value="0">--SELECCIONE UNA CIUDAD--</option>');
+
+                        $ciudadSelect.append('<option value="Mostrar todo">Mostrar todo</option>');
+                        
+                        ciudades.forEach(function(ciudad) {
+                            $ciudadSelect.append('<option value="' + ciudad.Ciu_Descripcion + '">' + ciudad.Ciu_Descripcion + '</option>');
+                        });
+
+                        if (ciudadId) {
+                            $ciudadSelect.val(ciudadId);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al cargar las ciudades');
+                    }
+                });
+            } else {
+                $('#ciudadSelect').empty().append('<option value="0">--SELECCIONE UNA CIUDAD</option>');
+            }
+        }
+
+        $('#departamentoSelect').change(function() {
+            var departamentoId = $(this).val();
+            cargarCiudades(departamentoId);
+        });
+    });
+
+
+
+
+
+
+
     async function generateReport() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
-    const ddl = document.getElementById('Ciu_Descripcion');
+    const ddl = document.getElementById('ciudadSelect');
 
     if (!startDate || !endDate || !ddl.value) {
         alert('Por favor, seleccione un rango de fechas válido.');

@@ -266,7 +266,7 @@ function validateForm() {
 $(document).ready(function() {
     $("#EsquemaAcceso").addClass('menu-open');
     $("#LinkAcceso").addClass('active');
-    $("#LinkUsuarios").addClass('active');
+    $("#LinkItemAcceso").addClass('active');
 
     // Inicialización de DataTables
     var table = $("#example1").DataTable({
