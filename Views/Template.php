@@ -24,11 +24,11 @@
 <!-- Site wrapper -->
 <div class="wrapper">
   <!-- HEADER -->
-  <?php include "Modules/Header.php"?>
+  <?php include "Layout/Header.php"?>
   <!-- /.HEADER -->
 
   <!-- Main Sidebar Container -->
-  <?php include "Modules/Menu.php"?>
+  <?php include "Layout/Menu.php"?>
   <br>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -56,7 +56,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <?php include "Modules/Footer.php"?>
+  <?php include "Layout/Footer.php"?>
 
   <!-- /.control-sidebar -->
 </div>

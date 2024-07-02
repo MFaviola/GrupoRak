@@ -7,7 +7,7 @@ class ApartadoVehiculoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Apartado_Listar`()';
+            $sql = 'CALL sp_apartado_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -32,7 +32,7 @@ class ApartadoVehiculoService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_MetodosPago_Listar`()';
+            $sql = 'CALL sp_metodospago_listar()';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {
@@ -57,7 +57,7 @@ class ApartadoVehiculoService {
     public function ModelosDDl($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Modelos_Ddl`(?)';
+            $sql = 'CALL sp_modelos_ddl(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -71,7 +71,7 @@ class ApartadoVehiculoService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Marca_Listar`()';
+            $sql = 'CALL sp_marca_listar()';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {
@@ -100,7 +100,7 @@ class ApartadoVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_cliente_insertar(?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -127,7 +127,7 @@ class ApartadoVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Insertar`(?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_vehiculos_insertar(?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -154,7 +154,7 @@ class ApartadoVehiculoService {
         $Creacion = $_SESSION['ID'];
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Apartado_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_apartado_insertar(?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -171,7 +171,7 @@ class ApartadoVehiculoService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(?)';
+            $sql = 'CALL sp_cliente_buscarpordni(?)';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {

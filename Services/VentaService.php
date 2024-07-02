@@ -8,7 +8,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL dbgruporac.sp_Ventas_Listar()';
+            $sql = 'CALL sp_ventas_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -33,7 +33,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_MetodoPago_Listar`()';
+            $sql = 'CALL sp_metodopago_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -54,7 +54,7 @@ class VentaService {
     public function eliminarDetalle($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_VentasDetalles_Eliminar`(?)';
+            $sql = 'CALL sp_ventasdetalles_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";
@@ -69,7 +69,7 @@ class VentaService {
     public function ListarVentaDetalles($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_VentasDetalle_Listar`(?)';
+            $sql = 'CALL sp_ventasdetalle_listar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -88,7 +88,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Listar`()';
+            $sql = 'CALL sp_vehiculos_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -107,7 +107,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(:dni)';
+            $sql = 'CALL sp_cliente_buscarpordni(:dni)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -133,7 +133,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Listar`()'; // Reutilizamos este procedimiento para obtener todos los vehículos y filtrar por placa
+            $sql = 'CALL sp_vehiculos_listar()'; // Reutilizamos este procedimiento para obtener todos los vehículos y filtrar por placa
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -162,7 +162,7 @@ class VentaService {
         }
         $Creacion = $_SESSION['ID'];
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Ventas_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, @Vnt_ID)';
+            $sql = 'CALL sp_ventas_insertar(?, ?, ?, ?, ?, ?, ?, ?, @Vnt_ID)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -186,7 +186,7 @@ class VentaService {
        }
        $Creacion = $_SESSION['ID'];
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Insertar`(?, ?, ?, ?)';
+            $sql = 'CALL sp_venta_detalle_insertar(?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -206,7 +206,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Venta_Detalle_Eliminar`(:vehPlaca)';
+            $sql = 'CALL sp_venta_detalle_eliminar(:vehPlaca)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -226,7 +226,7 @@ class VentaService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Venta_Eliminar`(:vntId)';
+            $sql = 'CALL sp_venta_eliminar(:vntId)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

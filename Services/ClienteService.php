@@ -7,7 +7,7 @@ class ClienteService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Listar`()';
+            $sql = 'CALL sp_cliente_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -37,7 +37,7 @@ class ClienteService {
 
         try {
             // Llamada al procedimiento almacenado
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Cli_ID)';
+            $sql = 'CALL sp_cliente_insertar(?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Cli_ID)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -62,7 +62,7 @@ class ClienteService {
     public function actualizar($id, $nombre, $apellido, $FechaNacimiento,$Sexo, $Identidad, $Ciudad,$Esciv, $Direccion, $Modificacion) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Actualizar`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_cliente_actualizar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -82,7 +82,7 @@ class ClienteService {
     public function CiudadesDDl($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Ciudades_Ddl`(?)';
+            $sql = 'CALL sp_ciudades_ddl(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -96,7 +96,7 @@ class ClienteService {
     public function obtenerPorID($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Detalle`(?)';
+            $sql = 'CALL sp_cliente_detalle(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -109,7 +109,7 @@ class ClienteService {
     public function eliminar($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Eliminar`(?)';
+            $sql = 'CALL sp_cliente_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";
@@ -122,7 +122,7 @@ class ClienteService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Departamentos_Listar`()';
+            $sql = 'CALL sp_departamentos_listar()';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {
@@ -147,7 +147,7 @@ class ClienteService {
     global $pdo;
 
     try {
-        $sql = 'CALL `dbgruporac`.`sp_EstadoCivil_Listar`()';
+        $sql = 'CALL sp_estadocivil_listar()';
         $stmt = $pdo->prepare($sql);
 
         if ($stmt === false) {
@@ -172,7 +172,7 @@ public function listarCiudades() {
     global $pdo;
 
     try {
-        $sql = 'CALL `dbgruporac`.`sp_Ciudad_Listar`()';
+        $sql = 'CALL sp_ciudad_listar()';
         $stmt = $pdo->prepare($sql);
 
         if ($stmt === false) {

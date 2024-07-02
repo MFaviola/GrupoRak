@@ -6,7 +6,7 @@ class CarService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_BuscarPorDNI`(?)';
+            $sql = 'CALL sp_cliente_buscarpordni(?)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

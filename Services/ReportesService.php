@@ -6,7 +6,7 @@ class ReportesServices {
     public function ReporteCompras1($startDate , $endDate) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_ComprasPorFecha_Reporte`(?, ?)';
+            $sql = 'CALL sp_comprasporfecha_reporte(?, ?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$startDate , $endDate]);
             
@@ -27,7 +27,7 @@ class ReportesServices {
     public function ReporteEmpleados($DNI, $fecha_inicio , $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasPorEmpleado_Reporte`(?,?,?)';
+            $sql = 'CALL sp_ventasporempleado_reporte(?,?,?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$DNI, $fecha_inicio, $fecha_fin]);
             
@@ -47,7 +47,7 @@ class ReportesServices {
     public function ReporteVehiculos($modelo, $fecha_inicio, $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VehiculosPorModelos_Reporte`(?,?,?)';
+            $sql = 'CALL sp_vehiculospormodelos_reporte(?,?,?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$modelo, $fecha_inicio, $fecha_fin]);
             
@@ -67,7 +67,7 @@ class ReportesServices {
     public function ReporteVentas($ciudad, $fecha_inicio, $fecha_fin) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasPorCiudad_Reporte`(?,?,?)';
+            $sql = 'CALL sp_ventasporciudad_reporte(?,?,?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$ciudad, $fecha_inicio, $fecha_fin]);
             
@@ -90,7 +90,7 @@ class ReportesServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Listar`()';
+            $sql = 'CALL sp_empleado_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -115,7 +115,7 @@ class ReportesServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Modelo_Listar`()';
+            $sql = 'CALL sp_modelo_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

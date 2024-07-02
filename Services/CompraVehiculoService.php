@@ -6,7 +6,7 @@ class CompraVehiculoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Listar`()';
+            $sql = 'CALL sp_compras_listar()';
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -20,7 +20,7 @@ class CompraVehiculoService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_MetodosPago_Listar`()';
+            $sql = 'CALL sp_metodospago_listar()';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {
@@ -44,7 +44,7 @@ class CompraVehiculoService {
     public function ModelosDDl($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Modelos_Ddl`(?)';
+            $sql = 'CALL sp_modelos_ddl(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -57,7 +57,7 @@ class CompraVehiculoService {
     public function buscarClientePorDNI($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Buscar`(?)';
+            $sql = 'CALL sp_cliente_buscar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -72,7 +72,7 @@ class CompraVehiculoService {
     public function ListarComprasDetalles($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalle_Listar`(?)';
+            $sql = 'CALL sp_comprasdetalle_listar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obtener todas las filas
@@ -86,7 +86,7 @@ class CompraVehiculoService {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Marca_Listar`()';
+            $sql = 'CALL sp_marca_listar()';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {
@@ -114,7 +114,7 @@ class CompraVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cliente_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_cliente_insertar(?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -140,7 +140,7 @@ class CompraVehiculoService {
         }
         $Creacion = $_SESSION['ID'];
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Vehiculos_Insertar`(?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_vehiculos_insertar(?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
     
             // Debug: Log values before executing
@@ -172,7 +172,7 @@ class CompraVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Insertar`(?, ?, ?, ?,@p_Com_ID)';
+            $sql = 'CALL sp_compras_insertar(?, ?, ?, ?,@p_Com_ID)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -197,7 +197,7 @@ class CompraVehiculoService {
     public function actualizarEncabezado($id, $fecha, $MetodoPago, $Cliente, $Modificacion) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Actualizar`(?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_compras_actualizar(?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -221,7 +221,7 @@ class CompraVehiculoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalles_Insertar`(?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_comprasdetalles_insertar(?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
     
             // Debug: Log values before executing
@@ -246,7 +246,7 @@ class CompraVehiculoService {
     public function finalizar($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Finalizar`(?)';
+            $sql = 'CALL sp_compras_finalizar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";
@@ -258,7 +258,7 @@ class CompraVehiculoService {
     public function obtenerCompras($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Compras_Detalle`(?)';
+            $sql = 'CALL sp_compras_detalle(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -272,7 +272,7 @@ class CompraVehiculoService {
     public function eliminarDetalle($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_ComprasDetalles_Eliminar`(?)';
+            $sql = 'CALL sp_comprasdetalles_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";

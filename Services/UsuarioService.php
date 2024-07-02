@@ -5,7 +5,7 @@ class UsuarioController {
     public function listarUsuario() {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Usuarios_Mostrar`()';
+            $sql = 'CALL sp_usuarios_mostrar()';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -30,7 +30,7 @@ class UsuarioController {
         $fechaCreacion = date('Y-m-d');
         error_log("insertarUsuario - Usu_Admin (preparado): " . $admin);
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Usuarios_Insertar`(?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_usuarios_insertar(?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -53,7 +53,7 @@ class UsuarioController {
         global $pdo;
         $fechaModifica = date('Y-m-d');
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Usuario_Actualizar`(?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_usuario_actualizar(?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -73,7 +73,7 @@ class UsuarioController {
     public function obtenerUsuarioPorID($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Usuarios_Detalles`(?)';
+            $sql = 'CALL sp_usuarios_detalles(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -86,7 +86,7 @@ class UsuarioController {
     public function eliminarUsuario($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Usuario_Eliminar`(?)';
+            $sql = 'CALL sp_usuario_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";
@@ -100,7 +100,7 @@ class UsuarioController {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Listar_2`()';
+            $sql = 'CALL sp_empleado_listar_2()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

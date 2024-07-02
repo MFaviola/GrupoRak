@@ -9,7 +9,7 @@ class DashboardsServices {
 
         try {
 
-            $sql = 'CALL `dbgruporac`.`SP_Marcas_Cantidad`();';
+            $sql = 'CALL sp_marcas_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -36,7 +36,7 @@ class DashboardsServices {
 
         try {
             
-            $sql = 'CALL `dbgruporac`.`SP_Vehiculos_Cantidad`();';
+            $sql = 'CALL sp_vehiculos_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -63,7 +63,7 @@ class DashboardsServices {
 
         try {
             
-            $sql = 'CALL `dbgruporac`.`SP_Ventas_Cantidad`();';
+            $sql = 'CALL sp_ventas_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -90,7 +90,7 @@ class DashboardsServices {
 
         try {
             
-            $sql = 'CALL `dbgruporac`.`SP_Compras_Cantidad`();';
+            $sql = 'CALL sp_compras_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -116,7 +116,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasMes_Cantidad`();';
+            $sql = 'CALL sp_ventasmes_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -143,7 +143,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_ComprasMes_Cantidad`();';
+            $sql = 'CALL sp_comprasmes_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -170,7 +170,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Modelos_Cantidad`();';
+            $sql = 'CALL sp_modelos_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -197,7 +197,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Empleados_Cantidad`();';
+            $sql = 'CALL sp_empleados_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -224,7 +224,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Clientes_Cantidad`();';
+            $sql = 'CALL sp_clientes_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -251,7 +251,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Sedes_Cantidad`();';
+            $sql = 'CALL sp_sedes_cantidad();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -277,7 +277,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Empleados_Top5`();';
+            $sql = 'CALL sp_empleados_top5();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -304,7 +304,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_Vehiculos_Top5`();';
+            $sql = 'CALL sp_vehiculos_top5();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -332,7 +332,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_ComprasClientes_Mes`();';
+            $sql = 'CALL sp_comprasclientes_mes();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -359,7 +359,7 @@ class DashboardsServices {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasEmpleados_Mes`();';
+            $sql = 'CALL sp_ventasempleados_mes();';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -387,7 +387,7 @@ class DashboardsServices {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`SP_ComprasCantidad_FiltroFecha`(?, ?)';
+            $sql = 'CALL sp_comprascantidad_filtrofecha(?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -411,7 +411,7 @@ class DashboardsServices {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasCantidad_FiltroFecha`(?, ?)';
+            $sql = 'CALL sp_ventascantidad_filtrofecha(?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -435,7 +435,7 @@ class DashboardsServices {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`SP_VentasEmpleadosCantidad_FiltroFecha`(?, ?)';
+            $sql = 'CALL sp_ventasempleadoscantidad_filtrofecha(?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -459,7 +459,7 @@ class DashboardsServices {
         global $pdo;
     
         try {
-            $sql = 'CALL `dbgruporac`.`SP_ComprasClientesCantidad_FiltroFecha`(?, ?)';
+            $sql = 'CALL sp_comprasclientescantidad_filtrofecha(?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));

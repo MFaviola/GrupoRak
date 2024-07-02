@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: url(https://i.pinimg.com/736x/95/62/3d/95623dc132235138cfa75403d63aeef3.jpg);">
     <!-- Brand Logo -->
-    <a href="../Views/Resources/index3.html" class="brand-link" style="background-color:#000">
+    <a href="?Pages=dashboardsInicio" class="brand-link" style="background-color:#000">
       <img src="../Views/Resources\dist\img\logroRac.jpg" alt="grupo rac" class="brand-image img-circle elevation-3" style="opacity: .8">
       <!-- <span class="brand-text" style="font-weight:bold; font-size:17px; color:white; font-family: Arial, sans-serif;">GRUPO<span class="brand-text" style="font-weight:bold; color:#cb0002; font-family: Arial, sans-serif;">RAC</span></span> -->
       <img src="../Views/Resources\dist\img\letras.png" class="ml-2" style="height:20px; width:100px; opacity: .8" alt="">

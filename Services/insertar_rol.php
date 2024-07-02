@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Insertar el nuevo rol y obtener el ID
-        $stmt = $pdo->prepare("CALL sp_Rol_Insertar(:rol_descripcion, :rol_creacion, :rol_fecha_creacion, @rol_id)");
+        $stmt = $pdo->prepare("CALL sp_rol_insertar(:rol_descripcion, :rol_creacion, :rol_fecha_creacion, @rol_id)");
         $stmt->bindParam(':rol_descripcion', $rol_descripcion);
         $stmt->bindValue(':rol_creacion', 1); // Ajusta según tu lógica
         $stmt->bindValue(':rol_fecha_creacion', date('Y-m-d H:i:s'));

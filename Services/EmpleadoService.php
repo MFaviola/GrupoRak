@@ -7,7 +7,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Listar`()';
+            $sql = 'CALL sp_empleado_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -36,7 +36,7 @@ class EmpleadoService {
         $Creacion = $_SESSION['ID'];
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Insertar`(?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)';
+            $sql = 'CALL sp_empleado_insertar(?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -59,7 +59,7 @@ class EmpleadoService {
     public function actualizar($id, $nombre, $apellido,$Sexo, $FechaNacimiento, $Ciudad, $Esciv,$cargo, $sede,  $Correo,  $Identidad, $Modificacion) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Actualizar`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $sql = 'CALL sp_empleado_actualizar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $pdo->prepare($sql);
             if ($stmt === false) {
                 throw new Exception('Error al preparar la declaración: ' . implode(", ", $pdo->errorInfo()));
@@ -82,7 +82,7 @@ class EmpleadoService {
     public function obtenerPorID($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Detalle`(?)';
+            $sql = 'CALL sp_empleado_detalle(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -95,7 +95,7 @@ class EmpleadoService {
     public function eliminar($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Empleado_Eliminar`(?)';
+            $sql = 'CALL sp_empleado_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -116,7 +116,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_EstadoCivil_Listar`()';
+            $sql = 'CALL sp_estadocivil_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -141,7 +141,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Ciudad_Listar`()';
+            $sql = 'CALL sp_ciudad_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -166,7 +166,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Cargo_Listar`()';
+            $sql = 'CALL sp_cargo_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -191,7 +191,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Sedes_Listar`()';
+            $sql = 'CALL sp_sedes_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -216,7 +216,7 @@ class EmpleadoService {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Departamentos_Listar`()';
+            $sql = 'CALL sp_departamentos_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {

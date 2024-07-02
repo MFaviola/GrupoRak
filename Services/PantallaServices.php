@@ -7,7 +7,7 @@ class PantallasController {
         global $pdo;
 
         try {
-            $sql = 'CALL SP_Pantallas_Listar()';
+            $sql = 'CALL sp_pantallas_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -92,7 +92,7 @@ class PantallasController {
         global $pdo;
 
         try {
-            $sql = 'CALL sp_PantallasPorRoles_Listar(?)';
+            $sql = 'CALL sp_pantallasporroles_listar(?)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -118,7 +118,7 @@ class PantallasController {
         global $pdo;
 
         try {
-            $sql = 'CALL sp_PantallasPorRoles_Eliminar(?, ?)';
+            $sql = 'CALL sp_pantallasporroles_eliminar(?, ?)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -137,7 +137,7 @@ class PantallasController {
         global $pdo;
 
         try {
-            $sql = 'CALL sp_PantallasDisponibles_Listar(?)';
+            $sql = 'CALL sp_pantallasdisponibles_listar(?)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -162,7 +162,7 @@ class PantallasController {
         global $pdo;
     
         try {
-            $sql = 'CALL sp_PantallasPorRoles_EliminarPorRol(?)';
+            $sql = 'CALL sp_pantallasporroles_eliminarPorRol(?)';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {

@@ -6,7 +6,7 @@ class RolesController {
         global $pdo;
 
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Rol_Listar`()';
+            $sql = 'CALL sp_rol_listar()';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -30,7 +30,7 @@ class RolesController {
     public function obtenerRolesPorID($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Rol_Detalle`(?)';
+            $sql = 'CALL sp_rol_detalle(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
@@ -43,7 +43,7 @@ class RolesController {
     public function eliminarRoles($id) {
         global $pdo;
         try {
-            $sql = 'CALL `dbgruporac`.`sp_Rol_Eliminar`(?)';
+            $sql = 'CALL sp_rol_eliminar(?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
             return "Usuario eliminado correctamente.";
@@ -56,7 +56,7 @@ class RolesController {
         global $pdo;
 
         try {
-            $sql = 'CALL sp_Rol_Insertar(?, ?, ?, @rol_id)';
+            $sql = 'CALL sp_rol_insertar(?, ?, ?, @rol_id)';
             $stmt = $pdo->prepare($sql);
 
             if ($stmt === false) {
@@ -78,7 +78,7 @@ class RolesController {
         global $pdo;
     
         try {
-            $sql = 'CALL sp_Rol_Actualizar(?, ?)';
+            $sql = 'CALL sp_rol_actualizar(?, ?)';
             $stmt = $pdo->prepare($sql);
     
             if ($stmt === false) {

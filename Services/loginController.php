@@ -29,7 +29,7 @@ class ControllerLogin {
         }
 
         try {
-            $stmt = $pdo->prepare("CALL acce_SP_Usuarios_InicioSesion(:usuario, :contrasena)");
+            $stmt = $pdo->prepare("CALL sp_usuarios_iniciosesion(:usuario, :contrasena)");
             $stmt->bindParam(':usuario', $usuario);
             $stmt->bindParam(':contrasena', $contrasena);
             $stmt->execute();

@@ -5,7 +5,7 @@ class CarService {
     public function obtenerCarroPorPlaca($placa) {
         global $pdo;
         try {
-            $stmt = $pdo->prepare('CALL sp_Vehiculo_BuscarPorPlaca(:placa)');
+            $stmt = $pdo->prepare('CALL sp_vehiculo_buscarporplaca(:placa)');
             $stmt->bindParam(':placa', $placa, PDO::PARAM_STR);
             $stmt->execute();
             $carro = $stmt->fetch(PDO::FETCH_ASSOC);
